@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 1 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #8b2e0f;
+    --accent-light: #c4512a;
+    --rule: #d4c9b0;
+    --tag-bg: #e8dfc8;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* header */
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+
+  /* deck tabs */
+  .deck-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab {
+    flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+    background: transparent; border: none; cursor: pointer; color: var(--ink-muted);
+    text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s;
+    border-right: 1.5px solid var(--ink);
+  }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+
+  /* category filter */
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+    background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s;
+  }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+
+  /* progress */
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+
+  /* card */
+  .card-wrap { perspective: 1200px; margin-bottom: 1.25rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-height: 220px;
+    cursor: pointer;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.12s, transform 0.12s;
+  }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+
+  /* answer */
+  .answer-area {
+    margin-top: 1.25rem; padding-top: 1.25rem;
+    border-top: 1px dashed var(--rule);
+    animation: fadein 0.2s ease;
+  }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    font-size: 12px; line-height: 1.65; color: var(--ink-muted);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+
+  /* nav */
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px;
+    background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink); transition: all 0.12s;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px;
+    background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s;
+    letter-spacing: 0.05em;
+  }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+  /* cat tag on card */
+  .cat-tag {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); align-self: flex-start; margin-bottom: 0.5rem;
+    padding: 2px 8px; background: var(--tag-bg); border-radius: 20px;
+  }
+
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 1 — <em>Later Middle Ages</em></h1>
+    <p class="subtitle">Crisis & Disintegration in the Fourteenth Century</p>
+  </header>
+
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front" id="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+
+  <footer>AP Euro · Ch. 1 · <span>14th Century</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  {cat:"Black Death",q:"What was the Black Death, and where did it originate?",a:"A catastrophic outbreak of bubonic plague (caused by <strong>Yersinia pestis</strong>) that originated in Central Asia, spread along Mongol trade routes, and reached Europe via Sicilian ports in 1347.",tip:"On the exam, connect the Mongol Empire's stability of trade routes to plague diffusion — the same network that enabled commerce spread disease."},
+  {cat:"Black Death",q:"How much of Europe's population died in the Black Death, and what were the demographic consequences?",a:"Estimates suggest roughly <strong>one-third of Europe's population</strong> died between 1347–1351. Labor became scarce, wages rose, and the feudal obligation tying serfs to land weakened — accelerating the end of serfdom in Western Europe.",tip:"SAQ/LEQ prompt: explain how the plague disrupted social and economic structures. Always link demographic collapse → labor scarcity → peasant leverage → end of serfdom."},
+  {cat:"Black Death",q:"How did contemporaries explain the Black Death, and what were the social consequences?",a:"Most Europeans attributed the plague to God's wrath, astrological conjunctions, or miasma (bad air). Jews were scapegoated and massacred in many cities. Flagellant movements spread as people sought to appease God through self-punishment.",tip:"Shows religious and social responses to crisis. Flagellants were eventually condemned by the papacy — note Church authority attempting to reassert control."},
+  {cat:"Black Death",q:"What was the Great Famine (1315–1322), and how did it set the stage for the Black Death?",a:"A series of catastrophic crop failures caused by climate cooling, which killed millions and left the population malnourished and immunologically weakened — making Europe far more vulnerable when plague arrived decades later.",tip:"This is the 'famine before the plague' context. Good for continuity arguments: medieval Europe was already in crisis before 1347."},
+  {cat:"Hundred Years' War",q:"What were the main causes of the Hundred Years' War (1337–1453)?",a:"<strong>Dynastic claims</strong>: Edward III of England claimed the French throne through his mother. <strong>Economic rivalry</strong>: English wool trade depended on Flemish cities nominally under French control. <strong>Feudal tensions</strong>: English kings held French lands as vassals of the French crown, creating irreconcilable loyalties.",tip:"AP loves cause questions. List all three types: dynastic, economic, feudal."},
+  {cat:"Hundred Years' War",q:"How did the longbow and cannon change warfare during the Hundred Years' War?",a:"The English <strong>longbow</strong> (used at Crécy 1346, Agincourt 1415) allowed common infantry to devastate armored knights — undermining the feudal military aristocracy. <strong>Cannon</strong> made castle walls obsolete and enabled monarchs to reduce the defensive power of nobles, centralizing military force under royal armies.",tip:"Key AP theme: military revolution → undermines feudalism → strengthens monarchies. Cannon is the most exam-relevant technology here."},
+  {cat:"Hundred Years' War",q:"Who was Joan of Arc and what was her historical significance?",a:"A French peasant who claimed divine visions instructed her to lead France to victory. She helped lift the siege of Orléans (1429) and was later burned as a heretic (1431). Her story became a symbol of emergent <strong>French national identity</strong>.",tip:"Joan embodies the nation-state theme. Her identity was French, not feudal — she fought for France, not a lord. Great evidence for the rise of nationalism."},
+  {cat:"Hundred Years' War",q:"How did the Hundred Years' War contribute to the formation of nation-states?",a:"The war created shared enemies, common military service, and vernacular literature/propaganda that fostered <strong>national identity</strong>. French kings emerged with centralized royal armies; English kings became dependent on Parliament for war funding. Feudal ties weakened as loyalty shifted from local lords to the crown.",tip:"Contrast the two outcomes: France → stronger monarchy; England → stronger Parliament. Both = weakened feudalism, stronger nation-state identity."},
+  {cat:"Political Instability",q:"What was the political situation in the Holy Roman Empire during the 14th century?",a:"German princes (electors) elected the emperor, giving them the power to keep central authority weak. The <strong>Golden Bull of 1356</strong> formalized this by confirming the election process and effectively making the HRE a loose confederation of independent principalities.",tip:"HRE = the anti-France. While French kings centralized, German princes prevented it. The HRE's fragmentation persists until Napoleon — a long continuity thread."},
+  {cat:"Political Instability",q:"What was the political situation in Italy in the 14th century?",a:"Italy was divided among <strong>city-states</strong> (Florence, Venice, Milan, Genoa), the Papal States, and the Kingdom of Naples. No central monarchy formed. This fragmentation, paradoxically, created competitive urban environments that fostered Renaissance culture and commerce.",tip:"Italy's fragmentation enabled Renaissance autonomy but left it vulnerable to foreign invasion (1494 — foreshadowing later chapters)."},
+  {cat:"Church Decline",q:"What was the conflict between Pope Boniface VIII and King Philip IV of France?",a:"Philip IV taxed French clergy to fund war; Boniface issued <strong>Unam Sanctam</strong> (1302) asserting papal supremacy over all rulers. Philip had Boniface arrested at Anagni (the 'Slap of Anagni'). Boniface died shortly after, and the papacy was humiliated.",tip:"Marks the end of papal political supremacy that had peaked under Innocent III. The Church's authority over kings was decisively broken here."},
+  {cat:"Church Decline",q:"What was the Avignon Papacy and why did it damage papal prestige?",a:"From 1305–1377, seven consecutive popes resided at <strong>Avignon in France</strong>, under heavy French influence. Critics saw the papacy as a puppet of the French crown, undermining its claim to universal spiritual authority.",tip:"Name comes from the 'Babylonian Captivity' of the Jews — a deliberate insult. Key to showing how the Church's credibility was eroded before the Great Schism."},
+  {cat:"Church Decline",q:"What was the Great Schism (1378–1417) and what were its consequences?",a:"After the papacy returned to Rome, French cardinals elected a rival pope who stayed in Avignon. For nearly 40 years there were <strong>two (and briefly three) claimants to the papacy</strong>. This shattered the Church's claim to spiritual unity and led reformers to argue councils should govern the Church.",tip:"The Schism + Avignon = massive crisis of Church authority. These two events together explain why Lutheranism was able to gain traction 100 years later."},
+  {cat:"Church Decline",q:"What was Conciliarism, and who were its main proponents?",a:"The theory that a <strong>general council of Church leaders</strong> held authority superior to the pope. Scholars like Marsilius of Padua and William of Ockham challenged papal monarchy. The Council of Constance (1414–1418) ended the Schism but later popes reasserted supremacy.",tip:"Conciliarism is a direct precursor to the Reformation debate about Church authority. Good to link forward to Luther's appeal to councils over the pope."},
+  {cat:"Church Decline",q:"Who were John Wycliffe and Jan Hus, and why are they historically important?",a:"<strong>Wycliffe</strong> (England) argued the Bible was the sole religious authority, denied transubstantiation, and promoted Bible translation into English. <strong>Hus</strong> (Bohemia) spread similar ideas and was burned at the Council of Constance (1415). Both are considered pre-Reformation reformers.",tip:"Direct precursors to Luther. The AP exam may ask you to trace the roots of the Reformation — Wycliffe and Hus are your 14th–15th century evidence."},
+  {cat:"Culture & Society",q:"What is vernacular literature, and why did it emerge in the 14th century?",a:"Literature written in everyday spoken languages rather than Latin. Major examples: <strong>Dante's Divine Comedy</strong>, <strong>Chaucer's Canterbury Tales</strong>, <strong>Boccaccio's Decameron</strong>. Vernacular writing reached broader audiences and expressed national cultural identity.",tip:"Vernacular = democratization of culture AND early nationalism. The Decameron is especially good evidence because it directly responds to the plague."},
+  {cat:"Culture & Society",q:"Who was Giotto and why is he significant in art history?",a:"A Florentine painter (c. 1267–1337) who broke from the flat Byzantine tradition by painting <strong>naturalistic, three-dimensional figures with emotional expression</strong>. He is considered the first major step toward Renaissance painting.",tip:"Giotto = bridge between medieval and Renaissance art. AP may ask you to identify turning points in cultural history — Giotto is your 14th-century answer."},
+  {cat:"Culture & Society",q:"How did urban life change in 14th-century Europe as a result of plague and economic disruption?",a:"Plague devastated urban populations but created opportunities: labor scarcity raised wages, guilds adapted, and some cities invested in <strong>public health infrastructure</strong> (quarantine, the first boards of health appeared in Italian cities). Towns also saw increased social mobility.",tip:"Good for showing how crisis can accelerate change — a common AP prompt pattern."},
+  {cat:"Culture & Society",q:"What new directions appeared in medicine as a result of the plague?",a:"Universities began permitting <strong>human dissection</strong> to understand disease. Physicians increasingly relied on observation rather than pure classical authority (Galen). The failure of traditional medicine to explain or stop plague forced empirical reconsideration.",tip:"Connects to the Scientific Revolution. Medical crisis → empirical observation = early sign of the shift from authority-based to observation-based knowledge."},
+  {cat:"Broader Themes",q:"Why did serfdom end in Western Europe but persist in Eastern Europe after the Black Death?",a:"In Western Europe, labor scarcity gave peasants leverage to demand freedom. In Eastern Europe, landlords responded by <strong>legally binding peasants more tightly to the land</strong> (the 'second serfdom') to prevent them from leaving. Less developed towns meant peasants had no escape route.",tip:"East-West divergence is a major AP theme. Use it to explain why Western Europe industrialized earlier and why Eastern Europe's social structures lasted into the 19th century."},
+  {cat:"Broader Themes",q:"How did the Mongol Empire both enable and devastate 14th-century Europe?",a:"The <strong>Pax Mongolica</strong> stabilized trade routes from China to Western Russia, enabling long-distance commerce. But the same routes carried the Black Death westward — rats and fleas traveled with merchant caravans. The Mongol empire simultaneously connected and destroyed the medieval world.",tip:"A great synthesis point: the same forces that brought prosperity brought plague — a recurring pattern in world history."},
+  {cat:"Broader Themes",q:"How did the crises of the 14th century collectively lead toward the Renaissance?",a:"The collapse of feudalism, the weakening of Church authority, rising urban wealth, demographic disruption, and the vernacular literary tradition all created conditions for a cultural rebirth. Italian city-states, enriched by surviving trade networks and freed from feudal constraints, could patronize <strong>humanist art and learning</strong>.",tip:"This is the synthesis question for Chapter 1. The whole chapter is setup for the Renaissance. Know the causal chain: crisis → dissolution of medieval order → Italian prosperity → humanism."}
+];
+
+const VOCAB = [
+  {cat:"Plague & Society",term:"Bubonic plague",pos:"noun",def:"A bacterial infection caused by <strong>Yersinia pestis</strong>, transmitted by fleas on rats. The form that struck Europe in 1347 caused swollen lymph nodes called buboes, high fever, and death — often within days.",tip:"Distinguished from pneumonic plague (airborne) and septicemic plague (bloodstream). The AP exam uses 'Black Death' broadly — know that bubonic was the primary form."},
+  {cat:"Plague & Society",term:"Black Death",pos:"noun",def:"The catastrophic epidemic of bubonic plague that swept Europe from 1347–1351, killing an estimated one-third of the population. Named for the dark discoloration of the skin caused by subcutaneous bleeding.",tip:"Use 'Black Death' for the event, 'bubonic plague' for the disease. The term itself was coined later — contemporaries called it the 'great pestilence.'"},
+  {cat:"Plague & Society",term:"Flagellants",pos:"noun (plural)",def:"Religious zealots who marched through towns publicly whipping themselves as penance, believing the plague was divine punishment for human sin. Condemned by Pope Clement VI in 1349.",tip:"Good evidence for how the plague intensified religious anxiety. The Church's condemnation shows its attempt to maintain doctrinal control during crisis."},
+  {cat:"Plague & Society",term:"Miasma theory",pos:"noun",def:"The dominant medieval explanation that disease spread through 'bad air' emanating from rotting matter. Physicians recommended avoiding foul smells and burning aromatic herbs.",tip:"Miasma theory persisted until germ theory in the 19th century. It explains why medieval medicine failed against plague — and why the crisis pushed some physicians toward observation-based thinking."},
+  {cat:"Plague & Society",term:"Scapegoating",pos:"noun/verb",def:"The practice of blaming a minority group for societal misfortunes. During the Black Death, Jewish communities were accused of poisoning wells and massacred across Europe, despite Jews dying of plague at similar rates.",tip:"An AP-relevant pattern: crisis → scapegoating. This recurs throughout European history (pogroms, witch trials, etc.)."},
+  {cat:"Plague & Society",term:"Decameron",pos:"noun (proper)",def:"A collection of 100 stories by <strong>Giovanni Boccaccio</strong> (1353), framed as tales told by ten nobles who fled Florence during the Black Death. A key primary source for plague-era society and early vernacular literature.",tip:"Useful both as a cultural artifact (vernacular Italian, humanist themes) and as a historical source about plague's social effects."},
+  {cat:"Feudalism & Economy",term:"Serfdom",pos:"noun",def:"A system of unfree agricultural labor in which peasants were legally bound to a lord's land, owed labor services, and could not leave without permission. Distinct from slavery but severely limiting.",tip:"The Black Death effectively ended serfdom in Western Europe by giving peasants labor leverage. It persisted and intensified in Eastern Europe — the 'second serfdom.'"},
+  {cat:"Feudalism & Economy",term:"Manor system",pos:"noun",def:"The economic unit of medieval feudalism: a lord's estate worked by serfs who owed labor in exchange for protection and use of the land. The backbone of medieval agricultural production.",tip:"One of the three pillars of medieval life. The plague's disruption of labor supply was the primary force that dissolved the manor system in the West."},
+  {cat:"Feudalism & Economy",term:"Second serfdom",pos:"noun",def:"The tightening of serf obligations in Eastern Europe (Poland, Russia, Prussia, Bohemia) after the Black Death, as landlords legally bound peasants to prevent them from leaving to find better wages elsewhere.",tip:"Contrast with Western Europe, where the same labor shortage freed serfs. The second serfdom explains Eastern Europe's delayed economic and social development."},
+  {cat:"Feudalism & Economy",term:"Pax Mongolica",pos:"noun (Latin)",def:"The 'Mongol Peace' — a period of relative stability across Eurasia under Mongol rule (c. 1250–1350) that secured overland trade routes from China to the Black Sea, enabling long-distance commerce.",tip:"A double-edged phenomenon: the same trade routes that brought silk and spices to Europe carried plague westward. Use this to explain how interconnection can simultaneously spread prosperity and catastrophe."},
+  {cat:"War & Politics",term:"Hundred Years' War",pos:"noun (proper)",def:"A series of conflicts between England and France (1337–1453) over dynastic claims to the French throne and control of French territories. It ended with France expelling England from virtually all French soil.",tip:"Not a continuous war but a series of campaigns. The key consequence: it broke feudal ties, created national armies, and forged French and English national identities."},
+  {cat:"War & Politics",term:"Longbow",pos:"noun",def:"A tall Welsh bow capable of firing arrows rapidly with enough force to pierce plate armor at 200 yards. English use of longbowmen devastated French knights at Crécy (1346) and Agincourt (1415).",tip:"The longbow democratized battlefield killing — a common archer could kill an armored nobleman. This undermined the social prestige and military function of the feudal knight class."},
+  {cat:"War & Politics",term:"Nation-state",pos:"noun",def:"A political entity in which a defined territory is governed by a central authority and its population shares a common identity (language, culture, history). Distinct from feudal kingdoms based on personal loyalty to lords.",tip:"The Hundred Years' War is a key origin point for French and English national identity. The AP exam frequently asks about the origins and development of nation-states."},
+  {cat:"War & Politics",term:"Golden Bull (1356)",pos:"noun (proper)",def:"A decree by Holy Roman Emperor Charles IV that formalized election of the emperor by seven designated princes (electors), effectively guaranteeing the decentralization of power in the Holy Roman Empire.",tip:"The HRE's key constitutional document. It explains why Germany remained fragmented while France and England centralized — a divergence with consequences all the way to 1871."},
+  {cat:"War & Politics",term:"Joan of Arc",pos:"noun (proper)",def:"A French peasant (c. 1412–1431) who claimed divine visions commanded her to lead French forces. She helped lift the siege of Orléans (1429), was captured, tried as a heretic, and burned at the stake.",tip:"Embodies French national identity — a commoner who fought for France, not for a feudal lord. Her story is essential evidence for the rise of nationalism."},
+  {cat:"Church & Religion",term:"Unam Sanctam (1302)",pos:"noun (proper)",def:"A papal bull issued by <strong>Pope Boniface VIII</strong> asserting that every human being must submit to papal authority for salvation — the most extreme claim of papal supremacy ever made.",tip:"Issued in response to Philip IV taxing clergy. Philip's humiliation of Boniface shortly after showed the claim was hollow. Marks the high-water mark — and collapse — of medieval papal political power."},
+  {cat:"Church & Religion",term:"Avignon Papacy",pos:"noun (proper)",def:"The period (1305–1377) during which seven successive popes resided in Avignon, France, under heavy French royal influence. Critics called it the 'Babylonian Captivity of the Church.'",tip:"Undermined the papacy's claim to universal, impartial spiritual authority. Non-French Christians resented French domination — setting the stage for the Great Schism."},
+  {cat:"Church & Religion",term:"Great Schism",pos:"noun (proper)",def:"The division of the Catholic Church (1378–1417) in which two — and briefly three — rival claimants each held the papacy, each excommunicating the others. Ended by the Council of Constance.",tip:"Distinguish from the Great Schism of 1054 (Catholic-Orthodox split). The 1378 schism is the Western Schism. It devastated Church credibility and fueled calls for reform."},
+  {cat:"Church & Religion",term:"Conciliarism",pos:"noun",def:"The doctrine that a general council of Church leaders holds supreme authority over the pope in matters of faith and Church governance. Developed as a solution to the Great Schism.",tip:"The Council of Constance (1414–1418) was conciliarism's high point. Later popes reasserted supremacy, but the debate resurfaces in the Reformation."},
+  {cat:"Church & Religion",term:"Heresy",pos:"noun",def:"Belief or teaching that contradicts official Church doctrine. Heretics could be excommunicated, imprisoned, or burned. The charge was used against Jan Hus, Joan of Arc, and later Protestant reformers.",tip:"Understanding heresy as a legal and theological category helps explain the stakes of religious dissent. The Church's use of heresy charges to silence critics became a major grievance driving the Reformation."},
+  {cat:"Church & Religion",term:"Transubstantiation",pos:"noun",def:"The Catholic doctrine that during the Eucharist, the bread and wine literally become the body and blood of Christ, while retaining the appearance of bread and wine. Defined as dogma at the Fourth Lateran Council (1215).",tip:"Wycliffe's denial of transubstantiation was one of his most radical heresies. Luther later rejected it too. It remains a core Catholic doctrine and a major fault line of the Reformation."},
+  {cat:"Culture",term:"Vernacular",pos:"adjective/noun",def:"The everyday spoken language of a region (e.g., French, English, Italian) as opposed to Latin. Vernacular literature made writing accessible to non-clerical audiences.",tip:"Dante, Chaucer, and Boccaccio all wrote in vernacular — a democratizing and nationalizing move. The rise of vernacular is both a cultural and a political phenomenon: it builds national identity."},
+  {cat:"Culture",term:"Humanism",pos:"noun",def:"An intellectual movement centered on the study of classical Greek and Roman texts and the belief in human dignity and potential. It does not reject Christianity but shifts focus toward human life and achievement.",tip:"Humanism is the intellectual foundation of the Renaissance. It begins in 14th-century Italy — Petrarch is considered its first major figure."},
+  {cat:"Culture",term:"Byzantine style",pos:"noun",def:"The flat, highly stylized, gold-background artistic tradition of the Eastern Roman Empire, dominant in European religious art before the Renaissance. Figures appear symbolic rather than realistic.",tip:"Giotto's break from the Byzantine style — by adding depth, shadow, and emotional expression — is the key turning point in Western art history."},
+  {cat:"Culture",term:"Quarantine",pos:"noun",def:"The enforced isolation of people or goods suspected of carrying disease. From the Italian <strong>quarantina</strong> ('forty days') — the period Venetian port authorities required ships to wait before unloading.",tip:"One of the most durable innovations of the plague era. Venice and other Italian cities developed the first systematic public health bureaucracies. An early example of state intervention in public welfare."}
+];
+
+const DECKS = [CONCEPTS, VOCAB, [...CONCEPTS, ...VOCAB]];
+const DECK_NAMES = ["concepts & themes", "vocabulary", "all cards"];
+
+let currentDeck = 0;
+let activeCat = "All";
+let deck = [];
+let idx = 0;
+let revealed = false;
+
+function getCats(cards) {
+  return ["All", ...[...new Set(cards.map(c => c.cat))]];
+}
+
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  const cats = getCats(DECKS[currentDeck]);
+  cats.forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0;
+  revealed = false;
+  render();
+}
+
+function switchDeck(n) {
+  currentDeck = n;
+  activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow();
+  buildDeck();
+}
+
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area";
+    area.className = "answer-area";
+    const defText = isVocab ? c.def : c.a;
+    const tipLabel = isVocab ? "why it matters" : "exam angle";
+    area.innerHTML = `<p class="answer-text">${defText}</p>
+      <div class="context-box"><p class="context-label">${tipLabel}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+
+// init
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>
