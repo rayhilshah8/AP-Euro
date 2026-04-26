@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 2 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #2a5c3f;
+    --accent-light: #3d7a57;
+    --rule: #d4c9b0;
+    --tag-bg: #e0e8e2;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+
+  .deck-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab {
+    flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+    background: transparent; border: none; cursor: pointer; color: var(--ink-muted);
+    text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s;
+    border-right: 1.5px solid var(--ink);
+  }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+    background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s;
+  }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+
+  .card-wrap { perspective: 1200px; margin-bottom: 1.25rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-height: 220px;
+    cursor: pointer;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.12s, transform 0.12s;
+  }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+
+  .answer-area {
+    margin-top: 1.25rem; padding-top: 1.25rem;
+    border-top: 1px dashed var(--rule);
+    animation: fadein 0.2s ease;
+  }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    font-size: 12px; line-height: 1.65; color: var(--ink-muted);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px;
+    background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink); transition: all 0.12s;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px;
+    background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s;
+    letter-spacing: 0.05em;
+  }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+  .cat-tag {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); align-self: flex-start; margin-bottom: 0.5rem;
+    padding: 2px 8px; background: var(--tag-bg); border-radius: 20px;
+  }
+
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 2 — <em>The Renaissance</em></h1>
+    <p class="subtitle">Recovery and Rebirth · 15th–16th Century Italy and Europe</p>
+  </header>
+
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front" id="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+
+  <footer>AP Euro · Ch. 2 · <span>The Renaissance</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  // Italian Renaissance — Origins & Society
+  {cat:"Origins & Society",q:"Why did the Renaissance begin in Italy rather than elsewhere in Europe?",a:"Italy had uniquely favorable conditions: wealthy <strong>merchant city-states</strong> (Florence, Venice, Milan) whose prosperity funded patronage; proximity to classical Roman ruins and manuscripts; a tradition of urban civic life rather than feudal hierarchy; and an influx of Byzantine scholars after the fall of Constantinople (1453) who brought Greek texts westward.",tip:"A classic AP causation question. Always list multiple factors — economic (merchant wealth), geographic (Roman heritage), political (city-state competition), and demographic (Byzantine scholars). Don't give a single-cause answer."},
+  {cat:"Origins & Society",q:"How did the economic recovery of the 15th century enable the Renaissance?",a:"After the Black Death disrupted trade, Italian banking families — especially the <strong>Medici of Florence</strong> — rebuilt commercial networks across Europe. Surplus wealth from banking, textile manufacturing, and long-distance trade created a class of patrons willing to spend on art, architecture, and scholarship.",tip:"Economic foundation of culture is a major AP theme. Patronage = private funding of the arts. Always connect wealth to cultural production when explaining the Renaissance's origins."},
+  {cat:"Origins & Society",q:"How did the fall of Constantinople (1453) affect the Renaissance?",a:"When the Ottoman Turks conquered Constantinople, many <strong>Byzantine scholars fled west</strong> to Italy, bringing Greek manuscripts and expertise in classical languages. This accelerated humanist scholarship, especially the recovery of Greek philosophy. It also disrupted eastern Mediterranean trade, pushing Italian merchants to seek Atlantic routes — reshaping European commerce.",tip:"Two consequences in one event: cultural (Greek learning) and economic (trade shift to the Atlantic). Both are AP-relevant. The trade shift foreshadows European exploration."},
+  {cat:"Origins & Society",q:"What were the major social changes of the Renaissance, and who benefited?",a:"A new <strong>secular, educated urban elite</strong> emerged — merchants, bankers, and lawyers who valued classical learning and individual achievement. The old feudal nobility declined in relative power. However, most peasants and women saw little change; the Renaissance was largely an elite phenomenon concentrated in cities.",tip:"AP often asks: who was included and excluded from Renaissance ideals? The answer: urban educated men benefited; women, peasants, and the poor were largely unchanged."},
+  {cat:"Origins & Society",q:"What was the role of the family and women in Renaissance Italy?",a:"The Renaissance family was <strong>patriarchal and dynastic</strong> — marriages were arranged to cement business alliances, and women were largely confined to domestic roles. Upper-class women might receive humanist education but were still excluded from public political life. Notable exceptions (Isabella d'Este, Lucrezia Borgia) existed but were exceptional, not representative.",tip:"Women in the Renaissance is a recurring AP topic. Know that humanist ideals of individual achievement largely excluded women — the Renaissance was a 'rebirth' for educated men."},
+
+  // Humanism & Intellectual Life
+  {cat:"Humanism & Ideas",q:"What is Renaissance humanism, and how did it differ from medieval scholasticism?",a:"Humanism was an intellectual movement focused on the <strong>studia humanitatis</strong> (grammar, rhetoric, poetry, history, moral philosophy) and the recovery of classical Greek and Roman texts. Where medieval scholasticism sought to reconcile faith and reason in service of theology, humanism emphasized human achievement, civic virtue, and this-worldly concerns — though it remained compatible with Christianity.",tip:"Scholasticism vs. humanism is a classic AP contrast. Key distinction: scholasticism = faith-driven, theological; humanism = human-centered, classical, civic. Neither is atheist — humanism worked within Christianity."},
+  {cat:"Humanism & Ideas",q:"Who was Petrarch and why is he called the 'first humanist'?",a:"Francesco Petrarch (1304–1374) was an Italian poet and scholar who championed the revival of classical Latin, wrote sonnets in vernacular Italian, and criticized the medieval period as a 'dark age.' He collected and restored ancient manuscripts and argued that the study of classical authors cultivated moral virtue and eloquent speech.",tip:"Petrarch is your go-to earliest humanist. He also links back to Ch. 1 — he's a 14th-century figure, showing the Renaissance's roots in the crisis period."},
+  {cat:"Humanism & Ideas",q:"What was civic humanism, and how did it emerge from the Italian city-states?",a:"Civic humanism (associated with <strong>Leonardo Bruni</strong> in Florence) held that the proper goal of humanist education was to produce active citizens capable of governing a republic. Rather than the medieval ideal of monastic contemplation, the civic humanist ideal was engagement in public life, oratory, and service to the city-state.",tip:"Civic humanism ties intellectual history to political history: city-states needed rhetoric, diplomacy, and law — humanism supplied the training. Good evidence for how context shapes ideas."},
+  {cat:"Humanism & Ideas",q:"Who was Erasmus and what did he stand for?",a:"Desiderius Erasmus (c. 1466–1536) was a northern humanist who applied humanist methods to Christian texts. His <em>Praise of Folly</em> satirized Church corruption, and his edited Greek New Testament (1516) became a tool for reformers. He advocated a 'philosophy of Christ' — simple piety over elaborate ritual — but refused to break with the Church.",tip:"Erasmus bridges the Renaissance and Reformation. He criticized the Church through humanism but stayed Catholic — unlike Luther. The AP may ask you to compare or contrast them."},
+  {cat:"Humanism & Ideas",q:"How did Renaissance thinkers approach history differently from medieval writers?",a:"Renaissance humanists began treating history as a secular discipline concerned with human causes and consequences, rather than as a record of God's plan. Scholars like <strong>Leonardo Bruni</strong> and later <strong>Machiavelli</strong> analyzed political events through human motivation and power — a major step toward modern historical thinking.",tip:"Humanist historiography = humans explain history, not divine providence. This is an early form of secularism and a step toward Enlightenment thinking. Good for long-run continuity arguments."},
+  {cat:"Humanism & Ideas",q:"What was the impact of the printing press on Renaissance ideas?",a:"<strong>Gutenberg's movable type</strong> (c. 1450s) allowed books to be produced faster and more cheaply than manuscript copying. Classical and humanist texts spread across Europe within decades. Literacy expanded, vernacular literature reached mass audiences, and ideas — including eventually religious reform — spread with unprecedented speed.",tip:"The press is arguably the most consequential technology of the Renaissance for AP purposes. It connects to everything: spread of humanism, Bible availability, Reformation, nationalism. Always mention it as a vector for idea diffusion."},
+
+  // Machiavelli & Politics
+  {cat:"Politics & Statecraft",q:"What were Machiavelli's main arguments in The Prince, and why were they revolutionary?",a:"Machiavelli argued that a ruler's primary goal is <strong>maintaining power and political stability</strong>, and that effective rule sometimes requires deceit, force, and the willingness to act immorally. He separated politics from Christian morality — a prince should appear virtuous but use whatever means are necessary. This secular, pragmatic approach to power was radically new.",tip:"Machiavelli = the birth of political science as a secular discipline. The AP loves asking about him. Key contrast: medieval rulers were judged by Christian virtue; Machiavelli judges rulers by effectiveness."},
+  {cat:"Politics & Statecraft",q:"What were the major Italian city-states, and how did their rivalry shape Renaissance culture?",a:"The five major powers were <strong>Florence, Venice, Milan, the Papal States, and Naples</strong>. Constant competition for dominance led to sophisticated diplomacy, professional armies (condottieri), and intense patronage of art and culture as expressions of civic prestige. The Balance of Power concept emerged from this Italian state system.",tip:"Competition between states as a driver of culture and innovation is a big AP theme. Italian city-state rivalry = Renaissance patronage; also foreshadows the later European state system."},
+  {cat:"Politics & Statecraft",q:"What was the Italian state system's contribution to modern diplomacy?",a:"Italian city-states pioneered the use of <strong>resident ambassadors</strong> — permanent diplomatic representatives stationed in foreign capitals. They also developed concepts of sovereignty, balance of power, and rational statecraft. These practices spread to the rest of Europe and became the basis of the modern diplomatic system.",tip:"The AP may ask about the 'birth of modern diplomacy.' The answer is Renaissance Italy: resident ambassadors, balance of power, written treaties, secular statecraft."},
+  {cat:"Politics & Statecraft",q:"What were 'new monarchies' and where did they emerge?",a:"In the late 15th century, rulers in <strong>France, England, and Spain</strong> built more centralized states by curbing noble power, developing royal bureaucracies, establishing standing armies, and increasing royal revenue through taxation. Louis XI (France), Henry VII (England), and Ferdinand & Isabella (Spain) are the key examples.",tip:"'New monarchies' is a key AP term. These rulers weren't absolute monarchs yet, but they laid the groundwork. Contrast with the HRE, where princes remained strong and centralization failed."},
+  {cat:"Politics & Statecraft",q:"How did Ferdinand and Isabella unify Spain, and what methods did they use?",a:"They united the crowns of <strong>Castile and Aragon</strong> through marriage (1469), completed the <em>Reconquista</em> by conquering Granada (1492), expelled Jews (1492) and forced Muslims to convert, and used the Spanish Inquisition to enforce religious conformity. They also sponsored Columbus's voyage, beginning Spain's Atlantic empire.",tip:"1492 is loaded for Spain: Granada falls, Jews expelled, Columbus sails. Three events in one year — great for demonstrating the interconnection of religion, politics, and expansion."},
+  {cat:"Politics & Statecraft",q:"What was the significance of the Ottoman conquest of Constantinople (1453) for European politics?",a:"The fall of the Byzantine Empire ended the last Roman successor state and gave the Ottomans control of key eastern trade routes. It created a powerful Muslim empire on Europe's southeastern border, driving Mediterranean trade westward and prompting fear of further Ottoman expansion into Europe.",tip:"Two angles: economic (trade disruption → Atlantic exploration) and political/religious (Ottoman threat to Christendom). Both are AP relevant. The Ottomans remain a constant presence in European politics through the 16th–17th centuries."},
+
+  // Art & Culture
+  {cat:"Art & Culture",q:"What was the defining aesthetic of Renaissance art, and how did it differ from medieval art?",a:"Renaissance art embraced <strong>naturalism</strong> — the realistic depiction of the human body, emotional expression, and three-dimensional space using linear perspective. Medieval art had been symbolic and hierarchical (size indicated spiritual importance, not physical reality). Renaissance artists studied anatomy, nature, and classical sculpture to depict the world as it appeared.",tip:"Medieval vs. Renaissance art is a classic AP contrast. Key terms: naturalism, linear perspective, anatomy, classical influence, secularism. Know that religious themes continued — the shift was in style, not subject."},
+  {cat:"Art & Culture",q:"Who were the major artists of the High Renaissance and what made their work distinctive?",a:"<strong>Leonardo da Vinci</strong> epitomized the Renaissance ideal of the universal man — painter, scientist, engineer. <strong>Michelangelo</strong> brought heroic grandeur to sculpture (David) and painting (Sistine Chapel ceiling). <strong>Raphael</strong> achieved graceful harmony in works like The School of Athens. All three combined classical ideals with Christian themes and unprecedented technical mastery.",tip:"Know at least one specific work per artist. The School of Athens is especially useful — it depicts classical philosophers, embodying humanist reverence for antiquity."},
+  {cat:"Art & Culture",q:"What was linear perspective and why was it revolutionary?",a:"Developed by <strong>Brunelleschi</strong> and theorized by <strong>Alberti</strong>, linear perspective is a mathematical technique for depicting three-dimensional space on a two-dimensional surface by converging parallel lines at a vanishing point. It allowed artists to create the illusion of depth and realistic spatial relationships for the first time in Western painting.",tip:"Linear perspective = the mathematical rationalization of vision. It reflects the Renaissance belief that human reason can master nature. Also connects to the Scientific Revolution's mathematical approach to understanding the world."},
+  {cat:"Art & Culture",q:"What was the Northern Renaissance, and how did it differ from the Italian Renaissance?",a:"The Northern Renaissance (in Germany, the Netherlands, France, England) absorbed Italian humanist ideas but blended them with stronger <strong>religious and moral concerns</strong>. Northern artists like Jan van Eyck and Albrecht Dürer excelled in detailed oil painting and printmaking. Northern humanists like Erasmus focused on applying classical learning to Church reform.",tip:"Key distinction: Italian Renaissance = more secular, civic, aesthetic; Northern Renaissance = more religious, moralistic, reformist. The Northern Renaissance feeds directly into the Reformation."},
+  {cat:"Art & Culture",q:"How did the social status of artists change during the Renaissance?",a:"Medieval artists were largely anonymous craftsmen organized into guilds. Renaissance artists became celebrated <strong>individual geniuses</strong> — Leonardo, Michelangelo, and Raphael were treated as celebrities, sought by popes and princes. Vasari's Lives of the Artists (1550) codified this new view of the artist as inspired creator rather than skilled laborer.",tip:"Artist status = a window into changing Renaissance values (individualism, secular achievement). Good evidence for the AP theme of how the Renaissance elevated the individual."},
+
+  // Church & Religion
+  {cat:"Church & Reform",q:"What were the main problems of the Renaissance Church, and how did the papacy contribute to them?",a:"Renaissance popes (e.g., Alexander VI, Julius II, Leo X) behaved more like secular Italian princes than spiritual leaders — engaging in warfare, nepotism, simony, and lavish artistic patronage funded by controversial practices like selling indulgences. The gap between the Church's spiritual mission and its political/financial behavior created widespread calls for reform.",tip:"The Renaissance papacy is the direct backdrop for the Reformation. Luther's complaints about indulgences, clerical corruption, and worldly popes make no sense without this context. Always connect Renaissance Church problems to the Reformation."},
+  {cat:"Church & Reform",q:"What were the heresy movements of the late 15th century, and how did the Church respond?",a:"The Church used the <strong>Inquisition</strong> (especially in Spain) to suppress heterodox belief. The Spanish Inquisition (est. 1478) targeted conversos (Jewish converts to Christianity) suspected of secretly practicing Judaism. Savonarola in Florence briefly led a puritanical movement against Renaissance excess before being executed (1498). These movements show that pressure for reform existed before Luther.",tip:"Demonstrates that the Reformation didn't come from nowhere. Pre-Reformation reform pressure (Wycliffe, Hus, Savonarola) shows continuity of religious discontent across the 14th–16th centuries."},
+
+  // Broader Themes
+  {cat:"Broader Themes",q:"What does 'individualism' mean in the Renaissance context, and what are its limits?",a:"Renaissance thinkers celebrated <strong>individual achievement, reputation, and self-fashioning</strong> — the idea that a person could shape their own identity through education and action (Pico della Mirandola's Oration on the Dignity of Man). But this applied primarily to educated men of means. Women, peasants, and the poor were largely excluded from this rhetoric.",tip:"Individualism is a core AP theme but needs qualification. The exam rewards nuanced answers: 'individualism for whom?' The answer: wealthy, educated, urban men. Always limit the claim."},
+  {cat:"Broader Themes",q:"What is secularism in the Renaissance context, and how far did it extend?",a:"Renaissance secularism meant a growing interest in <strong>human life, earthly achievement, and this-worldly concerns</strong> — not a rejection of Christianity. Art still depicted religious subjects; humanists still believed in God. The shift was in emphasis: from the afterlife toward the present world, from theology toward human nature and politics.",tip:"Don't overstate Renaissance secularism — a common student error. The AP rewards precision: Renaissance thinkers were not atheists; they were Christians who also valued classical learning and human achievement."},
+  {cat:"Broader Themes",q:"How did the African slave trade develop in the 15th century, and what was Portugal's role?",a:"Portugal pioneered European exploration of the African coast from the 1430s onward, establishing trading posts and eventually <strong>transporting enslaved Africans</strong> to work on Atlantic sugar plantations (Madeira, São Tomé). By 1500, Portugal dominated the Atlantic slave trade. This established the economic and logistical model that later fueled the transatlantic slave trade.",tip:"The slave trade origins are often placed in Unit 1 but are essential context for later AP units. Portugal's role, plantation agriculture, and the Atlantic economy all foreshadow the Columbian Exchange and colonial period."},
+  {cat:"Broader Themes",q:"How does the Renaissance connect to, and differ from, the Reformation that followed?",a:"Both movements drew on the revival of classical texts and criticized Church corruption. But the Renaissance was primarily <strong>cultural and aesthetic</strong>, centered in Italy, and worked within Catholicism. The Reformation was primarily <strong>theological and institutional</strong>, centered in northern Europe, and broke with Rome. The printing press, Northern humanism, and Renaissance Church abuses all connect the two.",tip:"A classic AP synthesis question. Know the links (printing press, humanist criticism of the Church, northern piety) and the differences (Italy vs. north, culture vs. theology, reform within vs. break from Catholicism)."}
+];
+
+const VOCAB = [
+  {cat:"Humanism",term:"Humanism",pos:"noun",def:"The Renaissance intellectual movement centered on the <strong>studia humanitatis</strong> (grammar, rhetoric, poetry, history, moral philosophy) and the recovery of classical Greek and Roman texts. It emphasized human dignity, individual achievement, and civic virtue.",tip:"Humanism is the intellectual core of the Renaissance. Distinguish from modern 'secular humanism' — Renaissance humanism was compatible with Christianity."},
+  {cat:"Humanism",term:"Studia humanitatis",pos:"noun (Latin)",def:"The five disciplines at the heart of humanist education: <strong>grammar, rhetoric, poetry, history, and moral philosophy</strong> — all modeled on classical Greek and Roman authors. The ancestor of the modern humanities.",tip:"Know this list. The AP may ask what humanist education emphasized — it's these five disciplines, not theology or natural science."},
+  {cat:"Humanism",term:"Petrarch",pos:"noun (proper)",def:"Francesco Petrarch (1304–1374), Italian poet and scholar widely considered the <strong>'first humanist.'</strong> He championed the revival of classical Latin, collected ancient manuscripts, criticized the medieval period as a 'dark age,' and wrote influential vernacular Italian sonnets.",tip:"Petrarch is your earliest humanist anchor. He's 14th century, showing Renaissance roots in the crisis era (Ch. 1 connection)."},
+  {cat:"Humanism",term:"Civic humanism",pos:"noun",def:"A strand of Renaissance humanism, developed in Florence by scholars like <strong>Leonardo Bruni</strong>, that held the goal of education was to produce active, virtuous citizens capable of governing a republic — privileging public engagement over monastic contemplation.",tip:"Civic humanism = humanism applied to politics. It grew directly from the city-state context and reflects the republican ideals of Florence in the early 15th century."},
+  {cat:"Humanism",term:"Secularism",pos:"noun",def:"In the Renaissance context, a growing emphasis on <strong>human life, earthly achievement, and this-worldly concerns</strong> — not a rejection of Christianity, but a shift in focus from purely theological and afterlife concerns toward human nature and temporal affairs.",tip:"Don't equate Renaissance secularism with atheism — a common error. Renaissance thinkers were Christians who also valued the classical and the human. The AP rewards this nuance."},
+  {cat:"Humanism",term:"Individualism",pos:"noun",def:"The Renaissance ideal that a person could shape their own identity and reputation through education, achievement, and self-cultivation. Celebrated in Pico della Mirandola's <em>Oration on the Dignity of Man</em> (c. 1486).",tip:"Individualism is real but limited: it applied to educated, wealthy, urban men. Women and the poor were excluded. Always qualify the claim on the AP."},
+  {cat:"Humanism",term:"Vernacular",pos:"noun/adjective",def:"The everyday spoken language of a region (Italian, French, English) as opposed to Latin. Renaissance writers like Dante, Petrarch, and Boccaccio wrote in vernacular, democratizing literature and reinforcing national identities.",tip:"Vernacular literature = cultural democratization + early nationalism. Connects to Ch. 1 (Boccaccio, Chaucer) and forward to the Reformation (Luther's German Bible)."},
+  {cat:"Humanism",term:"Printing press",pos:"noun",def:"Invented by <strong>Johannes Gutenberg</strong> (c. 1450s) using movable metal type, it allowed books to be produced faster and cheaper than hand-copying. Humanist and classical texts, and later the Bible and Protestant pamphlets, spread across Europe with unprecedented speed.",tip:"The press is arguably the most consequential technology for the AP exam. It enables: spread of humanism, Reformation, nationalism, Scientific Revolution. Always invoke it as a vector for idea diffusion."},
+  {cat:"Humanism",term:"Erasmus",pos:"noun (proper)",def:"Desiderius Erasmus (c. 1466–1536), leading northern humanist. His <em>Praise of Folly</em> satirized Church corruption; his edited Greek New Testament provided reformers with textual ammunition. He advocated simple Christian piety but refused to join Luther's break with Rome.",tip:"Erasmus = 'the prince of humanists.' He bridges Renaissance and Reformation. Know his two major works and his position: critical of the Church, but not a Protestant."},
+  {cat:"Politics",term:"The Prince",pos:"noun (proper)",def:"Political treatise by <strong>Niccolò Machiavelli</strong> (written 1513, published 1532), arguing that rulers must prioritize the maintenance of power over Christian moral virtue — using deceit, force, and pragmatic calculation as necessary. Often summarized as 'the ends justify the means.'",tip:"The Prince is the birth of secular political science. On the AP, use it to show the Renaissance shift away from medieval (theological) to modern (pragmatic) political thought."},
+  {cat:"Politics",term:"Machiavelli",pos:"noun (proper)",def:"Niccolò Machiavelli (1469–1527), Florentine diplomat and political thinker. His works (<em>The Prince</em>, <em>Discourses on Livy</em>) analyzed political power realistically, separating effectiveness from morality. Coined the political concept of <em>virtù</em> — the ability to shape one's political fortune.",tip:"Machiavelli appears on nearly every AP Euro exam in some form. Know: secular politics, separation of morality from power, Italian city-state context, influence on modern political thought."},
+  {cat:"Politics",term:"Condottieri",pos:"noun (plural, Italian)",def:"<strong>Mercenary military commanders</strong> hired by Italian city-states to fight their wars. Because city-states lacked large citizen armies, they contracted professional soldiers. Condottieri were powerful but unreliable — they sometimes switched sides for higher pay.",tip:"Condottieri = Italian city-states' solution to warfare without large armies. Machiavelli criticized reliance on mercenaries in The Prince, arguing rulers needed their own armies."},
+  {cat:"Politics",term:"Balance of power",pos:"noun",def:"The political principle that no single state should be allowed to become dominant enough to threaten the independence of others — leading weaker states to form alliances against any rising power. <strong>First articulated as a policy in the Italian state system</strong> of the Renaissance.",tip:"The balance of power concept originates in Renaissance Italy and later becomes the organizing principle of European diplomacy after 1648 (Peace of Westphalia). Good long-run continuity thread."},
+  {cat:"Politics",term:"New monarchies",pos:"noun",def:"The strengthened, centralized royal governments built in France, England, and Spain in the late 15th century by rulers who reduced noble power, established professional bureaucracies, created standing armies, and increased royal revenue.",tip:"Key rulers: Louis XI (France), Henry VII (England), Ferdinand & Isabella (Spain). Contrast with the HRE, where centralization failed. The 'new monarchies' are the predecessors of absolute monarchy."},
+  {cat:"Politics",term:"Reconquista",pos:"noun (Spanish)",def:"The centuries-long campaign by Christian kingdoms of Iberia to reconquer territory from Muslim rulers. Completed in <strong>1492</strong> when Ferdinand and Isabella captured Granada, the last Muslim kingdom in Spain.",tip:"1492 is a loaded date: Reconquista ends, Jews expelled, Columbus sails. Three events that define Spain's identity — religious uniformity, imperial ambition, global reach."},
+  {cat:"Politics",term:"Resident ambassador",pos:"noun",def:"A permanent diplomatic representative stationed in a foreign capital, developed by Italian city-states in the Renaissance. Unlike medieval envoys sent for specific missions, resident ambassadors maintained ongoing communication and intelligence — the foundation of modern diplomacy.",tip:"Renaissance Italy invented modern diplomacy. The resident ambassador is the key innovation. AP may ask about the 'origins of modern diplomacy' — this is your answer."},
+  {cat:"Art",term:"Linear perspective",pos:"noun",def:"A mathematical technique for representing three-dimensional space on a flat surface, developed by <strong>Brunelleschi</strong> and theorized by <strong>Alberti</strong>. Parallel lines converge at a single vanishing point, creating the illusion of depth.",tip:"Linear perspective is both an artistic and intellectual achievement — it reflects the Renaissance belief that human reason can mathematically master nature. Connects to the later Scientific Revolution."},
+  {cat:"Art",term:"Naturalism",pos:"noun",def:"The artistic principle of depicting subjects — especially the human figure — as they appear in reality, with accurate anatomy, proportion, emotion, and three-dimensional form. Contrasts with the flat, symbolic style of medieval art.",tip:"Naturalism = the visual embodiment of Renaissance humanism. Just as humanism centered on real human experience, naturalism centered on real human appearance. They're the same impulse in different media."},
+  {cat:"Art",term:"Patronage",pos:"noun",def:"The system by which wealthy individuals, families, or institutions (the Church, guilds, city governments) funded artists, scholars, and writers. The <strong>Medici family</strong> of Florence are the paradigmatic Renaissance patrons.",tip:"Patronage ties economic history to cultural history. You can't explain why the Renaissance happened in Florence without the Medici. Always connect wealth → patronage → cultural production."},
+  {cat:"Art",term:"Leonardo da Vinci",pos:"noun (proper)",def:"Florentine artist and polymath (1452–1519), epitome of the <strong>Renaissance 'universal man'</strong> (<em>uomo universale</em>). Famous works include the Mona Lisa and The Last Supper. Also made detailed anatomical drawings, engineering designs, and scientific observations.",tip:"Leonardo is the exam's go-to example for Renaissance individualism and the ideal of the universal man. Know at least two works and his range of interests."},
+  {cat:"Art",term:"Michelangelo",pos:"noun (proper)",def:"Italian sculptor, painter, and architect (1475–1564). Major works: the statue of <strong>David</strong>, the <strong>Sistine Chapel ceiling</strong> (commissioned by Pope Julius II), and the design of St. Peter's Basilica in Rome.",tip:"Michelangelo's Sistine Chapel is the ultimate intersection of Renaissance art and Church patronage. His David embodies Renaissance ideals: classical nudity, heroic individual, psychological intensity."},
+  {cat:"Art",term:"Northern Renaissance",pos:"noun",def:"The reception and adaptation of Italian Renaissance ideas in northern Europe (Germany, Netherlands, France, England), characterized by greater religious seriousness, detailed <strong>oil painting</strong> technique (Jan van Eyck), printmaking (Dürer), and humanist focus on Church reform (Erasmus).",tip:"Key contrast with Italian Renaissance: more religious, more moralistic, feeds into the Reformation. Artists: van Eyck, Dürer, Holbein. Humanists: Erasmus, Thomas More."},
+  {cat:"Church",term:"Simony",pos:"noun",def:"The buying and selling of Church offices or sacraments. A major form of corruption in the Renaissance Church, where wealthy families paid to have relatives appointed as bishops or cardinals.",tip:"Simony + nepotism + indulgences = the three pillars of Renaissance Church corruption that Luther attacked. Know all three."},
+  {cat:"Church",term:"Nepotism",pos:"noun",def:"The granting of favors or positions to relatives, especially by Church officials. Renaissance popes notoriously appointed family members as cardinals and gave them Church revenues — 'nephew' (<em>nipote</em>) is the origin of the word.",tip:"Renaissance popes acted like Italian princes — nepotism was how they built dynastic power within the Church. This behavior scandalized reformers and fed directly into the Reformation."},
+  {cat:"Church",term:"Indulgences",pos:"noun (plural)",def:"Church certificates that reduced the time a soul spent in purgatory, originally granted for acts of piety, later <strong>sold for money</strong> to fund Church projects (including St. Peter's Basilica). The sale of indulgences became Luther's primary target in 1517.",tip:"Indulgences connect the Renaissance papacy directly to the Reformation. The fundraising that funded Michelangelo's St. Peter's is the same practice Luther attacked. One event illuminates both chapters."},
+  {cat:"Church",term:"Savonarola",pos:"noun (proper)",def:"Girolamo Savonarola (1452–1498), a Dominican friar who briefly ruled Florence after the Medici were expelled (1494). He held 'Bonfires of the Vanities' to burn secular art and books, preached against Renaissance excess, and was ultimately excommunicated and executed.",tip:"Savonarola shows that backlash against Renaissance secularism existed before Luther. He's evidence of pre-Reformation reform impulses and the tension between religious piety and Renaissance culture."}
+];
+
+const DECKS = [CONCEPTS, VOCAB, [...CONCEPTS, ...VOCAB]];
+
+let currentDeck = 0;
+let activeCat = "All";
+let deck = [];
+let idx = 0;
+let revealed = false;
+
+function getCats(cards) {
+  return ["All", ...[...new Set(cards.map(c => c.cat))]];
+}
+
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  const cats = getCats(DECKS[currentDeck]);
+  cats.forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0;
+  revealed = false;
+  render();
+}
+
+function switchDeck(n) {
+  currentDeck = n;
+  activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow();
+  buildDeck();
+}
+
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area";
+    area.className = "answer-area";
+    const defText = isVocab ? c.def : c.a;
+    const tipLabel = isVocab ? "why it matters" : "exam angle";
+    area.innerHTML = `<p class="answer-text">${defText}</p>
+      <div class="context-box"><p class="context-label">${tipLabel}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>
