@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 3 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #3a4f7a;
+    --rule: #d4c9b0;
+    --tag-bg: #dde2ee;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+
+  .deck-tabs { display: flex; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab {
+    flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+    background: transparent; border: none; cursor: pointer; color: var(--ink-muted);
+    text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s;
+    border-right: 1.5px solid var(--ink);
+  }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+    background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s;
+  }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+
+  .card-wrap { margin-bottom: 1.25rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-height: 220px;
+    cursor: pointer;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.12s, transform 0.12s;
+  }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+
+  .answer-area {
+    margin-top: 1.25rem; padding-top: 1.25rem;
+    border-top: 1px dashed var(--rule);
+    animation: fadein 0.2s ease;
+  }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    font-size: 12px; line-height: 1.65; color: var(--ink-muted);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px;
+    background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink); transition: all 0.12s;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px;
+    background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s;
+    letter-spacing: 0.05em;
+  }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+  .cat-tag {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); align-self: flex-start; margin-bottom: 0.5rem;
+    padding: 2px 8px; background: var(--tag-bg); border-radius: 20px;
+  }
+
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 3 — <em>The Reformation</em></h1>
+    <p class="subtitle">Reformation and Religious Warfare · 16th Century</p>
+  </header>
+
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+
+  <footer>AP Euro · Ch. 3 · <span>The Reformation</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  // Prelude
+  {cat:"Prelude",q:"What conditions in the early 16th century made Europe ripe for the Reformation?",a:"A convergence of long-building pressures: <strong>Church corruption</strong> (simony, nepotism, sale of indulgences, worldly Renaissance popes); <strong>Northern humanism</strong> (Erasmus and others using classical tools to criticize the Church from within); the <strong>printing press</strong> amplifying dissent; and <strong>new monarchs</strong> eager to limit Church power and seize Church wealth. No single cause explains the Reformation — it required all of these.",tip:"AP causation question staple. Structure your answer with multiple categories: religious, intellectual, technological, political. Never give a single-cause answer for the Reformation."},
+  {cat:"Prelude",q:"How did Christian (Northern) humanism set the stage for the Reformation?",a:"Northern humanists like <strong>Erasmus</strong> applied humanist methods — going back to original Greek and Hebrew texts — to the Bible and Church writings, exposing centuries of errors and distortions. Erasmus's 1516 Greek New Testament showed that key doctrines rested on mistranslations. This undermined the Church's textual authority and provided reformers like Luther with scholarly ammunition.",tip:"Northern humanism → Reformation is a direct causal chain. Erasmus 'laid the egg that Luther hatched' is the famous contemporary saying — useful for showing continuity between Ch. 2 and Ch. 3."},
+  {cat:"Prelude",q:"What was the state of popular religion on the eve of the Reformation?",a:"Popular religion was intensely active but anxiety-ridden: people feared purgatory, sought indulgences, went on pilgrimages, venerated relics, and paid for masses for the dead. The Church monetized this fear. At the same time, many laypeople were biblically illiterate and poorly served by poorly educated or absentee parish priests — creating a gap between official religion and lived faith.",tip:"This context explains why Luther's message resonated so powerfully. He addressed real anxieties (salvation, purgatory) and offered a direct solution (faith alone). Always ground the Reformation's appeal in popular religious needs."},
+
+  // Luther
+  {cat:"Luther & Lutheranism",q:"What were Martin Luther's core theological arguments, and how did they challenge Catholic doctrine?",a:"Luther's three 'solas': <strong>sola fide</strong> (salvation by faith alone, not works), <strong>sola scriptura</strong> (scripture alone as religious authority, not Church tradition or papal decree), and <strong>sola gratia</strong> (grace alone — salvation is God's gift, not earned). These directly attacked indulgences (works-based salvation), papal authority, and seven centuries of Church tradition.",tip:"The three solas are non-negotiable AP knowledge. Know each term and its doctrinal implication. Sola scriptura is arguably the most radical because it destroys the Church's monopoly on religious interpretation."},
+  {cat:"Luther & Lutheranism",q:"What triggered Luther's break with Rome, and how did the conflict escalate?",a:"Luther's <strong>Ninety-Five Theses</strong> (1517) attacked indulgence sales by Johann Tetzel. Distributed by printing press, they ignited debate across Europe. At the Leipzig Debate (1519), Luther denied papal and conciliar authority. Excommunicated in 1521, he was declared an outlaw at the Diet of Worms — where he refused to recant. Protected by Frederick the Wise of Saxony, he translated the Bible into German.",tip:"The escalation sequence matters: Theses (1517) → Leipzig (1519) → excommunication (1521) → Diet of Worms (1521). Each step pushed the conflict from theological debate to political crisis."},
+  {cat:"Luther & Lutheranism",q:"Why did German princes support Lutheranism, and what was the political significance?",a:"Many princes saw Lutheranism as an opportunity to <strong>seize Church lands and revenues</strong>, assert independence from both the pope and the Holy Roman Emperor, and gain control over religion within their territories. The <strong>Peace of Augsburg (1555)</strong> formalized this with the principle <em>cuius regio, eius religio</em> — whoever rules determines the religion of the land.",tip:"Lutheranism spread politically because it served princes' interests. This is a classic AP theme: ideas succeed when they align with the interests of powerful actors. Always connect theological change to political power."},
+  {cat:"Luther & Lutheranism",q:"What was the German Peasants' War (1524–1525) and what did Luther's response reveal?",a:"Inspired partly by Lutheran ideas of Christian freedom, German peasants revolted against serfdom and noble oppression. Luther initially urged moderation but ultimately <strong>condemned the peasants violently</strong>, urging princes to crush the revolt 'like mad dogs.' The uprising was brutally suppressed, killing ~100,000 peasants.",tip:"Luther's response reveals the class limits of the Reformation. He needed princely protection; he could not afford to alienate the nobility. AP essays on the Reformation's social impact should address who benefited — and who was left behind."},
+  {cat:"Luther & Lutheranism",q:"How did Luther organize the Lutheran church, and what role did secular rulers play?",a:"Luther rejected the Catholic hierarchy of pope and bishops. Local Lutheran churches were governed under the authority of <strong>territorial princes</strong> who served as heads of the church in their lands. This <em>Landeskirche</em> (territorial church) model made secular rulers protectors — and controllers — of the new church, deeply entangling religion and politics.",tip:"Landeskirche = the institutionalization of cuius regio. It's why Lutheranism took root in northern Germany and Scandinavia: princes adopted it and imposed it on their subjects. Key for state-church relationship questions."},
+
+  // Other Reformations
+  {cat:"Other Reformations",q:"Who was Ulrich Zwingli, and how did his reformation differ from Luther's?",a:"Zwingli (1484–1531) led the Reformation in Zürich, Switzerland. He agreed with Luther on sola scriptura and rejecting papal authority but disagreed on the Eucharist: where Luther believed Christ was <strong>really present</strong> in the bread and wine, Zwingli argued the Lord's Supper was purely <strong>symbolic and commemorative</strong>. This split (the Marburg Colloquy, 1529) prevented Protestant unity.",tip:"The Zwingli-Luther split on the Eucharist is the first major fracture within Protestantism. It shows that 'Protestantism' was never a unified movement — a point AP prompts often probe."},
+  {cat:"Other Reformations",q:"Who were the Anabaptists, and why were they persecuted by both Catholics and Protestants?",a:"Anabaptists ('re-baptizers') rejected infant baptism, insisting on adult baptism for believers who consciously chose faith. They also advocated <strong>separation of church and state</strong>, pacifism, communal property in some groups, and refused to swear oaths or serve in armies. Both Catholic and Protestant authorities persecuted them as dangerous radicals — thousands were executed.",tip:"Anabaptists represent the 'radical Reformation' — the AP's term for reformers who went further than Luther or Calvin. Their ideas (voluntary church, separation of church and state) were ahead of their time and influenced later Baptist and Quaker traditions."},
+  {cat:"Other Reformations",q:"What were John Calvin's key theological ideas, and how did they differ from Luther's?",a:"Calvin agreed with Luther on sola fide and sola scriptura but added <strong>predestination</strong>: God has eternally predetermined who will be saved (the elect) and who will be damned, and humans cannot change this. Calvin also built a more systematic theology and created a more organized, disciplined church structure than Luther.",tip:"Predestination is Calvin's distinctive doctrine. Know it cold. The 'Protestant work ethic' (Max Weber) links to predestination: if you can't know if you're saved, visible success may be a sign of election — driving hard work and thrift."},
+  {cat:"Other Reformations",q:"What was Calvin's Geneva, and why was it significant?",a:"Calvin transformed Geneva into a <strong>theocratic model city</strong> — the Consistory (a board of pastors and elders) regulated morality, doctrine, and behavior. Geneva became a training ground for Protestant missionaries who spread Calvinism across Europe (France, Netherlands, Scotland, England). John Knox called it 'the most perfect school of Christ.'",tip:"Geneva = the Calvinist headquarters. Calvinism spread from Geneva to become the most internationally expansive form of Protestantism, shaping the Dutch Republic, Scotland (Presbyterianism), and English Puritanism."},
+  {cat:"Other Reformations",q:"What were the causes and consequences of the English Reformation under Henry VIII?",a:"Henry VIII sought an annulment of his marriage to Catherine of Aragon to marry Anne Boleyn and secure a male heir. When Pope Clement VII refused (politically unable to defy Catherine's nephew, Emperor Charles V), Henry broke with Rome via the <strong>Act of Supremacy (1534)</strong>, making himself head of the Church of England. The English Reformation was <strong>primarily political, not theological</strong> — the Church of England retained much Catholic doctrine initially.",tip:"The English Reformation is a crucial contrast case: driven by dynastic and political needs, not theological conviction. This is why it produced a via media (middle way) — the Anglican Church — rather than a clean Protestant break."},
+  {cat:"Other Reformations",q:"How did Elizabeth I shape the English Reformation into a lasting settlement?",a:"Elizabeth's <strong>Elizabethan Settlement (1559)</strong> established a Protestant Church of England that was deliberately ambiguous — Protestant enough to satisfy reformers (vernacular services, rejection of papal authority) but Catholic enough in liturgy and structure to retain conservatives. The <em>Thirty-Nine Articles</em> defined Anglican doctrine loosely, allowing broad interpretation. This pragmatic middle way defined the Church of England.",tip:"Elizabeth's settlement is an exercise in political religion — deliberately vague to maximize inclusion and minimize conflict. It also sets up the Puritan discontent that drives the English Civil War (Ch. 5 territory)."},
+
+  // Social Impact
+  {cat:"Social Impact",q:"How did the Reformation affect the family and the role of women?",a:"Protestantism elevated marriage and the family as the central Christian institution — Luther rejected celibacy as superior to marriage. But women's roles remained largely domestic. The closing of convents eliminated one sphere of female authority and education. Protestant women gained a slightly higher status within marriage (as spiritual partners) but <strong>lost the option of religious vocation</strong>.",tip:"The Reformation both elevated and constrained women. AP prompts often ask for continuity and change — the change is elevated marriage; the continuity is patriarchal household structure."},
+  {cat:"Social Impact",q:"What is the 'Protestant work ethic' and what is its historical basis?",a:"Sociologist Max Weber argued that Calvinist predestination created psychological pressure to demonstrate election through <strong>disciplined labor, thrift, and worldly success</strong>. Since you couldn't earn salvation, visible prosperity might signal God's favor. This encouraged the accumulation of capital and the disciplined habits associated with early capitalism.",tip:"Weber's thesis is debated but AP-relevant. Know the logical chain: predestination → anxiety about election → hard work and thrift as signs of grace → capital accumulation. Useful for connecting religion to economic change."},
+  {cat:"Social Impact",q:"How did the Reformation change religious practices and popular culture?",a:"Protestant reformers attacked <strong>saint veneration, pilgrimages, relics, religious images, and elaborate ceremony</strong> as superstitious or unscriptural. Church interiors were whitewashed; statues smashed (iconoclasm). Literacy rose as Bible reading became a Protestant duty. Carnival and traditional folk festivals were suppressed in Calvinist areas. Religion became more individual, text-based, and morally disciplined.",tip:"Iconoclasm and the attack on popular culture show the Reformation's disruptive social force. It wasn't just theology — it changed what people did daily, how they celebrated, and what they feared."},
+
+  // Catholic Reformation
+  {cat:"Catholic Reformation",q:"What was the Catholic Reformation, and was it a response to Protestantism or an independent development?",a:"Historians debate whether to call it the 'Counter-Reformation' (reactive) or 'Catholic Reformation' (internally driven). Both are partly true: reform impulses predated Luther (Savonarola, Ximénez de Cisneros), but the Protestant challenge <strong>dramatically accelerated and shaped</strong> Catholic reform. The Council of Trent, the Jesuits, and a revived papacy all addressed both Protestant critiques and internal abuses.",tip:"The naming debate is itself an AP-style analytical question. The best answer is: both — pre-existing reform impulses + Protestant pressure. Shows you can handle historiographical nuance."},
+  {cat:"Catholic Reformation",q:"What was the Society of Jesus (Jesuits) and what role did they play in the Catholic Reformation?",a:"Founded by <strong>Ignatius of Loyola</strong> (approved 1540), the Jesuits were a highly educated, disciplined religious order directly loyal to the pope. They became the Catholic Reformation's most effective agents: establishing schools across Europe, serving as missionaries in Asia and the Americas, and reconverting areas lost to Protestantism in Poland, southern Germany, and elsewhere.",tip:"Jesuits = the Catholic Reformation's intellectual and missionary vanguard. Their schools were the best in Europe — a direct response to Protestant emphasis on education. Key for any AP question about Catholic Reformation methods."},
+  {cat:"Catholic Reformation",q:"What did the Council of Trent (1545–1563) decide, and why was it significant?",a:"Trent <strong>reaffirmed core Catholic doctrines</strong> that Protestants had attacked: salvation by both faith AND works, the authority of both scripture AND Church tradition, transubstantiation, seven sacraments, and the Latin Vulgate Bible. It also enacted genuine reforms: better training for priests, ending the sale of indulgences, requiring bishops to live in their dioceses. It defined Catholicism clearly for three centuries.",tip:"Trent is the Catholic answer to Protestant challenge. Two outcomes: (1) doctrinal clarification — no compromise with Protestants; (2) genuine internal reform. It hardened the divide between Catholic and Protestant permanently."},
+
+  // Wars of Religion
+  {cat:"Wars of Religion",q:"What caused the French Wars of Religion (1562–1598), and how were they resolved?",a:"France had a large Calvinist minority (<strong>Huguenots</strong>) concentrated among nobles and urban artisans, while the monarchy and majority were Catholic. Noble factionalism (Guise vs. Bourbon) exploited religious division. Violence peaked in the <strong>St. Bartholomew's Day Massacre (1572)</strong>, when thousands of Huguenots were killed. Henry IV (a Huguenot who converted to Catholicism) ended the wars by issuing the <strong>Edict of Nantes (1598)</strong>, granting Huguenots limited religious toleration.",tip:"The French Wars of Religion show religion weaponized by noble factions — it's not purely about theology. Henry IV's 'Paris is worth a mass' pragmatism is a great example of politique reasoning. The Edict of Nantes is the first major religious toleration settlement in Europe."},
+  {cat:"Wars of Religion",q:"Who was Philip II of Spain, and how did he use religion to build royal power?",a:"Philip II (r. 1556–1598) saw himself as the <strong>champion of militant Catholicism</strong>. He used the Spanish Inquisition to enforce religious conformity at home, launched the Spanish Armada against Protestant England (1588), and fought to suppress the Dutch Revolt. His vast empire (Spain, Spanish Netherlands, Americas) gave him extraordinary resources, but overextension and the Armada's defeat weakened Spain.",tip:"Philip II = Catholicism + imperial ambition + overreach. The Armada's failure is a turning point: it marks the beginning of Spanish decline and English Protestant confidence. Great for cause-and-consequence questions."},
+  {cat:"Wars of Religion",q:"What caused the Dutch Revolt, and what was its outcome?",a:"The Spanish Netherlands revolted against Philip II's <strong>heavy taxation, religious persecution</strong> (the Duke of Alba's brutal repression), and violation of traditional local privileges. William of Orange led the revolt. The northern (Calvinist) provinces formed the <strong>Union of Utrecht (1579)</strong> and declared independence as the Dutch Republic. Spain retained the southern (Catholic) provinces (modern Belgium).",tip:"The Dutch Revolt = religion + taxation + local privilege vs. royal centralization. The outcome created the Dutch Republic — the most commercially dynamic state of the 17th century. Great bridge to the next chapter."},
+  {cat:"Wars of Religion",q:"What were the 'politiques' and what did they represent?",a:"Politiques were pragmatic rulers and thinkers — like <strong>Henry IV of France</strong> and the philosopher Jean Bodin — who argued that political stability and state survival mattered more than religious uniformity. They were willing to tolerate religious minorities for the sake of peace. The Edict of Nantes (1598) is the politique position institutionalized.",tip:"'Politique' is a key concept for AP. It represents early modern secularism in politics — the idea that the state's survival trumps religious purity. It's a step toward Enlightenment ideas of toleration and the separation of politics from religion."},
+
+  // Broader Themes
+  {cat:"Broader Themes",q:"How did the Reformation permanently alter the relationship between church and state?",a:"The Reformation shattered the idea of a single unified Christendom under papal authority. <strong>Secular rulers gained unprecedented control over religion</strong> in their territories (cuius regio, eius religio). The wars of religion ultimately pushed thinkers toward the conclusion that political order required separating religion from state authority — a process completed by the Peace of Westphalia (1648) and later the Enlightenment.",tip:"Long-run theme: the Reformation → religious pluralism → need for toleration → secular state. Trace this arc from 1517 through the Enlightenment. AP prompts love asking about long-term consequences of the Reformation."},
+  {cat:"Broader Themes",q:"How did the printing press shape the Reformation's spread and character?",a:"The press allowed Luther's Ninety-Five Theses to spread across Germany in weeks, not years. It enabled mass production of the German Bible (democratizing scripture), Protestant pamphlets, woodcut propaganda, and hymns. Without the press, the Reformation would have been another suppressed heresy like Hussitism. With it, ideas spread faster than the Church could contain them.",tip:"The press is the key technological cause of the Reformation's success. Compare: Hus (burned 1415, movement suppressed) vs. Luther (protected partly because his ideas spread too fast to contain). Technology changed the outcome."},
+  {cat:"Broader Themes",q:"What continuities existed between the medieval reform tradition and the Protestant Reformation?",a:"The Reformation didn't emerge from nowhere: <strong>Wycliffe</strong> (14th c.) and <strong>Hus</strong> (15th c.) had made similar arguments about scripture's authority and clerical corruption. The conciliarist tradition challenged papal supremacy. Mystics like Thomas à Kempis emphasized personal piety over institutional religion. The Reformation was the successful culmination of a long reform tradition, enabled by new conditions.",tip:"Continuity with Ch. 1 and Ch. 2 material. AP synthesis questions may ask you to connect the Reformation to earlier periods — always have Wycliffe, Hus, and the Great Schism ready as antecedents."}
+];
+
+const VOCAB = [
+  {cat:"Theology",term:"Sola fide",pos:"Latin phrase",def:"'<strong>By faith alone</strong>' — Luther's core doctrine that salvation is granted by God through faith, not earned through good works, sacraments, or indulgences. Directly attacked the Catholic system of merit and the sale of indulgences.",tip:"The most fundamental Lutheran doctrine. Sola fide + sola scriptura + sola gratia = the three solas. Know all three and their doctrinal implications for the AP."},
+  {cat:"Theology",term:"Sola scriptura",pos:"Latin phrase",def:"'<strong>By scripture alone</strong>' — the Protestant principle that the Bible is the sole authoritative source of Christian doctrine, overriding papal decrees, Church councils, and tradition. Gave individuals and communities the right to interpret the Bible directly.",tip:"Sola scriptura is arguably the most radical doctrine because it destroys the Church's interpretive monopoly. It logically leads to the proliferation of Protestant sects — everyone can now read and interpret."},
+  {cat:"Theology",term:"Predestination",pos:"noun",def:"Calvin's doctrine that God has <strong>eternally predetermined</strong> which souls will be saved (the elect) and which will be damned, independent of any human action or merit. Humans cannot change their fate, but outward signs of discipline and success may indicate election.",tip:"Predestination is Calvin's distinctive contribution. Know it clearly: it's not the same as fatalism — Calvinists worked hard precisely because they couldn't be certain of their status, hoping outward signs would confirm election."},
+  {cat:"Theology",term:"Transubstantiation",pos:"noun",def:"The Catholic doctrine (reaffirmed by Trent) that during the Mass the bread and wine <strong>literally become</strong> the body and blood of Christ, while retaining their outward appearance. Luther accepted the real presence; Zwingli called it purely symbolic; Calvin took a middle position.",tip:"Transubstantiation divided all parties: Catholics (literal), Luther (real presence without transubstantiation), Zwingli (purely symbolic), Calvin (spiritual presence). This fragmented Protestantism and prevented unity at Marburg (1529)."},
+  {cat:"Theology",term:"Indulgences",pos:"noun (plural)",def:"Church certificates that reduced time in purgatory, originally for acts of piety, later <strong>sold for money</strong>. Johann Tetzel's sale of indulgences in Germany to fund St. Peter's Basilica directly triggered Luther's Ninety-Five Theses (1517).",tip:"Indulgences are the spark of the Reformation. They embody the corruption Luther attacked: the commodification of salvation. Connect back to Ch. 2 — Michelangelo's St. Peter's was funded by the same indulgence sales that enraged Luther."},
+  {cat:"Theology",term:"Justification by faith",pos:"noun phrase",def:"The theological claim that a sinner is <strong>declared righteous by God through faith</strong>, not through accumulation of merit via good works or sacraments. Luther's reading of Paul's Letter to the Romans (particularly Romans 1:17) was the experiential basis of this doctrine.",tip:"Justification by faith is the experiential heart of Lutheranism — Luther described it as feeling 'born again' when he understood it. It's the personal, individual relationship with God that bypasses Church mediation."},
+  {cat:"Theology",term:"Iconoclasm",pos:"noun",def:"The destruction of religious images, statues, and art deemed idolatrous. Reformed (Calvinist) and Zwinglian reformers led waves of iconoclasm across Protestant Europe, whitewashing church interiors and smashing statues — arguing that visual images distracted from scripture-centered worship.",tip:"Iconoclasm is the Reformation's most visible social disruption. It permanently altered European art (Protestant regions produced less religious imagery) and shows how theological ideas have concrete material consequences."},
+  {cat:"People",term:"Martin Luther",pos:"noun (proper)",def:"German monk and theologian (1483–1546) whose Ninety-Five Theses (1517) launched the Protestant Reformation. His three solas, German Bible translation, and defiance at the Diet of Worms made him the foundational figure of Protestantism. Protected by Frederick the Wise of Saxony.",tip:"Luther is the most important figure in Ch. 3. Know his theology (three solas), key events (1517, Leipzig 1519, Diet of Worms 1521), and political context (princely protection, Peace of Augsburg)."},
+  {cat:"People",term:"John Calvin",pos:"noun (proper)",def:"French-born theologian (1509–1564) who built a systematic Protestant theology centered on <strong>predestination and God's sovereignty</strong>, and governed Geneva as a theocratic model city. His <em>Institutes of the Christian Religion</em> became the most influential systematic Protestant theology.",tip:"Calvin vs. Luther: both accept sola fide and sola scriptura, but Calvin adds predestination and builds a more organized, internationally expansive church. Calvinism spread further geographically than Lutheranism."},
+  {cat:"People",term:"Ignatius of Loyola",pos:"noun (proper)",def:"Spanish nobleman and soldier (1491–1556) who founded the Society of Jesus (Jesuits) after a religious conversion. His <em>Spiritual Exercises</em> became the Jesuit formation text. He emphasized <strong>education, discipline, and direct obedience to the pope</strong>.",tip:"Loyola is to the Catholic Reformation what Luther is to the Protestant. His military background shaped the Jesuits' disciplined, hierarchical structure — sometimes called 'God's soldiers.'"},
+  {cat:"People",term:"Henry VIII",pos:"noun (proper)",def:"King of England (r. 1509–1547) who broke with Rome via the <strong>Act of Supremacy (1534)</strong> to obtain an annulment from Catherine of Aragon. He dissolved the monasteries and seized Church wealth, but retained largely Catholic doctrine in the Church of England.",tip:"Henry's Reformation was dynastic and political, not theological. This is the key distinction from Luther or Calvin. Know: the annulment problem, Act of Supremacy, dissolution of monasteries, six wives (briefly)."},
+  {cat:"People",term:"Elizabeth I",pos:"noun (proper)",def:"Queen of England (r. 1558–1603) who established the <strong>Elizabethan Settlement</strong> — a deliberately ambiguous Protestant church that retained Catholic-style liturgy and episcopal structure while rejecting papal authority. Defeated the Spanish Armada (1588). Her reign is called the 'Golden Age' of English culture.",tip:"Elizabeth's genius was political ambiguity in religion. She created a church broad enough to contain most English Christians. Her defeat of the Armada confirmed England as a Protestant power and weakened Spain."},
+  {cat:"People",term:"Philip II of Spain",pos:"noun (proper)",def:"King of Spain (r. 1556–1598), the most powerful monarch in Europe. Champion of <strong>militant Catholicism</strong>, he launched the Spanish Armada (1588), suppressed the Dutch Revolt, and used the Inquisition to enforce religious conformity. His overextension contributed to Spain's long decline.",tip:"Philip II is the Counter-Reformation's political champion — the mirror image of Elizabeth I. His failure (Armada, Dutch independence) marks the limits of using state power to enforce religious uniformity."},
+  {cat:"People",term:"William of Orange",pos:"noun (proper)",def:"Dutch nobleman (1533–1584) who led the revolt of the Netherlands against Spanish rule. Known as 'William the Silent.' His leadership unified the northern (Calvinist) provinces; he was assassinated in 1584 but the revolt continued to eventual Dutch independence.",tip:"William of Orange = Dutch national founding figure. His assassination by a Spanish agent is an early example of state-sponsored political assassination and shows the brutal stakes of the religious wars."},
+  {cat:"Events & Documents",term:"Ninety-Five Theses",pos:"noun (proper)",def:"Luther's 1517 list of arguments against indulgences, written in Latin for academic debate and rapidly translated and distributed via the printing press. Traditionally said to have been nailed to the church door at Wittenberg — the symbolic start of the Reformation.",tip:"The Theses were not originally meant as a revolutionary manifesto — Luther intended academic debate. The printing press transformed them into a mass movement. This shows how technology can change the meaning and impact of an idea."},
+  {cat:"Events & Documents",term:"Diet of Worms (1521)",pos:"noun (proper)",def:"An imperial assembly at which Luther was summoned to recant his writings before Emperor Charles V. Luther refused: <strong>'Here I stand, I can do no other.'</strong> He was declared an outlaw of the Empire but escaped to the Wartburg Castle under Frederick the Wise's protection, where he translated the New Testament into German.",tip:"The Diet of Worms is the moment the Reformation became irreversible. Luther's refusal to recant before the emperor established the principle that individual conscience could override institutional authority — a revolutionary idea."},
+  {cat:"Events & Documents",term:"Peace of Augsburg (1555)",pos:"noun (proper)",def:"Agreement between Charles V and the Lutheran princes of the HRE establishing <em>cuius regio, eius religio</em> — the ruler of each territory determines its religion (Catholic or Lutheran). Calvinism was NOT included. It ended the first phase of German religious wars but left many tensions unresolved.",tip:"Augsburg = the political settlement of German Lutheranism. Know the Latin phrase and its meaning. Its exclusion of Calvinism and Anabaptists planted seeds for the Thirty Years' War (1618–1648) — a major limitation to note."},
+  {cat:"Events & Documents",term:"Act of Supremacy (1534)",pos:"noun (proper)",def:"English parliamentary legislation declaring <strong>Henry VIII the Supreme Head of the Church of England</strong>, severing England's ties with Rome. Effectively transferred papal authority over the English Church to the crown.",tip:"The Act of Supremacy is the legal mechanism of the English Reformation. It's a parliamentary act, not a royal decree alone — note Parliament's role. This matters for the later development of English constitutionalism."},
+  {cat:"Events & Documents",term:"Council of Trent (1545–1563)",pos:"noun (proper)",def:"The Catholic Church's reform council that reaffirmed all major doctrines challenged by Protestants (transubstantiation, seven sacraments, tradition alongside scripture, works + faith) while enacting genuine administrative reforms: better priest training, ending indulgence sales, residency requirements for bishops.",tip:"Trent = the definitive Catholic response to the Reformation. Two effects: (1) no doctrinal compromise — the split is permanent; (2) genuine reform eliminates the worst abuses. After Trent, the Catholic Church is much more disciplined and doctrinally precise."},
+  {cat:"Events & Documents",term:"St. Bartholomew's Day Massacre (1572)",pos:"noun (proper)",def:"The killing of thousands of <strong>Huguenots (French Protestants)</strong> by Catholic mobs and royal troops in Paris and across France, beginning August 24, 1572. Ordered or tolerated by Catherine de' Medici and Charles IX. An estimated 5,000–30,000 Huguenots were killed.",tip:"The Massacre shocked Protestant Europe and hardened religious divisions. It shows how religious conflict became intertwined with noble faction and royal politics in France. It's the violent low point of the French Wars of Religion."},
+  {cat:"Events & Documents",term:"Edict of Nantes (1598)",pos:"noun (proper)",def:"Decree by <strong>Henry IV of France</strong> granting Huguenots the right to worship in designated areas, hold public office, and maintain fortified towns for protection. The first major act of formal religious toleration in European history — though limited and eventually revoked by Louis XIV in 1685.",tip:"The Edict of Nantes is a landmark — the first major toleration settlement. It's pragmatic (politique), not ideological. Its revocation by Louis XIV in 1685 (Edict of Fontainebleau) will be in a later chapter, but know the arc."},
+  {cat:"Events & Documents",term:"Spanish Armada (1588)",pos:"noun (proper)",def:"Philip II's fleet of 130 ships sent to invade Protestant England. Defeated by a combination of English tactics (smaller, faster ships), storms, and poor coordination. The Armada's failure <strong>confirmed England as a Protestant power</strong> and marked the beginning of Spanish naval decline.",tip:"The Armada is a turning-point event. Before: Spain dominant; after: England rising. Philip II's defeat shows the limits of using military force to enforce religious conformity across national borders."},
+  {cat:"Institutions",term:"Society of Jesus (Jesuits)",pos:"noun (proper)",def:"Catholic religious order founded by <strong>Ignatius of Loyola</strong> (1540), characterized by rigorous education, strict discipline, and direct papal loyalty. Became the Catholic Reformation's primary agents of education, missionary work, and re-Catholicization in Protestant areas.",tip:"Jesuits = the Catholic Reformation's elite force. Their schools were the best in Europe. Know their three roles: education, missions (Asia, Americas), and re-Catholicization of Protestant regions."},
+  {cat:"Institutions",term:"Anabaptists",pos:"noun (plural)",def:"Radical Protestant reformers who rejected infant baptism, insisting on <strong>adult believer's baptism</strong>. They also advocated separation of church and state, pacifism, and communal living in some groups. Persecuted and executed by both Catholics and Protestants.",tip:"Anabaptists = the 'radical Reformation.' Their ideas (voluntary church, state-church separation) were centuries ahead of their time. They are ancestors of modern Baptist, Mennonite, and Amish traditions."},
+  {cat:"Institutions",term:"Huguenots",pos:"noun (plural)",def:"French <strong>Calvinist Protestants</strong>, numbering perhaps 10% of France's population by the 1560s, concentrated among nobles and urban craftsmen. Their presence triggered the French Wars of Religion (1562–1598). They received limited toleration under the Edict of Nantes (1598).",tip:"Huguenots are the French Calvinist minority. Know: their social composition (nobles + artisans), their role in the Wars of Religion, the Massacre (1572), and the Edict of Nantes (1598)."},
+  {cat:"Institutions",term:"Consistory (Geneva)",pos:"noun",def:"The governing body of Calvin's Geneva, composed of pastors and lay elders, that regulated <strong>doctrine, morality, and community behavior</strong>. Could impose fines, public penance, and excommunication. Made Geneva a model of Calvinist discipline.",tip:"The Consistory is the institutional expression of Calvin's theocracy. It shows how Calvinism combined religious and civic governance — and why Geneva attracted Protestant refugees from across Europe seeking a 'godly city.'"},
+  {cat:"Concepts",term:"Cuius regio, eius religio",pos:"Latin phrase",def:"'Whose realm, his religion' — the principle established by the <strong>Peace of Augsburg (1555)</strong> that the ruler of each German territory determines whether it is Catholic or Lutheran. Subjects who disagreed could emigrate.",tip:"This is the foundational principle of early modern religious settlement. It resolves conflict by giving rulers the right to impose religion — but at the cost of individual religious freedom and the forced migration of religious minorities."},
+  {cat:"Concepts",term:"Politique",pos:"noun (French)",def:"A ruler or thinker who prioritized <strong>political stability over religious uniformity</strong>, willing to tolerate religious minorities for the sake of peace. Henry IV of France is the paradigmatic exemple. Jean Bodin provided philosophical justification.",tip:"Politique = pragmatic secularism in politics. It's an early step toward the Enlightenment's separation of religion from politics. On the AP, use 'politique' to describe rulers who chose tolerance over religious war."},
+  {cat:"Concepts",term:"Protestant work ethic",pos:"noun phrase",def:"Max Weber's thesis (1905) that Calvinist predestination created anxiety about election that drove believers toward <strong>disciplined labor, thrift, and worldly success</strong> as possible signs of God's favor — fostering the habits of early capitalism.",tip:"Weber's thesis is influential but contested. For the AP, know the logical chain (predestination → anxiety → hard work → capital accumulation) and that it connects religious change to economic change — a major AP theme."},
+  {cat:"Concepts",term:"Cuius regio, eius religio",pos:"Latin phrase",def:"'Whose realm, his religion' — the principle established by the <strong>Peace of Augsburg (1555)</strong> that the ruler of each German territory determines whether it is Catholic or Lutheran. Subjects who disagreed could emigrate.",tip:"This is the foundational principle of early modern religious settlement. It resolves conflict by giving rulers the right to impose religion — but at the cost of individual religious freedom and the forced migration of religious minorities."}
+];
+
+// deduplicate vocab (cuius regio appeared twice)
+const seen = new Set();
+const VOCAB_DEDUPED = VOCAB.filter(c => {
+  const key = c.term;
+  if (seen.has(key)) return false;
+  seen.add(key);
+  return true;
+});
+
+const DECKS = [CONCEPTS, VOCAB_DEDUPED, [...CONCEPTS, ...VOCAB_DEDUPED]];
+
+let currentDeck = 0;
+let activeCat = "All";
+let deck = [];
+let idx = 0;
+let revealed = false;
+
+function getCats(cards) {
+  return ["All", ...[...new Set(cards.map(c => c.cat))]];
+}
+
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  getCats(DECKS[currentDeck]).forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0; revealed = false; render();
+}
+
+function switchDeck(n) {
+  currentDeck = n; activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow(); buildDeck();
+}
+
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area";
+    area.className = "answer-area";
+    area.innerHTML = `<p class="answer-text">${isVocab ? c.def : c.a}</p>
+      <div class="context-box"><p class="context-label">${isVocab ? "why it matters" : "exam angle"}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>
