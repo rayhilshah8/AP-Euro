@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 8 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #5a4a1a;
+    --rule: #d4c9b0;
+    --tag-bg: #ece4c8;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+  .deck-tabs { display: flex; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab {
+    flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+    background: transparent; border: none; cursor: pointer; color: var(--ink-muted);
+    text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s;
+    border-right: 1.5px solid var(--ink);
+  }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+    background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s;
+  }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+  .card-wrap { margin-bottom: 1.25rem; }
+  .card {
+    background: var(--card-bg); border: 1.5px solid var(--ink); border-radius: var(--radius);
+    box-shadow: var(--shadow); min-height: 220px; cursor: pointer; padding: 2rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: box-shadow 0.12s, transform 0.12s;
+  }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+  .answer-area { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--rule); animation: fadein 0.2s ease; }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    font-size: 12px; line-height: 1.65; color: var(--ink-muted);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px;
+    background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink); transition: all 0.12s;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px;
+    background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s; letter-spacing: 0.05em;
+  }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-tag {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint);
+    align-self: flex-start; margin-bottom: 0.5rem; padding: 2px 8px; background: var(--tag-bg); border-radius: 20px;
+  }
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 8 — <em>States, Wars & Society</em></h1>
+    <p class="subtitle">18th-Century Europe · States, Diplomacy, and Social Change</p>
+  </header>
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+  <div class="filter-row" id="filter-row"></div>
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+  <footer>AP Euro · Ch. 8 · <span>States, Wars & Society</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  // States & Diplomacy
+  {cat:"States & Diplomacy",q:"What was the 'diplomatic revolution' of 1756, and why was it significant?",a:"The diplomatic revolution was the sudden <strong>reversal of alliances</strong> before the Seven Years' War: France (traditionally allied with Prussia and opposed to Austria) allied with Austria; Prussia allied with Britain. These combinations overturned a century of European alliance patterns. It demonstrated that in the 18th-century state system, <strong>balance of power and national interest</strong> — not religion or tradition — drove diplomatic alignments.",tip:"The diplomatic revolution is evidence that Westphalian realpolitik had fully matured: ideology and religion meant nothing compared to strategic interest. It's also essential context for the Seven Years' War. The AP loves asking about the causes of that war — always start with the alliance reversal."},
+  {cat:"States & Diplomacy",q:"What was the War of the Austrian Succession (1740–1748), and what were its consequences?",a:"When Holy Roman Emperor Charles VI died without a male heir, <strong>Frederick the Great of Prussia seized Silesia</strong> from his daughter Maria Theresa, triggering a broader European war. Maria Theresa rallied Austrian support, secured British alliance, and fought to a partial recovery — but Prussia kept Silesia. The war established Prussia as a great power and set up the bitter rivalry that drove the Seven Years' War.",tip:"The War of Austrian Succession establishes the key 18th-century dynamic: Prussia vs. Austria for dominance in central Europe. Silesia is the prize — it's a wealthy industrial region. Maria Theresa is the AP's key figure here: a woman who successfully defended her inheritance in a male-dominated political system."},
+  {cat:"States & Diplomacy",q:"What was the Seven Years' War (1756–1763), and why is it sometimes called the 'first world war'?",a:"The Seven Years' War was fought simultaneously across <strong>Europe, North America, the Caribbean, West Africa, India, and the Philippines</strong>. In Europe, Prussia (+ Britain) fought Austria, France, Russia, and Sweden. In the colonies, Britain and France fought over North America (French and Indian War) and India. Britain emerged victorious, acquiring Canada and dominance in India, while France lost most of its colonial empire. Prussia survived against enormous odds.",tip:"'First world war' framing is AP-relevant because it shows European imperial rivalry had become truly global. Britain's victory reshaped the colonial world — French Canada became British, setting up American independence (Britain's debt from the war led to colonial taxation). Always connect to consequences."},
+  {cat:"States & Diplomacy",q:"What were the consequences of the Seven Years' War for the major powers?",a:"<strong>Britain</strong> emerged as the dominant colonial and naval power, gaining Canada, Florida, and Indian dominance. <strong>France</strong> lost most of its North American and Indian empire, accumulating massive debt that contributed to the financial crisis preceding the French Revolution. <strong>Prussia</strong> survived and confirmed its status as a great power. <strong>Austria</strong> failed to recover Silesia. The war's debt drove Britain to tax its American colonies — triggering the American Revolution.",tip:"The Seven Years' War's consequences cascade forward: British debt → American taxation → American Revolution; French debt → fiscal crisis → French Revolution. These connections make it arguably the most consequential war of the 18th century for the revolutions that follow."},
+  {cat:"States & Diplomacy",q:"How did 18th-century warfare change from the 17th century, and what were its limits?",a:"18th-century warfare became more <strong>professional, disciplined, and expensive</strong>: standing armies grew larger; officer corps became more professional; tactics emphasized drill and linear formations. But wars remained limited by logistics (armies couldn't easily supply themselves in hostile territory), the cost of armies (which discouraged total commitment), and aristocratic officer culture. Wars were fought for specific dynastic or territorial objectives — not ideological total war.",tip:"Limited warfare is the key 18th-century military concept. Armies were expensive instruments to be preserved, not expended — a sharp contrast to the total war of the 20th century. The contrast with the Revolutionary/Napoleonic Wars (which introduced mass conscript armies and ideological total war) is essential."},
+
+  // Enlightened Absolutism
+  {cat:"Enlightened Absolutism",q:"How did Maria Theresa and Joseph II reform the Habsburg state, and how did their approaches differ?",a:"<strong>Maria Theresa</strong> (r. 1740–1780) reformed Habsburg administration pragmatically — centralizing government, improving the army, reforming taxation, and promoting education, but without challenging the social order or the Church. <strong>Joseph II</strong> (r. 1780–1790) went far further: abolishing serfdom, extending religious toleration, subordinating the Church, and rationalizing administration — moves so radical they provoked revolts and were largely reversed after his death.",tip:"Maria Theresa vs. Joseph II is a great contrast within the same dynasty. Maria Theresa = cautious, pragmatic reformer; Joseph II = radical, ideological reformer. Joseph's failure shows that top-down Enlightenment reform without social buy-in couldn't be sustained — a lesson relevant to the French Revolution."},
+  {cat:"Enlightened Absolutism",q:"How did Prussia under Frederick the Great differ from Austria under the Habsburgs as a model of absolutism?",a:"Prussia developed a uniquely militarized absolutism: the <strong>Junker</strong> (noble) class served as army officers and local administrators in exchange for absolute control over their serfs. Frederick directed everything from the top but relied on this noble-military alliance. Austria was more bureaucratically complex, governing diverse peoples (Germans, Hungarians, Czechs, Italians) and more dependent on Church and traditional institutions. Prussia was leaner, more militarized, and more efficiently organized for war.",tip:"Prussia's 'military monarchy' model (Junkers + king + army) vs. Austria's bureaucratic-dynastic model is a classic AP comparison. Prussia's efficiency in war explains its rise despite being small and resource-poor. The Junker-king alliance is the social basis of Prussian power — analogous to Louis XIV's Versailles bargain with the French nobility."},
+  {cat:"Enlightened Absolutism",q:"How did Britain's constitutional monarchy compare to continental absolutism in the 18th century?",a:"Britain was governed through <strong>Parliament, common law, and cabinet government</strong> rather than royal decree. The monarch still held real power but governed through ministers who needed Parliamentary support. The Whig oligarchy (great landed families) dominated politics through patronage and rotten boroughs. Britain had no standing army (by law); its power projection was naval. This system was less 'rational' than enlightened despotism but more politically stable and commercially dynamic.",tip:"Britain as the alternative to absolutism is a key AP frame. Its commercial success (empire, trade) and political stability (no revolution until 1688, and then 'glorious') contrasted with continental absolutism. Montesquieu idealized the English constitution — which itself is evidence of its influence on Enlightenment thinking."},
+
+  // Economy & Society
+  {cat:"Economy & Society",q:"Was there an 'agricultural revolution' in the 18th century, and what changed?",a:"Yes, though gradual. Key changes: <strong>enclosure</strong> of common lands (especially in England) consolidated small strips into larger fields suitable for new techniques; <strong>crop rotation</strong> (Norfolk four-field system: wheat, turnips, barley, clover) eliminated fallow years and fed more livestock; new crops (turnips, clover) improved soil and fed animals over winter; scientific breeding improved livestock. The result: higher yields, fewer agricultural workers needed, and displaced peasants moving to cities.",tip:"The agricultural revolution is the economic foundation of the Industrial Revolution — it freed labor for industrial work and increased food production to feed a growing urban population. England was the leader; continental Europe followed more slowly. The enclosure movement's social costs (displacing peasants) are as AP-relevant as its productivity gains."},
+  {cat:"Economy & Society",q:"What was cottage industry (the 'putting-out' system), and why was it significant?",a:"In cottage industry, <strong>merchants distributed raw materials</strong> (wool, flax, cotton) to rural households, who spun and wove cloth at home in exchange for payment, then returned finished cloth to the merchant. It bypassed guild restrictions, provided supplemental income to peasant families, expanded textile production beyond guild towns, and created a dispersed proto-industrial workforce that prepared the way for factory production.",tip:"Cottage industry is the economic bridge between agricultural and industrial society. It shows that capitalist organization (merchant capital, wage labor, market production) preceded the factory. The AP may ask about proto-industrialization — cottage industry is your evidence. It also shows rural people integrating into market economies before urbanization."},
+  {cat:"Economy & Society",q:"How did European population grow in the 18th century, and what drove it?",a:"Europe's population grew from roughly 120 million (1700) to 190 million (1800). Causes: <strong>decline of plague</strong> after 1720 (last major European plague); improved nutrition (American food crops, especially potatoes, supported larger populations); slightly improved hygiene; earlier marriage and higher birth rates in some regions. The population surge created both labor supply (for industrialization) and demand pressure for food and goods.",tip:"Population growth is the demographic engine of the 18th century. It connects to almost everything: more people → more demand → agricultural revolution; more rural poor → cottage industry → eventual factory labor. Know the rough numbers (120M → 190M) and the main causes."},
+  {cat:"Economy & Society",q:"How did the Atlantic economy and colonial trade reshape European commerce in the 18th century?",a:"Atlantic trade — especially in <strong>sugar, tobacco, cotton, and enslaved labor</strong> — became Europe's most dynamic economic sector. The slave trade reached its peak in the 18th century (6 million transported in that century alone). New 'colonial goods' (sugar, coffee, chocolate, tea) transformed European consumption habits and created new commercial networks. Ports like Liverpool, Bristol, Bordeaux, and Amsterdam grew rich on colonial trade.",tip:"Colonial trade's role in 18th-century economic growth is AP-essential. It connects Ch. 4 (slave trade origins) to Ch. 8 (peak) to Ch. 9 (Industrial Revolution fueled by colonial markets and cotton). The human cost — the slave trade's peak — must always be addressed alongside the economic gains."},
+  {cat:"Economy & Society",q:"What new financial innovations emerged in the 18th century, and how did they reshape European economies?",a:"Key innovations: <strong>national banks</strong> (Bank of England, 1694) that issued paper money and government bonds, allowing states to borrow cheaply for wars; <strong>stock markets</strong> (London, Amsterdam) enabling investment in colonial and trading companies; <strong>insurance markets</strong> (Lloyd's of London) spreading commercial risk; and <strong>credit networks</strong> linking European merchants. These allowed capital to flow more efficiently and funded both state activities and commercial expansion.",tip:"Financial innovation is the institutional infrastructure of commercial capitalism. The Bank of England is the most AP-relevant institution — it allowed Britain to fund wars more cheaply than France (which lacked a similar institution until 1800), giving Britain a structural fiscal advantage that persisted through the Napoleonic Wars."},
+
+  // Social Order
+  {cat:"Social Order",q:"What was the social structure of 18th-century Europe, and how was it changing?",a:"Society was still organized in traditional <strong>estates/orders</strong>: clergy (First Estate), nobility (Second Estate), and everyone else (Third Estate — peasants, urban workers, and the growing middle class). But this was changing: a new commercial and professional <strong>bourgeoisie</strong> (middle class) was growing in wealth and cultural influence without corresponding political power; the nobility was defending its privileges against both royal centralization and bourgeois challenge; peasants remained the vast majority but with varying conditions across Europe.",tip:"The social tensions of the 18th century — bourgeoisie rising economically but excluded politically; nobility defending privilege; peasants overburdened — are the social causes of the French Revolution. This chapter is the social backdrop to Ch. 9. Know the three estates and the growing tension between economic reality and legal-social status."},
+  {cat:"Social Order",q:"What was the condition of the peasantry across 18th-century Europe, and how did it vary?",a:"Peasant conditions varied dramatically by region. In <strong>Western Europe</strong> (England, France, Netherlands), most peasants were legally free, paying rent or taxes; enclosure was displacing many. In <strong>Eastern Europe</strong> (Prussia, Austria, Russia), most peasants were serfs — legally bound to noble land, subject to labor obligations, and effectively property of their lords. The Pugachev Rebellion in Russia (1773–75) and smaller revolts in Austria showed peasant discontent could become explosive.",tip:"East-West peasant divergence is a classic AP continuity thread (it began in Ch. 1 with the Black Death). By the 18th century, Western peasants were increasingly integrated into market economies; Eastern peasants remained under serfdom that was actually intensifying. This gap explains later divergences in industrialization and political development."},
+  {cat:"Social Order",q:"What was the nobility's position in 18th-century society, and how was it under pressure?",a:"The nobility remained the legal, social, and in most states political elite — owning most land, monopolizing army officer positions, and enjoying tax exemptions. But they faced pressure from <strong>above</strong> (monarchs seeking to bypass them through bureaucracies) and <strong>below</strong> (a rising bourgeoisie with wealth but not legal privilege). In France, the nobility's 'feudal reaction' — reasserting old privileges and closing off elite positions to commoners — intensified bourgeois resentment before 1789.",tip:"Noble privilege as a source of revolution is one of the AP's most important social history arguments. The French nobility's feudal reaction (insisting on privilege while the bourgeoisie was excluded) is the social cause of the French Revolution. Know this for Ch. 9."},
+  {cat:"Social Order",q:"How was urban life changing in 18th-century Europe, and who was the growing bourgeoisie?",a:"Cities grew as rural migrants sought work. The <strong>bourgeoisie</strong> — lawyers, doctors, merchants, manufacturers, and financiers — was expanding rapidly and developing a distinctive culture: valuing education, professional achievement, family life, privacy, and material comfort. They consumed Enlightenment literature, attended concerts, read novels, and furnished homes with new colonial goods. Politically, they were excluded from aristocratic privilege despite their economic importance — a structural grievance.",tip:"The bourgeoisie is the social class of the Enlightenment and the driving force of revolution. Their cultural values (reason, merit, education, family) map directly onto Enlightenment ideals. Their political exclusion despite economic importance is the structural cause of the French Revolution. Know this class well."},
+  {cat:"Social Order",q:"How did family life and leisure change for the wealthy in 18th-century Europe?",a:"Wealthy families showed new patterns: more <strong>privacy</strong> (separate rooms in houses rather than communal living), greater emphasis on <strong>affective bonds</strong> (love marriages rather than purely arranged; more attention to childhood as a distinct stage); new leisure activities (coffeehouses, novels, theater, concerts, pleasure gardens); and conspicuous consumption of colonial goods (tea, coffee, sugar, chocolate, cotton clothing). The domestic sphere became more important as a cultural ideal.",tip:"Changing family and leisure patterns reveal the bourgeois culture that is forming before the Revolution. Privacy, affective family life, and consumption of Enlightenment culture (novels, coffeehouses) are all bourgeois phenomena. They also connect to changing gender roles — the 'separate spheres' ideology placing women in the domestic realm."},
+
+  // Broader Themes
+  {cat:"Broader Themes",q:"How does the 18th century's economic and social change set up the French Revolution and Industrial Revolution?",a:"Economically: proto-industrialization (cottage industry), agricultural revolution, population growth, and colonial trade all expanded the market economy and created new social classes. Socially: the bourgeoisie grew in wealth and cultural confidence but remained politically excluded; peasants remained burdened by feudal dues and taxation; the nobility defended privilege. Politically: the state's fiscal demands (from wars, especially the Seven Years' War) were unsustainable under the existing tax system. All these tensions converged in France after 1789.",tip:"This synthesis card is the bridge from Ch. 8 to Ch. 9. The AP expects you to see the French Revolution and Industrial Revolution as products of long-developing economic and social forces, not sudden eruptions. Agricultural revolution + cottage industry = proto-industrialization; bourgeois frustration + peasant burden + fiscal crisis = revolution. Know both chains."},
+  {cat:"Broader Themes",q:"What was the 'consumer revolution,' and what does it reveal about 18th-century society?",a:"The consumer revolution was the <strong>expansion of market consumption</strong> by middling and even working-class families in the 18th century — purchasing textiles, ceramics, books, tea, sugar, and other goods that had previously been luxury items. Driven by cottage industry wages, colonial trade lowering prices, and new retail networks (shops, fairs, catalogs). It shows the integration of ordinary Europeans into market economies and the material basis of a consumer culture predating the Industrial Revolution.",tip:"The consumer revolution is evidence that demand-side forces (not just supply/technology) drove economic change. Ordinary people wanting to buy more things drove cottage industry and eventually factory production. It also shows that the Industrial Revolution's social preconditions were already forming before the factories were built."}
+];
+
+const VOCAB = [
+  {cat:"Diplomacy & War",term:"Balance of power",pos:"noun",def:"The 18th-century principle that no single European state should be allowed to dominate the others; weaker states should form coalitions to check any rising hegemon. The Grand Alliance against Louis XIV and the coalitions of the Seven Years' War both reflect this principle in operation.",tip:"Balance of power is the operating logic of 18th-century European diplomacy. It originated at Westphalia (1648) and became fully operational in the 18th century. Know it as a description of how states actually behaved, not just a theory."},
+  {cat:"Diplomacy & War",term:"Diplomatic revolution (1756)",pos:"noun (proper)",def:"The sudden reversal of European alliances before the Seven Years' War: <strong>France allied with Austria</strong> (its traditional enemy); <strong>Prussia allied with Britain</strong>. It overturned a century of alliance patterns and demonstrated that strategic interest, not religion or tradition, governed 18th-century diplomacy.",tip:"The diplomatic revolution is the clearest proof that 18th-century diplomacy was fully secular and interest-driven. It also explains why the Seven Years' War had such unusual alliance configurations. Know the two new partnerships and what they replaced."},
+  {cat:"Diplomacy & War",term:"War of Austrian Succession (1740–1748)",pos:"noun (proper)",def:"Triggered when <strong>Frederick the Great of Prussia seized Silesia</strong> from Maria Theresa upon her accession. A general European war followed; it ended with Prussia keeping Silesia (Treaty of Aix-la-Chapelle, 1748). Established Prussia as a great power and created the Austrian-Prussian rivalry.",tip:"The War of Austrian Succession introduces two of the 18th century's most important figures: Frederick the Great and Maria Theresa. Silesia is the prize that keeps recurring — it's what the Seven Years' War is also partly about. Know the key actors and the outcome."},
+  {cat:"Diplomacy & War",term:"Seven Years' War (1756–1763)",pos:"noun (proper)",def:"A global conflict fought in Europe, North America, India, the Caribbean, and elsewhere. Britain and Prussia vs. France, Austria, Russia, and others. Britain won decisively, gaining Canada and dominance in India; France lost most of its colonial empire. Sometimes called the <strong>'first world war.'</strong>",tip:"Know the global scope (what makes it 'world'), the alliance configuration (diplomatic revolution), and the consequences: British colonial dominance, French debt → fiscal crisis → French Revolution, American taxation → American Revolution. This war's aftermath shaped the next 30 years."},
+  {cat:"Diplomacy & War",term:"Maria Theresa",pos:"noun (proper)",def:"Habsburg Empress of Austria (r. 1740–1780) who successfully defended her inheritance against Frederick the Great and reformed the Habsburg state — centralizing administration, improving the army, and promoting education. Mother of Joseph II and Marie Antoinette. A pragmatic reformer who avoided her son's radical changes.",tip:"Maria Theresa is a key 18th-century figure the AP loves — a woman who successfully led a major state at a time when women were excluded from public life. Her contrast with Joseph II (pragmatic vs. radical) is useful for essays on enlightened despotism."},
+  {cat:"Diplomacy & War",term:"Pragmatic Sanction",pos:"noun (proper)",def:"Emperor Charles VI's legal document (1713) attempting to guarantee that his daughter <strong>Maria Theresa</strong> would inherit the Habsburg lands — overriding the tradition of male-only succession. Most European powers agreed to it; Frederick the Great ignored it when he seized Silesia in 1740.",tip:"The Pragmatic Sanction is the legal basis of Maria Theresa's claim — and the document Frederick the Great violated. It shows how dynastic succession law could trigger major wars. Know it as the legal background to the War of Austrian Succession."},
+  {cat:"Economy",term:"Agricultural revolution",pos:"noun",def:"The gradual transformation of European (especially English) farming through: <strong>enclosure</strong> of common lands; <strong>Norfolk four-field crop rotation</strong> (wheat, turnips, barley, clover — eliminating fallow); new tools (seed drill); and scientific livestock breeding. Result: higher yields, fewer agricultural workers, and displaced rural labor moving to cities.",tip:"The agricultural revolution is the economic precondition for the Industrial Revolution: it freed labor (enclosure drove people off the land) and increased food supply (to feed urban workers). England led; continental Europe followed. The social cost — displaced peasants — is as important as the productivity gains."},
+  {cat:"Economy",term:"Enclosure",pos:"noun",def:"The process by which <strong>common lands and open fields were consolidated into privately owned farms</strong>, primarily in England during the 18th century. Enabled more efficient farming but displaced smallholders and rural poor, contributing to urbanization.",tip:"Enclosure = agricultural efficiency + social disruption. The displaced rural poor became the urban working class of the Industrial Revolution. AP essays on the causes of industrialization should mention enclosure as a labor supply mechanism. It's also a social justice issue — the poor lost access to common land they had used for centuries."},
+  {cat:"Economy",term:"Norfolk four-field rotation",pos:"noun (proper)",def:"A crop rotation system developed in Norfolk, England, alternating <strong>wheat, turnips, barley, and clover</strong> across four fields. Eliminated the traditional fallow year (when one field rested), dramatically increasing total output. Turnips and clover also fed livestock over winter, increasing meat and dairy production.",tip:"Norfolk rotation is the technical heart of the agricultural revolution. Know the four crops and why each matters: wheat and barley = food; turnips = livestock winter feed; clover = nitrogen-fixing (restores soil fertility). It's elegant efficiency — each crop benefits the next."},
+  {cat:"Economy",term:"Cottage industry",pos:"noun",def:"A system (also called the 'putting-out system') in which <strong>merchants distributed raw materials to rural households</strong> for processing at home (spinning, weaving), then collected finished goods for sale. Bypassed guild restrictions, provided peasant supplemental income, and expanded textile production.",tip:"Cottage industry = proto-industrialization. It proves that capitalist organization (merchant capital + wage labor + market production) preceded factories. It's the economic bridge between agricultural and industrial society. The workers who later went to factories were often former cottage industry workers."},
+  {cat:"Economy",term:"Proto-industrialization",pos:"noun",def:"The expansion of rural manufacturing — especially cottage industry — before the factory system. Created a rural workforce accustomed to <strong>wage labor and market production</strong>, developing commercial habits and providing capital accumulation that facilitated later industrialization.",tip:"Proto-industrialization is the historiographical concept (Franklin Mendels, 1972) connecting cottage industry to industrial development. It shows industrialization was not sudden but had deep roots in 18th-century rural change. AP essays on the Industrial Revolution's origins should engage this concept."},
+  {cat:"Economy",term:"Bank of England",pos:"noun (proper)",def:"Founded in 1694, England's central bank that issued <strong>government bonds and paper currency</strong>, allowing the British state to borrow cheaply and at scale to fund wars. Its stability and credibility gave Britain a structural fiscal advantage over France and other states that lacked equivalent institutions.",tip:"The Bank of England is the key financial institution of the 18th century. It explains why Britain could fight expensive wars (Seven Years' War, Napoleonic Wars) without going bankrupt while France could not. Financial infrastructure = military and imperial advantage. Know its founding date (1694) and function."},
+  {cat:"Economy",term:"Consumer revolution",pos:"noun",def:"The 18th-century expansion of <strong>market consumption by middling and working families</strong> — buying textiles, ceramics, books, tea, sugar, and other goods previously considered luxuries. Driven by cottage industry wages, falling prices on colonial goods, and new retail networks.",tip:"The consumer revolution shows that ordinary Europeans were already integrated into market economies before industrialization. It provides the demand side of the Industrial Revolution — people wanted goods, driving production. It also shows the social reach of the Atlantic economy (colonial goods in ordinary households)."},
+  {cat:"Economy",term:"Mercantile empire",pos:"noun",def:"A colonial system in which the mother country uses its colonies primarily as <strong>sources of raw materials, captive markets for manufactured goods, and suppliers of labor</strong> — maximizing the mother country's wealth through trade regulation and monopoly. Britain, France, and the Netherlands all operated mercantile empires.",tip:"Mercantile empire is the 18th-century application of mercantilist theory (from Ch. 4 and Ch. 5) at full scale. Know: colonies → raw materials to mother country; mother country → manufactured goods to colonies; Navigation Acts enforce the closed system. The system funded industrialization by providing cotton, markets, and capital."},
+  {cat:"Social Order",term:"Bourgeoisie",pos:"noun (French)",def:"The <strong>urban middle class</strong> of merchants, lawyers, doctors, manufacturers, and financiers — growing in wealth and cultural confidence in the 18th century but excluded from aristocratic privilege. Their frustration at being economically powerful yet politically marginalized was a structural cause of the French Revolution.",tip:"The bourgeoisie is the social class of the Enlightenment and revolution. Know them as: economically rising, culturally Enlightened (reading novels, going to coffeehouses), politically excluded. Their exclusion from the political system (dominated by the nobility) despite their economic importance is the key social tension of the era."},
+  {cat:"Social Order",term:"Estates (social orders)",pos:"noun (plural)",def:"The legal division of society into three hierarchical groups: <strong>First Estate</strong> (clergy), <strong>Second Estate</strong> (nobility), and <strong>Third Estate</strong> (everyone else — from wealthy bourgeois to urban poor to peasants). In France, each estate had distinct legal rights and tax obligations.",tip:"The three estates are the formal social structure of the Old Regime (ancien régime). The system's fundamental injustice: the Third Estate (97% of the population) paid most taxes while the privileged First and Second Estates were largely exempt. This grievance drives the French Revolution directly."},
+  {cat:"Social Order",term:"Junkers",pos:"noun (plural)",def:"The Prussian landed nobility who served as <strong>army officers and local administrators</strong> in exchange for absolute authority over their serfs and exemption from most taxes. The Junker-crown alliance was the social basis of Prussian military power.",tip:"Junkers are Prussia's version of the nobility-crown bargain. Compare to Louis XIV's Versailles bargain: both involved trading noble political independence for privileges. Prussia's bargain was more militarized — Junkers became officers, not just courtiers. This military aristocracy persisted into the 20th century."},
+  {cat:"Social Order",term:"Feudal reaction",pos:"noun",def:"The late 18th-century tendency of European nobles — especially in France — to <strong>reassert old feudal privileges</strong>, close elite positions (army officers, Church offices, royal administration) to non-nobles, and increase feudal dues on peasants. Intensified bourgeois and peasant resentment before the French Revolution.",tip:"The feudal reaction is the social cause of the French Revolution. Just as the bourgeoisie was rising economically and culturally, the nobility was slamming doors shut. The combination — rising expectations frustrated by reasserted privilege — is a classic recipe for revolution."},
+  {cat:"Social Order",term:"Serfdom (Eastern Europe)",pos:"noun",def:"The system of <strong>legally binding peasants to noble land</strong> in Eastern Europe (Russia, Prussia, Austria), requiring labor services and subjecting them to noble justice. Intensified in the 18th century (Russia especially) even as Western European peasants were becoming legally freer.",tip:"East-West serfdom divergence is a continuity thread from Ch. 1 (Black Death). In the 18th century, Eastern serfdom was intensifying (second serfdom) while Western European peasants were legally free (though economically squeezed by enclosure). This gap explains Eastern Europe's later industrialization and political development."},
+  {cat:"Social Order",term:"Pugachev Rebellion (1773–1775)",pos:"noun (proper)",def:"A massive <strong>peasant and Cossack uprising in Russia</strong> led by Yemelyan Pugachev, who claimed to be the rightful tsar. The largest rebellion in Russian history before 1917, it was brutally crushed by Catherine the Great, who responded by intensifying noble control over serfs.",tip:"The Pugachev Rebellion shows the explosive potential of Eastern European serfdom — and Catherine the Great's response (tightening serfdom rather than liberating serfs) is evidence of the limits of her 'enlightened' despotism. When liberation threatened noble power, Catherine chose the nobles."},
+  {cat:"Social Order",term:"Ancien régime",pos:"noun (French)",def:"'Old Regime' — the social, political, and economic system of pre-revolutionary France (and by extension, Europe), characterized by <strong>legal privilege for nobility and clergy</strong>, a tax system falling mainly on commoners, and an absolute monarchy with limited institutional checks. The term was coined after the Revolution to describe what had been overthrown.",tip:"Ancien régime is the organizing concept for the social order the French Revolution destroyed. Know its three features: legal estates (nobility exempt from taxes), absolute monarchy, and Church privilege. Everything the Revolution did was in some sense a response to one of these features."},
+  {cat:"Culture",term:"Rococo",pos:"noun/adjective",def:"An artistic style of the early-to-mid 18th century characterized by <strong>elegant, playful, ornate decoration</strong> — lighter and more intimate than Baroque, but still serving aristocratic tastes. Associated with French court culture (Watteau, Fragonard). Eventually replaced by Neoclassicism as Enlightenment values of rationality and civic virtue gained cultural dominance.",tip:"Rococo = the aristocratic pleasure culture of the early 18th century before Enlightenment seriousness took over. Contrast with Neoclassicism: Rococo is decorative and playful; Neoclassicism is rational and civic. The shift from Rococo to Neoclassicism maps onto the shift from court to bourgeois patronage."},
+  {cat:"Culture",term:"Coffeehouse",pos:"noun",def:"A public gathering place where men (primarily) met to drink coffee and tea, read newspapers, and debate political and intellectual topics. Coffeehouses in London, Paris, and Vienna were key nodes of the <strong>public sphere</strong> — spaces for rational public debate outside Church and state control.",tip:"The coffeehouse is the social infrastructure of the Enlightenment. Ideas need physical spaces to circulate — coffeehouses (along with salons) were where that happened. They were also democratic in a limited sense: admission was by the price of a cup, not by birth."},
+  {cat:"Culture",term:"Separate spheres",pos:"noun phrase",def:"The 18th-century ideological division of life into a <strong>public sphere</strong> (politics, commerce, professional life — for men) and a <strong>private/domestic sphere</strong> (home, family, child-rearing — for women). Emerged with bourgeois culture and was reinforced by Rousseau's writings. Justified women's exclusion from political life.",tip:"Separate spheres ideology is the cultural mechanism that confined bourgeois women to the domestic realm even as Enlightenment ideas about rights were spreading. It's the social context for Wollstonecraft's critique. Know it as an ideology (a set of beliefs about what's natural) rather than a description of reality — many women worked outside the home."}
+];
+
+const DECKS = [CONCEPTS, VOCAB, [...CONCEPTS, ...VOCAB]];
+let currentDeck = 0, activeCat = "All", deck = [], idx = 0, revealed = false;
+
+function getCats(cards) { return ["All", ...[...new Set(cards.map(c => c.cat))]]; }
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  getCats(DECKS[currentDeck]).forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0; revealed = false; render();
+}
+function switchDeck(n) {
+  currentDeck = n; activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow(); buildDeck();
+}
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area"; area.className = "answer-area";
+    area.innerHTML = `<p class="answer-text">${isVocab ? c.def : c.a}</p>
+      <div class="context-box"><p class="context-label">${isVocab ? "why it matters" : "exam angle"}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>

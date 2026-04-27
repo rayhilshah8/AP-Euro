@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 9 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #6b2737;
+    --rule: #d4c9b0;
+    --tag-bg: #eedadc;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Mono', monospace; background: var(--bg); color: var(--ink); min-height: 100vh; padding: 2rem 1rem 4rem; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+  .deck-tabs { display: flex; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab { flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px; background: transparent; border: none; cursor: pointer; color: var(--ink-muted); text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s; border-right: 1.5px solid var(--ink); }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius); background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s; }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+  .card-wrap { margin-bottom: 1.25rem; }
+  .card { background: var(--card-bg); border: 1.5px solid var(--ink); border-radius: var(--radius); box-shadow: var(--shadow); min-height: 220px; cursor: pointer; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; transition: box-shadow 0.12s, transform 0.12s; }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+  .answer-area { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--rule); animation: fadein 0.2s ease; }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box { margin-top: 0.75rem; padding: 0.6rem 0.85rem; background: var(--tag-bg); border-left: 3px solid var(--accent); font-size: 12px; line-height: 1.65; color: var(--ink-muted); border-radius: 0 var(--radius) var(--radius) 0; }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn { font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px; background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius); cursor: pointer; color: var(--ink); transition: all 0.12s; }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn { font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px; background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius); cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s; letter-spacing: 0.05em; }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-tag { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); align-self: flex-start; margin-bottom: 0.5rem; padding: 2px 8px; background: var(--tag-bg); border-radius: 20px; }
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 9 — <em>Revolution & Napoleon</em></h1>
+    <p class="subtitle">The French Revolution and the Napoleonic Era · 1776–1815</p>
+  </header>
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+  <div class="filter-row" id="filter-row"></div>
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+  <footer>AP Euro · Ch. 9 · <span>Revolution & Napoleon</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  // American Revolution
+  {cat:"American Revolution",q:"How did the American Revolution influence the French Revolution?",a:"The American Revolution demonstrated that Enlightenment principles — <strong>natural rights, consent of the governed, separation of powers</strong> — could be successfully translated into a working republican government. The Declaration of Independence (1776) and U.S. Constitution (1787) were living proof that Locke and Montesquieu's theories were politically viable. French officers who served in America (notably <strong>Lafayette</strong>) returned with republican ideas and military experience. France's financial crisis from funding the American war also directly triggered the Estates-General.",tip:"The American Revolution is the immediate prologue to the French Revolution. Three links: ideological (proof that Enlightenment ideas work), personal (Lafayette and French veterans), and fiscal (French debt from the war caused the financial crisis). Always make all three connections."},
+  {cat:"American Revolution",q:"What principles did the American founding documents establish, and how did they circulate in Europe?",a:"The <strong>Declaration of Independence</strong> (1776) asserted natural rights (life, liberty, pursuit of happiness), popular sovereignty, and the right of revolution against tyrannical government — essentially Locke applied to a specific situation. The <strong>Constitution</strong> (1787) embodied Montesquieu's separation of powers and federalism. Both documents were widely read and debated in France and inspired reformers who wanted similar changes in their own countries.",tip:"Know the specific Enlightenment ideas in each document: Declaration = Locke (natural rights, right of revolution); Constitution = Montesquieu (separation of powers). The AP may ask you to trace Enlightenment ideas into specific revolutionary documents — this is your American chapter connection."},
+
+  // Causes of French Revolution
+  {cat:"Causes of Revolution",q:"What were the long-term causes of the French Revolution?",a:"Three categories: <strong>Social</strong> — the rigid estate system left the bourgeoisie economically powerful but politically excluded; the feudal reaction closed off noble privileges just as expectations were rising. <strong>Economic</strong> — France's fiscal crisis from wars (especially the Seven Years' War and funding American independence) made reform urgent; an inefficient tax system exempted the privileged estates most able to pay. <strong>Intellectual</strong> — Enlightenment ideas provided a vocabulary of rights, natural law, and popular sovereignty that made the existing order seem irrational and illegitimate.",tip:"AP causation question staple. Use three categories: social (estate system, feudal reaction), economic (fiscal crisis, tax injustice), intellectual (Enlightenment). Long-term causes explain why France was unstable; short-term triggers (bad harvest, Estates-General deadlock) explain why it exploded in 1789."},
+  {cat:"Causes of Revolution",q:"What were the immediate triggers of the French Revolution in 1788–1789?",a:"A catastrophic <strong>harvest failure in 1788</strong> caused bread prices to spike — ordinary Parisians spent 80–90% of their income on bread, and suddenly couldn't afford it. King Louis XVI convened the <strong>Estates-General</strong> (not met since 1614) to address the fiscal crisis. The Third Estate's demands for equal representation triggered a constitutional standoff. When the king dismissed his reform minister Necker, Parisians feared royal repression — the crowd stormed the <strong>Bastille</strong> on July 14, 1789.",tip:"Immediate triggers vs. long-term causes is a classic AP distinction. Bread prices are the trigger that mobilized ordinary Parisians; the Estates-General deadlock is the political trigger that radicalized the bourgeoisie. Both must be mentioned — neither alone explains the explosion."},
+  {cat:"Causes of Revolution",q:"What was the structural problem of French royal finances, and why couldn't the king solve it?",a:"France's wars had left it with crushing debt — debt service consumed over half of royal revenues. The obvious solution was taxing the nobility and clergy, who were largely exempt. But when Louis XVI proposed tax reform, the nobility convened the Estates-General to block it — expecting to use the crisis to reassert their own power. The <strong>nobility's obstruction of reform</strong> converted a fiscal crisis into a constitutional crisis, opening space for the Third Estate to make revolutionary demands.",tip:"The fiscal crisis is essential context that's often underemphasized. The French monarchy wasn't overthrown because of ideology alone — it was bankrupt. The nobility's veto of tax reform is what radicalized the situation: the king couldn't solve the crisis without the nobility, and the nobility would only cooperate if given more power."},
+
+  // The Revolution
+  {cat:"The Revolution",q:"What happened in the early phases of the Revolution (1789–1791), and what did the National Assembly accomplish?",a:"The Third Estate declared itself a <strong>National Assembly</strong> (June 1789), swore the Tennis Court Oath not to disband until France had a constitution, and was joined by liberal nobles and clergy. The peasant Great Fear (rural revolts) prompted the National Assembly to abolish feudalism on <strong>August 4, 1789</strong>. The <strong>Declaration of the Rights of Man and Citizen</strong> (August 1789) proclaimed natural rights, equality before the law, and popular sovereignty. The Constitution of 1791 established a constitutional monarchy with a limited legislature.",tip:"The early Revolution (1789–1791) was the moderate, bourgeois phase — what the reformers originally wanted. Know the sequence: Tennis Court Oath → August 4 abolition of feudalism → Declaration of Rights of Man → Constitution of 1791. The AP frequently asks what was accomplished in this phase."},
+  {cat:"The Revolution",q:"What was the Declaration of the Rights of Man and Citizen (1789), and what did it establish?",a:"France's foundational revolutionary document, it declared: all men are born free and equal in rights; these rights include <strong>liberty, property, security, and resistance to oppression</strong>; sovereignty resides in the nation; law is the expression of the general will; freedom of speech, press, and religion. It drew directly on Locke, Rousseau, and the American Declaration of Independence.",tip:"The Declaration of Rights of Man is the AP's key primary source for the French Revolution. Know its core claims and their Enlightenment sources: Locke (natural rights), Rousseau (general will, popular sovereignty), Montesquieu (law as expression of the collective). Note what it omits: women are not mentioned."},
+  {cat:"The Revolution",q:"What caused the Revolution to radicalize in 1792–1793, and how did the radical phase begin?",a:"Multiple pressures converged: <strong>war with Austria and Prussia</strong> (declared April 1792) went badly, creating fear of invasion and foreign-backed counter-revolution; the king's flight to Varennes (June 1791) proved he was not committed to the constitutional monarchy; bread prices remained high and sans-culottes demanded more radical action; and the Legislative Assembly's Girondins pushed for war while the Jacobins mobilized popular support. The monarchy was suspended in August 1792; Louis XVI was tried and guillotined in January <strong>1793</strong>.",tip:"Radicalization sequence: war → military crisis → fear of counter-revolution → popular pressure → execution of the king → Committee of Public Safety → Terror. Know each link. The AP often asks why the Revolution became radical — external war is always part of the answer: revolutions radicalize under military pressure."},
+  {cat:"The Revolution",q:"What was the Reign of Terror (1793–1794), and how did Robespierre justify it?",a:"The Committee of Public Safety, dominated by <strong>Maximilien Robespierre</strong>, executed an estimated 17,000–40,000 people as enemies of the Revolution. Robespierre justified the Terror as the instrument of virtue: in a republic, he argued, virtue must be enforced by terror against its enemies. The Terror targeted not just aristocrats but also moderate revolutionaries (Girondins), political rivals, and ordinary people denounced by neighbors.",tip:"The Terror is the Revolution's most AP-tested phase. Key points: Robespierre + Committee of Public Safety + virtue/terror ideology + guillotine. The paradox — a revolution in liberty producing mass execution — is what makes it analytically rich. Rousseau's 'general will' provides the philosophical cover: those who resist the general will can be 'forced to be free.'"},
+  {cat:"The Revolution",q:"What were the social and gender dimensions of the Revolution — who benefited and who was excluded?",a:"The Revolution abolished feudalism and legal privilege, extending civil equality to all men. It briefly abolished slavery in French colonies (1794). Women gained some legal improvements (divorce rights, inheritance) but the <strong>Declaration of Rights of Man explicitly applied only to men</strong>. Olympe de Gouges's Declaration of the Rights of Woman (1791) was ignored, and she was later guillotined. Revolutionary clubs for women were closed in 1793. The Revolution's promise of universal rights was not extended to women.",tip:"Gender and the Revolution is a standard AP topic. Know: Olympe de Gouges (women's rights advocate, guillotined), clubs closed 1793, Declaration excluded women. The key analytical point: the Revolution proclaimed universal rights and then defined 'universal' as male. Wollstonecraft's Vindication was published the same year as the Declaration — the parallel is not coincidental."},
+  {cat:"The Revolution",q:"What was the Thermidorian Reaction and the Directory, and why did they fail?",a:"Robespierre was overthrown and executed in <strong>Thermidor</strong> (July 1794) by Convention members who feared they were next. The subsequent <strong>Directory</strong> (1795–1799) was a five-man executive committee representing moderate bourgeois interests — anti-Jacobin but also anti-royalist. It ended inflation, stabilized the economy somewhat, but was corrupt, politically unstable, and unable to end the wars. Its weakness created the conditions for Napoleon's coup (<em>18 Brumaire</em>, November 1799).",tip:"The Directory is the 'exhausted middle' — too conservative for radicals, too republican for royalists, too weak to govern effectively. Its failure is why Napoleon was welcomed. The AP may ask you to explain why the Revolution ended in military dictatorship — the Directory's instability is the proximate cause."},
+
+  // Napoleon
+  {cat:"Napoleon",q:"How did Napoleon rise to power, and what legitimized his authority?",a:"Napoleon Bonaparte rose through military distinction in the Revolutionary Wars (Italian campaigns 1796–1797, Egyptian expedition 1798). His coup of <strong>18 Brumaire</strong> (November 1799) overthrew the Directory with army support, establishing the Consulate with Napoleon as First Consul. He legitimized his authority through: military success, the <strong>plebiscite</strong> (popular vote confirming his rule), the Concordat with the Pope (1801) restoring Catholic legitimacy, and the Napoleonic Code (legal rationalization winning bourgeois support).",tip:"Napoleon's legitimacy is multi-layered: popular (plebiscites), military (victories), religious (Concordat), and legal (Napoleonic Code). No single source was sufficient — he needed all four. This multi-sourced legitimacy is analytically richer than 'he was a strong leader' and earns AP points."},
+  {cat:"Napoleon",q:"What were Napoleon's major domestic reforms, and which Revolutionary principles did they preserve or abandon?",a:"Napoleon preserved: legal equality (Napoleonic Code), abolition of feudalism, meritocracy in government service, religious toleration. Napoleon abandoned: political liberty (press censorship, secret police, authoritarian rule), democracy (plebiscites were manipulated, legislature was powerless), and women's rights (Napoleonic Code gave husbands legal dominance over wives). His <strong>Napoleonic Code</strong> rationalized French civil law and spread across Europe, permanently reshaping legal systems.",tip:"The AP loves asking: was Napoleon a child of the Revolution or its betrayer? The best answer: both. He preserved its social and legal gains (equality, meritocracy, legal rationalization) while destroying its political liberties (press freedom, representative government). The Code is the clearest example of this duality."},
+  {cat:"Napoleon",q:"What was the Napoleonic Code, and why was it historically significant?",a:"Promulgated in 1804, the Code consolidated revolutionary legal principles: <strong>equality before the law, property rights, religious toleration, and abolition of feudal privilege</strong>. It also enshrined patriarchal family law (husbands' legal authority over wives, limiting women's rights). It was adopted or imposed across Napoleon's empire and influenced legal systems across Europe and Latin America — it remains the basis of civil law in France, Quebec, and Louisiana today.",tip:"The Napoleonic Code is Napoleon's most enduring legacy — more lasting than any military victory. Know its content (equality, property, religious toleration, patriarchal family law) and its geographic spread. It permanently ended feudal law wherever it was introduced, making Napoleon an inadvertent spreader of revolutionary change."},
+  {cat:"Napoleon",q:"How did Napoleon build and lose his European empire, and what forces brought him down?",a:"At its peak (1810), Napoleon controlled directly or through client states most of continental Europe. Three forces brought him down: <strong>nationalism</strong> — peoples he conquered (Spanish, Germans, Russians) resisted French domination, inspiring nationalist resistance movements; the <strong>Continental System</strong> backfired, hurting Europe's economies and alienating allies; and the <strong>Russian campaign</strong> (1812) destroyed his Grand Army (600,000 entered Russia; ~100,000 returned). The Sixth Coalition defeated him at Leipzig (1813) and Waterloo (1815).",tip:"Napoleon's fall is caused by forces he himself helped create: nationalism (his empire inspired it as a reaction), the limits of logistics (Russia), and British seapower (which the Continental System couldn't break). Waterloo (1815) and Elba/St. Helena — know the sequence. The AP may ask why Napoleon's empire ultimately failed."},
+  {cat:"Napoleon",q:"What was the Continental System, and why did it fail?",a:"Napoleon's attempt to defeat Britain economically by closing European ports to British trade (1806). It failed because: <strong>Britain's navy</strong> enabled it to find alternative markets; European states (including France's allies) needed British goods and resented the restrictions; widespread smuggling undermined the embargo; and Napoleon's invasion of Portugal and Spain (to enforce it) triggered the <strong>Peninsular War</strong>, which tied down French forces and inspired nationalist resistance.",tip:"The Continental System is Napoleon's strategic error that cost him the empire. It aimed to strangle British trade but instead damaged his own allies' economies, triggered the Peninsular War, and gave Britain time to build the coalition that eventually defeated him. Know it as cause → Peninsular War → nationalist resistance."},
+  {cat:"Napoleon",q:"How did Napoleon's conquests spread revolutionary ideas across Europe, and what was the paradox?",a:"Napoleon's armies carried the Napoleonic Code, abolition of feudalism, legal equality, and rational administration wherever they conquered — permanently transforming the legal and social landscape of Europe. But his domination also <strong>awakened nationalism</strong> as peoples resisted French occupation. The paradox: Napoleon spread the Revolution's liberal ideas while simultaneously inspiring the conservative nationalism that would eventually overthrow liberal revolution elsewhere. He was both liberator and conqueror.",tip:"Napoleon's double legacy is the AP's most sophisticated analytical point about him: he spread Enlightenment/Revolutionary ideas (equality, legal rationalization) while inspiring nationalism as a counter-force. Both liberalism AND nationalism, which would be the dominant competing forces of the 19th century, were amplified by Napoleon. Know this paradox."},
+
+  // Broader Themes
+  {cat:"Broader Themes",q:"What were the long-term consequences of the French Revolution for European history?",a:"The Revolution permanently established that <strong>sovereignty resides in the people</strong>, not monarchs; that legal privilege based on birth is illegitimate; and that governments can be overthrown when they fail to serve the general interest. These ideas — combined with Napoleon's spread of the Code — made Europe's legal and political landscape permanently different. The Revolution also created the political spectrum (left/right), established nationalism as a political force, and set the agenda for 19th-century political conflict (liberalism vs. conservatism).",tip:"Long-term consequences question is almost guaranteed on the AP. Know: popular sovereignty, legal equality, nationalism, and the left-right political spectrum (the terms come from seating in the National Assembly). These are the Revolution's enduring gifts to modern politics — and the source of 19th-century conflicts."},
+  {cat:"Broader Themes",q:"How did Romanticism emerge as a response to the French Revolution and Enlightenment rationalism?",a:"Romanticism (emerging c. 1790s–1840s) was a cultural reaction against both Enlightenment rationalism and the Revolution's violence — <strong>celebrating emotion, imagination, nature, and individual genius</strong> over reason and universal rules. It was also often nationalist, drawing on folk culture, history, and language as sources of authentic identity. Artists like Goethe, Wordsworth, Beethoven, and Delacroix embodied different aspects of this reaction — some pro-revolutionary, some conservative, all anti-rationalist.",tip:"Romanticism as a reaction to Enlightenment and Revolution is the cultural bridge from Ch. 9 to the 19th century. It's not just an art style — it's a worldview that valued what the Enlightenment dismissed (emotion, tradition, nature, the particular vs. the universal). Know it as a cultural-intellectual movement with political implications: nationalist Romanticism fueled the revolutions of 1830 and 1848."}
+];
+
+const VOCAB = [
+  {cat:"Revolution: Key Terms",term:"Old Regime (Ancien régime)",pos:"noun (French)",def:"The social and political system of pre-revolutionary France: three legal estates (clergy, nobility, commoners), royal absolutism, noble tax exemptions, and Church privilege. The Revolution abolished it — the term was coined afterward to describe what had been overthrown.",tip:"Ancien régime is the frame for all the Revolution's reforms. Every revolutionary act was directed against one of its features: abolition of feudalism (August 4), Declaration of Rights (legal equality), execution of Louis XVI (royal absolutism). Know it as the 'before' picture."},
+  {cat:"Revolution: Key Terms",term:"Estates-General",pos:"noun (proper)",def:"France's representative assembly of the three estates, last convened in 1614 and called again by Louis XVI in 1789 to address the fiscal crisis. The dispute over voting procedure (by estate vs. by head) triggered the constitutional crisis that launched the Revolution.",tip:"The Estates-General is where the Revolution actually started — in a procedural dispute. Voting by estate (each estate gets one vote = nobility + clergy always outvote the Third Estate) vs. voting by head (Third Estate = majority) was a proxy war over who governed France."},
+  {cat:"Revolution: Key Terms",term:"Tennis Court Oath (1789)",pos:"noun (proper)",def:"The pledge by Third Estate delegates (constituted as the <strong>National Assembly</strong>) not to disband until they had given France a constitution. Sworn in a tennis court after being locked out of their meeting hall (June 20, 1789). The first direct challenge to royal authority.",tip:"The Tennis Court Oath is the symbolic birth of the Revolution — the moment commoners claimed the right to write a constitution regardless of royal permission. It's the political declaration of popular sovereignty in practice, before the Declaration of Rights articulated it in theory."},
+  {cat:"Revolution: Key Terms",term:"Storming of the Bastille (July 14, 1789)",pos:"noun (proper)",def:"Parisian crowds attacked and seized the Bastille prison (a symbol of royal tyranny) on July 14, 1789, after Louis XVI dismissed his reform minister Necker, sparking fear of royal crackdown. The Bastille held only seven prisoners but its capture symbolized the people's power. <strong>Bastille Day</strong> remains France's national holiday.",tip:"The Bastille's storming is the Revolution's most iconic moment. Know why it happened (fear of royal troops massing outside Paris) and what it symbolized (popular power over royal tyranny). It marks the point where the Revolution moved from the Assembly hall to the streets."},
+  {cat:"Revolution: Key Terms",term:"Great Fear (1789)",pos:"noun (proper)",def:"A wave of <strong>peasant revolts</strong> across rural France in July–August 1789, as peasants attacked noble estates and burned feudal records. Triggered by rumors of aristocratic plots and food shortages. Prompted the National Assembly to abolish feudalism on the night of August 4, 1789.",tip:"The Great Fear is the rural dimension of the Revolution — it shows that the Revolution wasn't just a bourgeois affair in Paris. Peasant pressure from below forced the National Assembly to abolish feudalism more rapidly and completely than it might otherwise have done."},
+  {cat:"Revolution: Key Terms",term:"Declaration of the Rights of Man and Citizen (1789)",pos:"noun (proper)",def:"The French Revolution's foundational statement of principles: all men born free and equal; natural rights of liberty, property, security, and resistance to oppression; sovereignty in the nation; law as expression of the general will; freedom of press, speech, religion. Applied to men only.",tip:"This is the Revolution's core document. Know its key claims and their Enlightenment sources: Locke (natural rights), Rousseau (general will, popular sovereignty). The exclusion of women is as important as what it includes — Olympe de Gouges's response is your evidence."},
+  {cat:"Revolution: Key Terms",term:"National Assembly",pos:"noun (proper)",def:"The legislative body formed by the Third Estate (June 1789) after declaring itself the representative of the French nation. Later became the <strong>Constituent Assembly</strong> (writing the constitution) and then the <strong>Legislative Assembly</strong>. The shift in names tracks the Revolution's stages.",tip:"The National Assembly's self-constitution is the act of popular sovereignty — the Third Estate claiming to speak for France. Know the name sequence: Third Estate → National Assembly → Constituent Assembly → Legislative Assembly → National Convention. Each shift marks a revolutionary escalation."},
+  {cat:"Revolution: Key Terms",term:"Sans-culottes",pos:"noun (plural, French)",def:"Literally 'without knee-breeches' — the working-class and petty-bourgeois Parisians who wore long trousers rather than the knee-breeches of the upper classes. They were the <strong>radical popular force</strong> that pushed the Revolution leftward, demanding price controls, bread, and direct democracy.",tip:"Sans-culottes are the social base of the radical Revolution. They're not the same as Jacobins (who were political leaders) — they're the crowd, the street pressure. Their bread demands and direct democracy aspirations explain why the Revolution radicalized beyond bourgeois constitutionalism."},
+  {cat:"Revolution: Key Terms",term:"Jacobins",pos:"noun (plural)",def:"A radical republican political club that dominated the National Convention (1792–1794). Led by <strong>Maximilien Robespierre</strong>, the Jacobins controlled the Committee of Public Safety and directed the Reign of Terror. They believed in popular sovereignty, civic virtue, and the necessity of terror to save the Republic.",tip:"Jacobins = the radical revolutionary party. Know their leader (Robespierre), their institution (Committee of Public Safety), their policy (Terror), and their ideology (civic virtue + popular sovereignty). Contrast with the Girondins (moderate republicans) whom the Jacobins purged."},
+  {cat:"Revolution: Key Terms",term:"Committee of Public Safety",pos:"noun (proper)",def:"The executive body that effectively governed France during the Radical phase (1793–1794), dominated by <strong>Robespierre</strong>. It directed the war effort, organized the levée en masse (mass conscription), and oversaw the Terror. Robespierre was overthrown and guillotined in Thermidor (July 1794).",tip:"The Committee of Public Safety is the institutional engine of the Terror. It shows how revolutionary emergency (war crisis + internal opposition) produced centralized, authoritarian government even in a republic. The parallel to later revolutionary emergencies (Russian Revolution, etc.) is worth noting."},
+  {cat:"Revolution: Key Terms",term:"Reign of Terror (1793–1794)",pos:"noun (proper)",def:"The period of the French Revolution when the Committee of Public Safety, led by <strong>Robespierre</strong>, executed an estimated 17,000–40,000 people as enemies of the Republic. Justified by Robespierre as necessary to defend republican virtue against its enemies. Ended with Robespierre's own execution (Thermidor, July 1794).",tip:"The Terror is the Revolution's darkest chapter and most analytically productive moment. Key AP question: why did a revolution in liberty produce mass execution? Answers: war crisis, Rousseau's general will ideology, class conflict, political paranoia. Robespierre's own execution by the same logic he used is darkly fitting."},
+  {cat:"Revolution: Key Terms",term:"Thermidorian Reaction",pos:"noun (proper)",def:"The conservative turn after Robespierre's overthrow (9 Thermidor, July 27, 1794). Convention members who feared the Terror overthrew Robespierre. The subsequent period dismantled radical Jacobin policies, released political prisoners, and moved France toward the moderate <strong>Directory</strong> (1795–1799).",tip:"Thermidorian Reaction = the Revolution's swing back toward the center after radical excess. 'Thermidor' became a general term for revolutionary retreat. The AP may use it as a concept: when does a revolution 'thermidorize'? France: 1794; Russia: arguably 1921 (NEP) or 1924 (Stalin)."},
+  {cat:"Revolution: Key Terms",term:"Directory",pos:"noun (proper)",def:"The five-man executive committee that governed France (1795–1799). Represented moderate bourgeois republicanism — anti-Jacobin and anti-royalist. Corrupt, politically unstable, and unable to end France's wars. Overthrown by Napoleon's coup of <strong>18 Brumaire</strong> (November 1799).",tip:"The Directory is the exhausted middle of the Revolution. Its failure shows that the Revolution couldn't find a stable moderate equilibrium — it was pulled by royalists on the right and radicals on the left. Its weakness is why Napoleon's coup was welcomed rather than resisted."},
+  {cat:"Revolution: Key Terms",term:"Levée en masse",pos:"noun (French)",def:"The <strong>mass conscription</strong> of all able-bodied French men into the revolutionary armies (decreed August 1793). Created armies of unprecedented size (up to 800,000 men) motivated by nationalism and civic ideals rather than just pay. Transformed European warfare by introducing mass citizen armies.",tip:"The levée en masse is the military revolution of the French Revolution. It created something new: citizen armies fighting for a nation and its ideals, not for a king's wages. This transformed warfare — Napoleon's armies used this model. It also spread nationalism, as other nations had to mobilize similarly to resist France."},
+  {cat:"Revolution: Key Terms",term:"Olympe de Gouges",pos:"noun (proper)",def:"French activist (1748–1793) who wrote the <em>Declaration of the Rights of Woman and Female Citizen</em> (1791), directly paralleling the Declaration of Rights of Man and demanding equal rights for women. She was guillotined in 1793 during the Terror.",tip:"De Gouges is the Revolution's feminist conscience — she took the Declaration of Rights of Man at face value and asked why it didn't apply to women. Her execution shows that the Revolution's promises of universal rights had explicit limits. Know her declaration and her fate."},
+  {cat:"Napoleon",term:"18 Brumaire",pos:"noun (proper)",def:"Napoleon Bonaparte's coup d'état on November 9, 1799 (18 Brumaire in the revolutionary calendar), overthrowing the Directory. He established the Consulate with himself as First Consul — effectively ending the Revolution and beginning his personal rule.",tip:"18 Brumaire = the end of the Revolution and the beginning of Napoleon. Know the date, what it overthrew (Directory), and what it created (Consulate). It's the moment where the Revolution's failure to find stable government led to military dictatorship — a pattern that repeated in other revolutionary situations."},
+  {cat:"Napoleon",term:"Napoleonic Code",pos:"noun (proper)",def:"The comprehensive French civil law code promulgated in 1804, establishing: equality before the law, property rights, religious toleration, abolition of feudal privilege, and secular civil marriage. Also established patriarchal family law. Adopted or imposed across Napoleon's empire; still the basis of civil law in France, Quebec, and Louisiana.",tip:"The Code is Napoleon's most enduring achievement. It preserved revolutionary gains (equality, property, toleration) while establishing conservative family law (male dominance). Its geographic spread — across Europe and into Latin America — made Napoleon the inadvertent exporter of revolutionary legal principles."},
+  {cat:"Napoleon",term:"Concordat of 1801",pos:"noun (proper)",def:"An agreement between Napoleon and Pope Pius VII <strong>restoring the Catholic Church's official status in France</strong> while keeping Church property nationalized and the state's right to nominate bishops. It ended the religious conflict of the Revolution and gave Napoleon papal legitimacy.",tip:"The Concordat is Napoleon's political masterstroke — it restored Catholic legitimacy without giving the Church back its land or independence. He got religious peace and papal endorsement; the Pope got an official Church role in France. It shows Napoleon's pragmatism: using religion as a tool of governance."},
+  {cat:"Napoleon",term:"Continental System",pos:"noun (proper)",def:"Napoleon's 1806 embargo closing European ports to British trade, intended to defeat Britain economically by cutting off its export markets. It failed because British naval power found alternative markets, European allies resented the restrictions, and smuggling was widespread. Its enforcement triggered the Peninsular War.",tip:"The Continental System is Napoleon's strategic blunder. Know: purpose (economic war on Britain), why it failed (British navy, smuggling, allied resentment), and its consequence (Peninsular War → nationalist resistance → Napoleon's decline). It shows the limits of land power against a naval hegemon."},
+  {cat:"Napoleon",term:"Nationalism",pos:"noun",def:"The political ideology holding that people sharing a common language, culture, or history constitute a <strong>nation</strong> that deserves self-governance. Spread as a mass force by the French Revolution (citizen armies fighting for France) and intensified as a reaction against Napoleon's conquests across Europe.",tip:"Nationalism is the Revolution's most consequential unintended export. Napoleon's conquests awakened nationalism in Spain, Germany, Russia, and elsewhere — the same force that eventually destroyed his empire dominated 19th-century European politics. Know it as both a product of the Revolution (French nationalism) and a reaction to Napoleon (German, Spanish nationalism)."},
+  {cat:"Napoleon",term:"Peninsular War (1808–1814)",pos:"noun (proper)",def:"Napoleon's attempt to enforce the Continental System by invading Portugal and Spain, installing his brother as King of Spain. Spanish resistance (guerrilla warfare supported by Britain) tied down ~300,000 French troops for six years, draining resources and inspiring nationalist opposition. Wellington's campaigns in Spain helped defeat Napoleon.",tip:"The Peninsular War is Napoleon's 'Spanish ulcer' — his own term. It shows how nationalism and guerrilla resistance could defeat conventional military superiority. It's also Britain's most important continental contribution to Napoleon's defeat, foreshadowing Wellington at Waterloo."},
+  {cat:"Napoleon",term:"Russian Campaign (1812)",pos:"noun (proper)",def:"Napoleon's invasion of Russia with 600,000 troops. Russia's strategy of retreating (scorched earth, burning Moscow) denied Napoleon a decisive battle. The French won militarily but found Moscow burned and abandoned; winter caught the army retreating. Roughly <strong>400,000–500,000 men died</strong>; fewer than 100,000 returned in fighting condition. The decisive turning point in Napoleon's downfall.",tip:"The Russian campaign is Napoleon's fatal overreach. Know: 600,000 in, ~100,000 out, 1812. The causes of failure: logistical impossibility of supplying such a force, Russian scorched earth, Russian winter, and Russian nationalism. It permanently broke the Grande Armée and made Napoleon's eventual defeat inevitable."},
+  {cat:"Napoleon",term:"Congress of Vienna (1814–1815)",pos:"noun (proper)",def:"The great-power conference that redrew Europe's map after Napoleon's defeat, guided by the principles of <strong>legitimacy</strong> (restoring pre-revolutionary monarchies), <strong>balance of power</strong> (no single state dominant), and <strong>compensation</strong> (rewarding victorious powers). Metternich (Austria) dominated proceedings. Created a conservative European order that largely held until 1848.",tip:"The Congress of Vienna is the end point of Ch. 9 and the starting point of 19th-century European politics. Know its three principles (legitimacy, balance of power, compensation) and its key figure (Metternich). Its conservative settlement tried to undo the Revolution — the revolutions of 1830 and 1848 show it only partially succeeded."},
+  {cat:"Napoleon",term:"Metternich",pos:"noun (proper)",def:"Klemens von Metternich, Austrian foreign minister and architect of the <strong>Congress of Vienna</strong> (1815). Champion of conservatism, legitimacy, and the suppression of liberal and nationalist movements. The dominant European statesman from 1815 until the revolutions of 1848 forced him to resign.",tip:"Metternich is the face of post-Napoleonic conservatism. He believed the French Revolution and its ideas were a disease to be contained. His Concert of Europe system (great powers cooperating to suppress revolution) defined European diplomacy from 1815 to 1848 — and its collapse in 1848 marks the end of his era."}
+];
+
+const DECKS = [CONCEPTS, VOCAB, [...CONCEPTS, ...VOCAB]];
+let currentDeck = 0, activeCat = "All", deck = [], idx = 0, revealed = false;
+
+function getCats(cards) { return ["All", ...[...new Set(cards.map(c => c.cat))]]; }
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  getCats(DECKS[currentDeck]).forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0; revealed = false; render();
+}
+function switchDeck(n) {
+  currentDeck = n; activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow(); buildDeck();
+}
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area"; area.className = "answer-area";
+    area.innerHTML = `<p class="answer-text">${isVocab ? c.def : c.a}</p>
+      <div class="context-box"><p class="context-label">${isVocab ? "why it matters" : "exam angle"}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>
