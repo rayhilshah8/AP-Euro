@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 4 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #5c3d6e;
+    --rule: #d4c9b0;
+    --tag-bg: #e6dff0;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+
+  .deck-tabs { display: flex; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab {
+    flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+    background: transparent; border: none; cursor: pointer; color: var(--ink-muted);
+    text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s;
+    border-right: 1.5px solid var(--ink);
+  }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+    background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s;
+  }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+
+  .card-wrap { margin-bottom: 1.25rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-height: 220px;
+    cursor: pointer;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.12s, transform 0.12s;
+  }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+
+  .answer-area {
+    margin-top: 1.25rem; padding-top: 1.25rem;
+    border-top: 1px dashed var(--rule);
+    animation: fadein 0.2s ease;
+  }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    font-size: 12px; line-height: 1.65; color: var(--ink-muted);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px;
+    background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink); transition: all 0.12s;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px;
+    background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s;
+    letter-spacing: 0.05em;
+  }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+  .cat-tag {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); align-self: flex-start; margin-bottom: 0.5rem;
+    padding: 2px 8px; background: var(--tag-bg); border-radius: 20px;
+  }
+
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 4 — <em>New Encounters</em></h1>
+    <p class="subtitle">Europe and the World · 1500–1800</p>
+  </header>
+
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+
+  <footer>AP Euro · Ch. 4 · <span>New Encounters</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  // Motives & Means
+  {cat:"Motives & Means",q:"What were the primary motives driving European overseas exploration after 1400?",a:"Historians summarize them as <strong>God, Glory, and Gold</strong>: missionary zeal to spread Christianity; individual and national prestige; and commercial profit — especially the desire to access Asian spice and silk markets without paying Ottoman middlemen. The fall of Constantinople (1453) intensified the need for alternative routes to Asia.",tip:"Always list all three motive categories on the AP — religious, political, and economic. Single-cause answers lose points. Note that motives varied by nation: Portugal was early and commercially focused; Spain added religious conquest; northern powers came later for trade."},
+  {cat:"Motives & Means",q:"What technological innovations made sustained oceanic exploration possible?",a:"Key advances included the <strong>caravel</strong> (a maneuverable ship that could sail against the wind using a lateen sail), the <strong>magnetic compass</strong> and <strong>astrolabe</strong> (for navigation without visible landmarks), improved cartography, and the <strong>sternpost rudder</strong>. The Portuguese also systematized the collection of geographical knowledge under Prince Henry the Navigator.",tip:"Technology enabling exploration is a classic AP causation topic. Don't just list the tools — explain what problem each solved. The caravel solved the problem of sailing into the wind (returning from Africa); the astrolabe solved latitude measurement."},
+  {cat:"Motives & Means",q:"What role did the Ottoman Empire play in spurring European exploration?",a:"The Ottoman conquest of Constantinople (1453) gave the Ottomans <strong>control over overland and eastern Mediterranean trade routes</strong> to Asia, making the spice and silk trade more expensive and politically difficult for European merchants. This created powerful economic incentive to find direct sea routes to Asia that bypassed Ottoman territory.",tip:"The Ottoman connection links Ch. 2/3 to Ch. 4. It's a classic AP continuity thread: the same event (fall of Constantinople) that enriched Italian humanism with Greek scholars also redirected European commerce toward the Atlantic."},
+
+  // Portugal & Spain
+  {cat:"Portuguese & Spanish Empires",q:"How did Portugal build its maritime empire, and what methods did it use?",a:"Portugal pioneered the systematic exploration of the African coast under <strong>Prince Henry the Navigator</strong>, establishing a chain of fortified trading posts (<em>feitorias</em>). Bartolomeu Dias rounded the Cape of Good Hope (1488); Vasco da Gama reached India (1498). Portugal controlled the Indian Ocean spice trade through naval dominance, not territorial conquest — a commercial empire of sea routes and ports rather than inland colonies.",tip:"Portugal's empire model = commercial and coastal, not settler colonialism. Contrast with Spain's model of inland conquest and territorial control. The AP frequently asks you to compare colonial models."},
+  {cat:"Portuguese & Spanish Empires",q:"What was the significance of Columbus's 1492 voyage, and what did he actually discover?",a:"Columbus sailed west seeking Asia and landed in the Caribbean, believing he had reached Asia. His voyages opened sustained <strong>contact between Europe and the Americas</strong> — a world unknown to Europeans. The Treaty of Tordesillas (1494) divided the non-European world between Spain and Portugal along a longitudinal line, giving Spain the Americas and Portugal Africa/Asia.",tip:"Columbus didn't 'discover' America — indigenous peoples had lived there for millennia, and Norse explorers had reached North America earlier. The AP exam frames it as the beginning of sustained contact with world-historical consequences. Emphasize consequences, not the voyage itself."},
+  {cat:"Portuguese & Spanish Empires",q:"How did Spain conquer the Aztec and Inca empires, and what factors made conquest possible?",a:"<strong>Hernán Cortés</strong> conquered the Aztec Empire (1519–1521) and <strong>Francisco Pizarro</strong> conquered the Inca Empire (1531–1533). Three factors made this possible: <strong>military technology</strong> (steel weapons, horses, gunpowder — all unknown in the Americas); <strong>epidemic disease</strong> (smallpox killed an estimated 50–90% of indigenous populations); and <strong>political divisions</strong> among indigenous peoples, some of whom allied with the Spanish against their rivals.",tip:"Disease is the most important factor — more indigenous people died of smallpox than Spanish swords. The AP rewards this nuance. Military technology alone couldn't have conquered empires of millions; disease did the demographic work."},
+  {cat:"Portuguese & Spanish Empires",q:"What was the encomienda system, and what were its consequences for indigenous peoples?",a:"The encomienda granted Spanish conquistadors the right to demand <strong>labor and tribute from indigenous people</strong> in a designated area in exchange for Christianization. In practice it was a brutal forced labor system that contributed to indigenous population collapse. Reformers like Bartolomé de Las Casas condemned it and helped replace it with the repartimiento — but exploitation continued.",tip:"The encomienda is the institutional face of Spanish colonialism's violence. Las Casas is important as a critic — he's your evidence for European awareness of and debate about colonial brutality. His writings led to the New Laws of 1542 attempting (weakly) to protect indigenous people."},
+
+  // Columbian Exchange & Disease
+  {cat:"Columbian Exchange",q:"What was the Columbian Exchange, and what were its most significant consequences?",a:"The Columbian Exchange was the <strong>transfer of plants, animals, diseases, and people between the Old and New Worlds</strong> after 1492. Europeans brought horses, cattle, pigs, wheat, and deadly diseases (smallpox, measles, typhus) to the Americas. The Americas sent back potatoes, tomatoes, maize, cacao, tobacco, and precious metals. The population consequences were catastrophic for indigenous Americans; European and global populations eventually grew dramatically on American food crops.",tip:"The Columbian Exchange is one of the most consequential events in world history. For the AP, emphasize both directions and both positive and negative effects. Key AP framing: the exchange transformed global demography, diet, and economics over the long run."},
+  {cat:"Columbian Exchange",q:"How did epidemic disease reshape the Americas after 1492?",a:"Indigenous Americans had no prior exposure — and thus no immunity — to European diseases like smallpox, measles, and typhus. The result was <strong>catastrophic demographic collapse</strong>: indigenous populations in some regions fell by 50–90% within a century of contact. This demographic disaster made Spanish conquest possible, destroyed indigenous social and political structures, and created the labor shortage that drove the Atlantic slave trade.",tip:"Disease causation → conquest → labor shortage → slave trade: this three-step chain is one of the most important analytical sequences in AP Euro. Make sure you can articulate each link explicitly."},
+  {cat:"Columbian Exchange",q:"How did American food crops transform Europe and the world?",a:"Crops from the Americas — especially the <strong>potato, maize (corn), and tomato</strong> — dramatically increased food supplies in Europe, supporting population growth. The potato in particular became a staple crop for the European poor, especially in Ireland, where dependence on it later caused catastrophic famine (1840s). Sweet potato and maize also transformed African agriculture and demographics.",tip:"American crops → European population growth is a classic AP long-run consequence question. This connects Ch. 4 to the population growth of the 18th century and even the Industrial Revolution (more people = more labor and demand)."},
+
+  // Slave Trade
+  {cat:"Slave Trade",q:"What were the origins of the Atlantic slave trade, and what drove its growth?",a:"Portugal began trading enslaved Africans along the West African coast in the 1440s, initially for European labor markets. The <strong>plantation system</strong> in the Americas — growing sugar, tobacco, and later cotton — created insatiable demand for cheap, coerced labor. After indigenous populations collapsed from disease, African enslaved labor became the solution. By the 18th century, the Atlantic slave trade had transported an estimated 12 million Africans to the Americas.",tip:"The causal chain: disease kills indigenous → labor shortage on plantations → Atlantic slave trade expands. The slave trade is not a separate story — it's directly caused by earlier developments in this chapter. Always connect them."},
+  {cat:"Slave Trade",q:"What was the triangular trade, and how did it function?",a:"The triangular trade connected three regions: European goods (textiles, guns, alcohol) were traded in West Africa for enslaved people; enslaved people were transported across the Atlantic (the <strong>Middle Passage</strong>) to the Americas; American commodities (sugar, tobacco, cotton) were shipped back to Europe. Each leg generated profit, making the system self-reinforcing and enormously profitable.",tip:"The triangular trade is the economic skeleton of Atlantic colonialism. Know all three legs and what flowed on each. The Middle Passage's brutality — mortality rates of 10–20% — is essential context for any discussion of the slave trade's human cost."},
+  {cat:"Slave Trade",q:"What was the impact of the slave trade on West African societies?",a:"The slave trade <strong>depopulated regions</strong> of West Africa, distorted local economies toward slave raiding and warfare, empowered states that participated in the trade (Dahomey, Ashanti) at the expense of those that didn't, and created cycles of violence and instability. It also transferred enormous wealth out of Africa and into European and American economies, contributing to Africa's relative economic underdevelopment.",tip:"The AP increasingly expects students to consider the perspectives and experiences of the enslaved and of African societies. Don't frame the slave trade purely from a European commercial perspective — address its African consequences."},
+
+  // New Rivals & Global Reach
+  {cat:"New Rivals & Global Reach",q:"How did the Dutch, English, and French challenge Iberian dominance of global trade in the 17th century?",a:"The Dutch created the <strong>Dutch East India Company (VOC)</strong> and <strong>Dutch West India Company</strong> — joint-stock companies that pooled capital to fund expensive trading ventures. England and France followed with their own East India Companies. These northern European powers focused on <strong>trade and profit</strong> rather than religious conversion, and their joint-stock model allowed them to raise more capital than the Spanish or Portuguese crown-funded system.",tip:"The shift from Iberian to Dutch/English/French dominance is a key 17th-century development. The joint-stock company is the key innovation — it democratized investment in overseas trade and is an ancestor of the modern corporation."},
+  {cat:"New Rivals & Global Reach",q:"What was the European role in Asia, and how did it differ from the Americas?",a:"In Asia, Europeans generally could not conquer large, powerful states like China, Japan, or Mughal India. Instead, they established <strong>coastal trading posts</strong> and competed for access to existing trade networks. The Portuguese dominated initially; the Dutch displaced them in the 17th century; the British eventually dominated India. Japan expelled most Europeans (except Dutch traders at Nagasaki) in the 1630s; China restricted Europeans to Canton.",tip:"Asia vs. Americas comparison is AP gold: in the Americas, Europeans conquered and colonized; in Asia, they traded and competed at the margins of powerful states. The contrast reveals the limits of European power in this period."},
+  {cat:"New Rivals & Global Reach",q:"How did European colonialism affect Southeast Asia?",a:"The Portuguese established Goa (India) and Malacca (Malaysia) as trading centers. The Dutch eventually dominated the <strong>Spice Islands (modern Indonesia)</strong> through the VOC, imposing a brutal monopoly on nutmeg and cloves and forcing local rulers into dependency. The VOC's treatment of the Banda Islands (massacring the indigenous population for a nutmeg monopoly) exemplifies colonial violence in Southeast Asia.",tip:"Southeast Asia is often overlooked but shows the economic logic of colonialism starkly: monopoly control of a high-value commodity justified extreme violence. The Banda massacre is a powerful specific example for DBQs on colonial methods."},
+
+  // Economy
+  {cat:"Economy & Capitalism",q:"What was mercantilism, and how did it shape European colonial policy?",a:"Mercantilism was the economic theory that national wealth was finite and measured in gold and silver, and that states should <strong>maximize exports, minimize imports, and accumulate bullion</strong>. Colonies existed to supply raw materials to the mother country and buy its manufactured goods — a closed economic system. Navigation Acts (England), the Colbert system (France), and the Spanish colonial trade monopoly all reflected mercantilist policy.",tip:"Mercantilism = the economic ideology of colonialism. It explains why European states fought so hard to control colonies: they were instruments of national enrichment. Contrast with free trade (Adam Smith, late 18th century) — which rejected mercantilist assumptions."},
+  {cat:"Economy & Capitalism",q:"What was the 'price revolution' of the 16th century, and what caused it?",a:"A sustained period of <strong>inflation across Europe</strong> (prices rising 2–3x over the 16th century), caused primarily by the massive influx of silver from Spanish American mines (especially Potosí in Bolivia). More silver in circulation without a proportional increase in goods drove prices up. Wage earners were hurt; merchants and landowners who could raise prices benefited.",tip:"The price revolution shows how American silver reshaped European economics. It's also evidence that the Americas affected Europe even before large-scale immigration — through commodity flows. Good for questions about economic consequences of exploration."},
+  {cat:"Economy & Capitalism",q:"What was commercial capitalism, and how did it develop in the 16th–17th centuries?",a:"Commercial capitalism involved <strong>private investment in trade for profit</strong>, supported by new financial instruments: joint-stock companies (pooling investor capital), marine insurance, bills of exchange (transferable credit), and banking houses (Fuggers of Augsburg, later Dutch and English banks). The Amsterdam Exchange Bank (1609) became the center of European finance, enabling larger-scale, longer-distance trade.",tip:"The development of commercial capitalism is a key AP economic theme. Know the key financial innovations and their functions. The joint-stock company is the most important — it's the ancestor of the modern corporation and enabled the massive capital needs of colonial trade."},
+  {cat:"Economy & Capitalism",q:"How did overseas expansion shift the economic center of gravity in Europe?",a:"The Atlantic economy displaced the Mediterranean as Europe's commercial core. Italian city-states (Venice, Genoa) declined as the <strong>Atlantic ports — Lisbon, Seville, Antwerp, Amsterdam, London</strong> — rose. The Dutch Republic became the dominant commercial power of the 17th century, followed by England. This shift fundamentally reoriented European economic and political power toward the northwest.",tip:"This geographic shift is an AP continuity-and-change favorite. The Renaissance began in Italy partly because of Mediterranean trade wealth; the shift to the Atlantic economy explains why Italy declined economically while England and the Dutch Republic rose."},
+
+  // Impact & Ethics
+  {cat:"Impact & Ethics",q:"What was the demographic impact of European expansion on indigenous peoples of the Americas?",a:"The combination of epidemic disease, warfare, forced labor, and social disruption caused <strong>catastrophic population collapse</strong>. Estimates vary widely but many historians believe the indigenous population of the Americas fell by 50–90% in the century after contact — from perhaps 50–70 million to as few as 5–10 million. Entire civilizations, languages, and knowledge systems were destroyed.",tip:"This is one of history's greatest demographic catastrophes. AP essays on the impact of exploration must address indigenous people — not just European gains. The 'Columbian Exchange' framing risks making this sound like an equal trade; it was radically unequal."},
+  {cat:"Impact & Ethics",q:"What debates arose among Europeans about the morality of conquest and enslavement?",a:"<strong>Bartolomé de Las Casas</strong>, a Dominican friar, condemned the encomienda system and argued indigenous people had natural rights and souls. The Valladolid Debate (1550–1551) pitted him against Juan Ginés de Sepúlveda, who argued indigenous people were natural slaves (Aristotle's concept). The Spanish crown issued the New Laws (1542) partly in response — but enforcement was weak and exploitation continued.",tip:"Las Casas is essential AP content — he's your evidence for European moral critique of colonialism. The Valladolid Debate is the first major European debate about human rights in a colonial context. Know both sides of the debate and its limited practical impact."},
+  {cat:"Impact & Ethics",q:"How did European expansion affect European society and culture?",a:"Expansion brought new goods (tobacco, chocolate, coffee, sugar) that transformed European diet and social customs. It generated new wealth that funded the arts and state power. It also challenged European intellectual frameworks: encountering diverse peoples and cultures raised questions about human nature, religion, and social organization that fed into the Scientific Revolution and Enlightenment. The 'noble savage' idea emerged as a critique of European society.",tip:"The cultural impact of expansion on Europe itself is often underemphasized. For the AP, connect expansion to the Enlightenment: encounter with diverse human societies raised relativism and challenged religious and cultural assumptions."},
+
+  // Broader Themes
+  {cat:"Broader Themes",q:"How did European expansion create the first truly global economy?",a:"By connecting the Americas, Africa, Asia, and Europe through sustained trade networks, European expansion created a <strong>world economy</strong> for the first time. Silver from the Americas flowed to China (where it was in high demand); spices from Southeast Asia reached European tables; enslaved Africans worked American plantations producing sugar for European consumers. No region remained economically isolated.",tip:"'First global economy' is a big-picture AP framing. The key argument: before 1500, regional economies existed; after 1600, they were linked into a single system by European-controlled trade networks. This is the origin of modern economic globalization."},
+  {cat:"Broader Themes",q:"What is the historiographical debate about the legacy of European expansion?",a:"Traditional ('Eurocentric') history celebrated exploration as progress and the spread of civilization. Later historians emphasized the <strong>violence, genocide, and exploitation</strong> that accompanied expansion. Post-colonial historians center indigenous and African perspectives and argue that European wealth was built on the labor and resources extracted from the Global South. Most current AP-level historians take a complex view: expansion generated enormous wealth AND caused enormous suffering — both are true.",tip:"Historiography questions appear on the AP DBQ and LEQ. Know that 'Eurocentric' vs. 'post-colonial' framing is a real debate. The most sophisticated AP answers acknowledge both the transformative power of expansion and its devastating human costs."}
+];
+
+const VOCAB = [
+  {cat:"Exploration",term:"Caravel",pos:"noun",def:"A small, maneuverable Portuguese sailing ship featuring <strong>lateen (triangular) sails</strong> that allowed sailing against the wind — essential for returning north along the African coast. The caravel made sustained oceanic exploration practical.",tip:"The caravel is the key technological enabler of Portuguese exploration. Know what problem it solved: sailing against prevailing winds. Without it, ships could sail south but not return."},
+  {cat:"Exploration",term:"Astrolabe",pos:"noun",def:"A navigational instrument used to measure the <strong>altitude of the sun or stars</strong> above the horizon, allowing sailors to calculate their latitude at sea. Along with the magnetic compass, it made open-ocean navigation feasible.",tip:"The astrolabe solves the 'where am I?' problem at sea. Combined with the compass (direction) and improved maps, it enabled sailors to venture far from coastlines and return safely."},
+  {cat:"Exploration",term:"Prince Henry the Navigator",pos:"noun (proper)",def:"Portuguese prince (1394–1460) who sponsored and organized systematic exploration of the West African coast, established a school of navigation at Sagres, and oversaw the collection of geographic and cartographic knowledge that made Portugal's maritime empire possible.",tip:"Henry never sailed on the major voyages himself — his significance is institutional and organizational. He created the infrastructure for Portuguese exploration. Good example of how royal patronage enabled exploration."},
+  {cat:"Exploration",term:"Treaty of Tordesillas (1494)",pos:"noun (proper)",def:"Agreement between Spain and Portugal, brokered by Pope Alexander VI, dividing the non-European world along a <strong>longitudinal line ~370 leagues west of the Cape Verde Islands</strong>. Spain received the Americas (except Brazil); Portugal received Africa, Asia, and Brazil.",tip:"Tordesillas reveals the assumption that European powers had the right to divide the world between themselves — ignoring indigenous inhabitants entirely. Brazil speaks Portuguese today because of this treaty."},
+  {cat:"Exploration",term:"Bartolomeu Dias",pos:"noun (proper)",def:"Portuguese explorer who in <strong>1488 became the first European to round the Cape of Good Hope</strong> at the southern tip of Africa, proving a sea route to the Indian Ocean was feasible.",tip:"Dias is the turning-point moment for Portuguese exploration — proof that Africa could be circumnavigated. Vasco da Gama completed the route to India ten years later (1498)."},
+  {cat:"Exploration",term:"Vasco da Gama",pos:"noun (proper)",def:"Portuguese explorer who in <strong>1498 became the first European to reach India by sea</strong>, sailing around Africa to Calicut. His voyage opened the direct sea route to the spice trade, ending the need for overland routes through the Ottoman Empire.",tip:"Da Gama's voyage is the payoff of decades of Portuguese exploration. Its commercial consequence: Portugal could now buy spices directly in India and sell them in Europe at enormous profit, bypassing all middlemen."},
+  {cat:"Empires",term:"Conquistadors",pos:"noun (plural, Spanish)",def:"Spanish soldiers and explorers who conquered indigenous empires in the Americas. The most significant were <strong>Hernán Cortés</strong> (Aztec Empire, 1519–1521) and <strong>Francisco Pizarro</strong> (Inca Empire, 1531–1533).",tip:"Know both conquistadors and their targets. On the AP, don't focus only on the military conquest — explain why it succeeded (disease, indigenous alliances, technology) and what it produced (encomienda, population collapse, silver extraction)."},
+  {cat:"Empires",term:"Encomienda",pos:"noun (Spanish)",def:"A grant to Spanish colonists giving them the right to demand <strong>labor and tribute from a specified group of indigenous people</strong> in exchange for their Christianization and 'protection.' In practice, a brutal forced labor system that contributed to indigenous population collapse.",tip:"The encomienda is the institutional mechanism of Spanish colonial exploitation. It was formally a labor grant, not slavery — but the distinction was largely academic. Las Casas's critique of the encomienda is essential context."},
+  {cat:"Empires",term:"Bartolomé de Las Casas",pos:"noun (proper)",def:"Spanish Dominican friar (1484–1566) who initially held an encomienda, witnessed its brutality, and became the most prominent <strong>advocate for indigenous rights</strong>. His <em>A Short Account of the Destruction of the Indies</em> (1542) documented Spanish atrocities and influenced the New Laws of 1542.",tip:"Las Casas is your go-to figure for moral critique of colonialism from within European culture. He argued indigenous people were rational beings with souls, deserving the same rights as Europeans — a radical position in 1542."},
+  {cat:"Empires",term:"Potosí",pos:"noun (proper)",def:"A city in modern Bolivia, site of the <strong>world's largest silver mine</strong> in the 16th–17th centuries. Operated by indigenous forced labor (mita system), it produced the silver that flooded Europe and fueled the price revolution. At its peak it was one of the largest cities in the world.",tip:"Potosí is the physical source of the price revolution. It also illustrates colonial extraction at its most brutal — the mita system killed hundreds of thousands of indigenous laborers. A single specific place that connects economic and social history."},
+  {cat:"Columbian Exchange",term:"Columbian Exchange",pos:"noun (proper)",def:"The transfer of <strong>plants, animals, diseases, and people</strong> between the Eastern and Western Hemispheres following Columbus's 1492 voyage. Europe sent diseases, horses, cattle, and wheat westward; the Americas sent potatoes, maize, tomatoes, tobacco, and silver eastward. Coined by historian Alfred Crosby (1972).",tip:"Know both directions of the exchange and the most significant items in each. The asymmetry is crucial: Europe gained food crops that supported population growth; the Americas received diseases that caused population collapse. Not an equal exchange."},
+  {cat:"Columbian Exchange",term:"Middle Passage",pos:"noun",def:"The brutal transatlantic voyage that transported <strong>enslaved Africans to the Americas</strong>, the middle leg of the triangular trade. Enslaved people were packed into ships in horrific conditions; mortality rates ranged from 10–20%. An estimated 12 million Africans were transported; perhaps 1.5–2 million died at sea.",tip:"The Middle Passage is the human center of the Atlantic slave trade. AP essays on the slave trade must address its conditions and mortality — not just its economic function. It's evidence against any purely 'progress' narrative of early modern globalization."},
+  {cat:"Columbian Exchange",term:"Price revolution",pos:"noun",def:"The sustained <strong>inflation of prices across Europe</strong> during the 16th century, caused primarily by the influx of American silver (especially from Potosí). Prices rose 2–3x over the century. Wage earners suffered; merchants and landowners who could raise prices benefited.",tip:"Price revolution = American silver → European inflation → social disruption. It's evidence that the Americas transformed Europe economically before large-scale European settlement. Good for questions about unintended consequences of exploration."},
+  {cat:"Economy",term:"Mercantilism",pos:"noun",def:"The dominant economic theory of early modern Europe, holding that national wealth was finite (measured in gold and silver) and that states should <strong>maximize exports, minimize imports, and accumulate bullion</strong>. Colonies existed to supply raw materials to the mother country and consume its manufactured goods.",tip:"Mercantilism is the economic ideology behind colonialism. Know its logic: colonies = economic weapons. Its rejection by Adam Smith (Wealth of Nations, 1776) marks a major intellectual turning point toward modern free-market economics."},
+  {cat:"Economy",term:"Joint-stock company",pos:"noun",def:"A business organization in which <strong>multiple investors pool capital</strong> by buying shares, sharing profits and losses proportionally. The Dutch VOC (1602) and English East India Company (1600) were the most significant early examples. Limited individual investor risk while enabling massive capital accumulation.",tip:"The joint-stock company is one of the most important financial innovations in history. It solved the problem of financing enormously expensive overseas ventures. It's the direct ancestor of the modern publicly traded corporation."},
+  {cat:"Economy",term:"VOC (Dutch East India Company)",pos:"noun (proper)",def:"The <em>Vereenigde Oost-Indische Compagnie</em>, founded 1602, the world's <strong>first publicly traded joint-stock company</strong> and the dominant commercial force in Asian trade in the 17th century. It controlled the spice trade from the Spice Islands, established Cape Colony (South Africa), and operated its own army and navy.",tip:"The VOC is the apex of Dutch commercial power. At its peak it was the most valuable company in history (in inflation-adjusted terms). Its methods — monopoly, violence, and corporate governance — define the colonial trading company model."},
+  {cat:"Economy",term:"Triangular trade",pos:"noun",def:"The three-legged Atlantic trade system: <strong>(1) European manufactured goods → West Africa</strong> (traded for enslaved people); <strong>(2) enslaved Africans → Americas</strong> (Middle Passage); <strong>(3) American commodities (sugar, tobacco, cotton) → Europe</strong>. Each leg generated profit; the system was self-reinforcing.",tip:"Know all three legs and what flowed on each. The triangular trade is the economic structure of Atlantic colonialism. It made slavery not just a moral atrocity but a central pillar of European economic growth."},
+  {cat:"Economy",term:"Plantation system",pos:"noun",def:"The agricultural system in tropical and subtropical American colonies based on <strong>large estates (plantations) producing a single cash crop</strong> (sugar, tobacco, cotton, indigo) using enslaved African labor. Generated enormous wealth for European merchants and colonial elites; depended entirely on coerced labor.",tip:"The plantation system is the economic engine that drove the slave trade. Without plantation agriculture's labor demands, the Atlantic slave trade would have been far smaller. Always connect plantation → slave trade → triangular trade."},
+  {cat:"Economy",term:"Commercial capitalism",pos:"noun",def:"An economic system centered on <strong>private investment in long-distance trade for profit</strong>, supported by new financial instruments: joint-stock companies, marine insurance, bills of exchange, and banking. Emerged in the 16th–17th centuries as the dominant form of capitalist organization before industrial capitalism.",tip:"Commercial capitalism precedes industrial capitalism. It's the economic system of the early modern period — built on trade, not manufacturing. The Dutch Republic is its highest expression. Connects forward to the Industrial Revolution, which transformed commercial into industrial capitalism."},
+  {cat:"Economy",term:"Feitoria",pos:"noun (Portuguese)",def:"A <strong>fortified Portuguese trading post</strong> established along the African, Asian, and Brazilian coasts. Feitorias were the building blocks of Portugal's commercial maritime empire — control points for trade rather than centers of large settler colonies.",tip:"The feitoria model contrasts with Spain's inland territorial empire. Portugal controlled sea routes and trading access; Spain controlled territory and people. This difference in colonial model reflects different resources and goals."},
+  {cat:"People & Places",term:"Hernán Cortés",pos:"noun (proper)",def:"Spanish conquistador (1485–1547) who conquered the <strong>Aztec Empire</strong> (1519–1521) with ~600 men, allied indigenous peoples, and devastating smallpox epidemics. Captured the Aztec emperor Moctezuma II and destroyed Tenochtitlán, the Aztec capital.",tip:"Cortés's conquest is the paradigmatic case of how disease + indigenous alliances + technology enabled tiny Spanish forces to defeat massive empires. Don't attribute the conquest to Spanish military genius alone."},
+  {cat:"People & Places",term:"Francisco Pizarro",pos:"noun (proper)",def:"Spanish conquistador (c. 1471–1541) who conquered the <strong>Inca Empire</strong> (1531–1533) with ~180 men, exploiting a civil war within the empire and capturing the Inca emperor Atahualpa. Like Cortés, he benefited enormously from smallpox epidemics that had preceded his arrival.",tip:"Compare Pizarro and Cortés: both used disease, indigenous divisions, and small forces to conquer massive empires. The parallel is not coincidence — it reveals the structural advantages Europeans held in this period."},
+  {cat:"People & Places",term:"Valladolid Debate (1550–1551)",pos:"noun (proper)",def:"A formal debate at the Spanish court between <strong>Bartolomé de Las Casas</strong> (indigenous people have natural rights and souls) and <strong>Juan Ginés de Sepúlveda</strong> (indigenous people are natural slaves per Aristotle, conquest is justified). The first European debate about the rights of colonized peoples.",tip:"The Valladolid Debate shows that Europeans debated the morality of colonialism from the very beginning — though the debate had limited practical impact. It's your evidence for European moral awareness of colonial violence. Good DBQ document context."},
+  {cat:"People & Places",term:"Mita",pos:"noun (Spanish/Quechua)",def:"A <strong>Spanish colonial forced labor system</strong> in the Andes (adapted from an Incan institution) requiring indigenous communities to send a quota of workers to labor in silver mines (especially Potosí) and on public works. Workers died in enormous numbers from dangerous conditions and overwork.",tip:"The mita is the labor system behind Potosí's silver production. It's the human cost of the price revolution — every coin of American silver represents indigenous labor under brutal conditions. Good for 'conquered' perspective questions."},
+  {cat:"People & Places",term:"Amsterdam",pos:"noun (proper)",def:"Capital of the Dutch Republic and the <strong>center of world trade and finance in the 17th century</strong>. Home to the Amsterdam Exchange Bank (1609), the Amsterdam Stock Exchange, the VOC headquarters, and a vast merchant fleet. It displaced Antwerp (after the Spanish sack of 1576) as Europe's commercial hub.",tip:"Amsterdam's rise is the story of Dutch commercial supremacy. Its financial innovations (stock exchange, exchange bank) are the foundation of modern capitalism. Its decline in the 18th century (replaced by London) marks the shift to British commercial dominance."}
+];
+
+const DECKS = [CONCEPTS, VOCAB, [...CONCEPTS, ...VOCAB]];
+
+let currentDeck = 0, activeCat = "All", deck = [], idx = 0, revealed = false;
+
+function getCats(cards) {
+  return ["All", ...[...new Set(cards.map(c => c.cat))]];
+}
+
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  getCats(DECKS[currentDeck]).forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0; revealed = false; render();
+}
+
+function switchDeck(n) {
+  currentDeck = n; activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow(); buildDeck();
+}
+
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area";
+    area.className = "answer-area";
+    area.innerHTML = `<p class="answer-text">${isVocab ? c.def : c.a}</p>
+      <div class="context-box"><p class="context-label">${isVocab ? "why it matters" : "exam angle"}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 5 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #7a3a2a;
+    --rule: #d4c9b0;
+    --tag-bg: #eeddd8;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+
+  .deck-tabs { display: flex; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab {
+    flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+    background: transparent; border: none; cursor: pointer; color: var(--ink-muted);
+    text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s;
+    border-right: 1.5px solid var(--ink);
+  }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+    background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s;
+  }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+
+  .card-wrap { margin-bottom: 1.25rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-height: 220px;
+    cursor: pointer;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.12s, transform 0.12s;
+  }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+
+  .answer-area {
+    margin-top: 1.25rem; padding-top: 1.25rem;
+    border-top: 1px dashed var(--rule);
+    animation: fadein 0.2s ease;
+  }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    font-size: 12px; line-height: 1.65; color: var(--ink-muted);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px;
+    background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink); transition: all 0.12s;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px;
+    background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s;
+    letter-spacing: 0.05em;
+  }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+  .cat-tag {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); align-self: flex-start; margin-bottom: 0.5rem;
+    padding: 2px 8px; background: var(--tag-bg); border-radius: 20px;
+  }
+
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 5 — <em>State Building</em></h1>
+    <p class="subtitle">The Search for Order · 17th Century</p>
+  </header>
+
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+
+  <footer>AP Euro · Ch. 5 · <span>State Building</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  // Crisis & Disorder
+  {cat:"Crisis & Disorder",q:"What was the 'General Crisis' of the 17th century, and what caused it?",a:"Historians use this term for the widespread instability of the mid-17th century: revolts, civil wars, and state collapses across Europe (England, France, Spain, the HRE, Russia, China). Causes included the <strong>aftermath of the Thirty Years' War</strong>, climatic cooling (the Little Ice Age reducing harvests), population pressure, price revolution-driven poverty, and the strain of new taxation to fund expanded armies. The crisis drove rulers to find more effective — often more absolutist — forms of government.",tip:"The 'General Crisis' is a historiographical concept (Trevor-Roper, 1959) that the AP uses to frame the whole chapter. It's the context for everything: witchcraft, rebellions, the Thirty Years' War, and the rise of absolutism. Think of it as the 17th century's version of Ch. 1's 14th-century crisis."},
+  {cat:"Crisis & Disorder",q:"Why did witchcraft accusations surge in the late 16th and 17th centuries, and who were the primary targets?",a:"Accusations peaked between 1580–1650, driven by: religious upheaval (both Catholics and Protestants prosecuted witches); <strong>socioeconomic stress</strong> (poor harvests, price inflation, war) creating communities looking for scapegoats; and new demonological theories spread by printing. The primary targets were <strong>older, poor, marginalized women</strong> — widows, midwives, healers — though men were also accused. Approximately 40,000–60,000 people were executed.",tip:"Witchcraft trials are social history, not just superstition. The AP expects you to analyze them as symptoms of crisis: when communities face unexplainable hardship, they seek human causes. Targets reveal existing social anxieties about gender, poverty, and community boundaries."},
+  {cat:"Crisis & Disorder",q:"What caused the Thirty Years' War (1618–1648), and why is it described as both a religious and political conflict?",a:"It began as a <strong>religious conflict</strong> in Bohemia — Protestant nobles threw Habsburg Catholic officials out of a window (the Defenestration of Prague, 1618), triggering revolt. But it rapidly became a <strong>political struggle</strong> over Habsburg dominance of the HRE and European balance of power. Catholic France allied with Protestant Sweden (under Cardinal Richelieu's direction) against the Catholic Habsburgs — proving that state interests had decisively overtaken religious solidarity.",tip:"The Thirty Years' War is the ultimate demonstration that by the 17th century, state power trumped religion in European diplomacy. France's alliance with Protestant powers against Catholic Habsburgs is your best evidence. This point is essential for any AP essay on the secularization of politics."},
+  {cat:"Crisis & Disorder",q:"What were the phases of the Thirty Years' War, and how did the conflict evolve?",a:"Four overlapping phases: <strong>Bohemian</strong> (1618–1625, Habsburg victory); <strong>Danish</strong> (1625–1629, Denmark intervenes for Protestants, loses); <strong>Swedish</strong> (1630–1635, Gustavus Adolphus leads Protestant revival, dies at Lützen 1632); <strong>French</strong> (1635–1648, Catholic France openly joins against Habsburgs, decisive). The war devastated the HRE — some regions lost 25–40% of their population to war, famine, and disease.",tip:"You don't need every battle, but know the four phases and their logic: each phase brought new actors and widened the conflict from religious to fully political. The Swedish and French phases are most AP-relevant."},
+  {cat:"Crisis & Disorder",q:"Was there a 'military revolution' in the 17th century, and what changed in warfare?",a:"Historians debate the exact timing, but the period saw major changes: <strong>firearms (muskets) replaced pikes</strong> as the primary infantry weapon; armies grew dramatically in size (Louis XIV's army reached 400,000); <strong>standing professional armies</strong> replaced mercenaries; new fortification styles (trace italienne) made siege warfare dominant; and the cost of war rose enormously, requiring more efficient state taxation.",tip:"Military revolution connects to state building: bigger armies → more taxes → stronger central government → absolutism. The causal chain runs from military change to political change. AP essays on absolutism should mention this."},
+
+  // Absolutism — West
+  {cat:"Absolutism: West",q:"What is absolutism, and what is the theoretical basis for absolute monarchy?",a:"Absolutism is a form of government in which the monarch holds <strong>supreme, unchallengeable authority</strong> — legislative, executive, and judicial — limited only by divine law. Its theoretical foundations: <strong>Jacques-Bénigne Bossuet</strong> argued for divine right (kings derive authority directly from God and are accountable only to Him); <strong>Jean Bodin</strong> argued for sovereignty as the absolute, indivisible power to make law.",tip:"Distinguish absolutism from tyranny and from modern totalitarianism. Absolute monarchs were powerful but still operated through institutions and customs — they weren't omnipotent. The AP often asks: what were the limits of absolutism even in theory?"},
+  {cat:"Absolutism: West",q:"How did Cardinal Richelieu lay the groundwork for French absolutism under Louis XIII?",a:"Richelieu (chief minister 1624–1642) systematically undermined the power of the French nobility and the <strong>Huguenots</strong> (Protestant minority). He destroyed Huguenot military and political power (Edict of Nantes's political clauses revoked), used <em>intendants</em> (royal officials) to bypass noble governors, and subordinated French foreign policy entirely to state power — allying with Protestant powers against Catholic Habsburgs to check the Habsburgs.",tip:"Richelieu is the architect of French absolutism before Louis XIV. He's also the paradigmatic 'politique' statesman — he put French state interests above Catholic religious solidarity. Know him as Louis XIII's minister, not Louis XIV's."},
+  {cat:"Absolutism: West",q:"How did Louis XIV build and maintain absolute monarchy in France?",a:"Louis XIV (r. 1643–1715) used multiple strategies: <strong>Versailles</strong> as a physical tool to control the nobility (requiring their attendance at court, keeping them occupied with ritual and spectacle); <em>intendants</em> to administer provinces directly; <strong>Jean-Baptiste Colbert</strong> to rationalize taxation and build mercantilist economic policy; a massive army under Louvois; and revocation of the Edict of Nantes (1685) to enforce religious uniformity.",tip:"Louis XIV's methods are a package — political (Versailles, intendants), economic (Colbert/mercantilism), military (standing army), and religious (Edict revocation). Know all four dimensions. His famous phrase 'L'état, c'est moi' ('I am the state') encapsulates the absolutist claim."},
+  {cat:"Absolutism: West",q:"What role did Versailles play in Louis XIV's political system?",a:"Versailles was simultaneously a <strong>palace, a political tool, and a propaganda machine</strong>. By requiring high nobles to reside at court for parts of the year, Louis removed them from their regional power bases, made them financially dependent on royal favor, and kept them occupied with elaborate court ritual. The palace's architecture, gardens, and art projected royal magnificence and French cultural dominance across Europe.",tip:"Versailles is the physical embodiment of absolutism. AP essays on Louis XIV should always mention it as a political mechanism, not just an aesthetic achievement. The key insight: Louis turned the nobility from potential rivals into courtiers dependent on royal patronage."},
+  {cat:"Absolutism: West",q:"What was Colbert's economic system, and how did it serve absolutism?",a:"Jean-Baptiste Colbert (finance minister 1661–1683) implemented rigorous <strong>mercantilism</strong>: expanding French manufacturing (tapestries, luxury goods), building a merchant marine and navy, imposing high tariffs on imports, reducing internal tolls, and establishing overseas trading companies. The goal was to maximize French bullion through a favorable balance of trade — funding Louis's wars and state apparatus.",tip:"Colbert = mercantilism in practice. Know his role: he's Louis's economic architect, not just an accountant. His policies connect Ch. 4 (mercantilism as colonial theory) to Ch. 5 (mercantilism as domestic policy). France's luxury goods industries (Sèvres porcelain, Gobelin tapestries) are his legacy."},
+  {cat:"Absolutism: West",q:"Why did Spain decline as a great power in the 17th century?",a:"Spanish decline had multiple causes: <strong>military overextension</strong> (defending vast empire in Americas, Italy, Netherlands); the <strong>expulsion of Moriscos</strong> (1609) removing skilled agricultural and artisan labor; dependence on American silver that fueled inflation rather than productive investment; costly wars (Thirty Years' War, Dutch Revolt); and a tax burden falling almost entirely on Castile while other kingdoms retained exemptions.",tip:"Spain's decline is a classic AP continuity-and-change question. Know the multi-causal explanation: economic, military, demographic, political. It's also a useful contrast to France's rise — same period, opposite trajectory."},
+
+  // Absolutism — East
+  {cat:"Absolutism: East",q:"How did the German states emerge from the Thirty Years' War, and what was the HRE's political structure afterward?",a:"The Peace of Westphalia (1648) confirmed the <strong>sovereignty of approximately 300 German princes</strong> within the HRE, cementing German political fragmentation. The Habsburg emperor retained his title but lost real power over the princes. Prussia (Brandenburg-Prussia under the Hohenzollerns) emerged as the most dynamic German state, building a powerful military state through ruthless taxation and a strong army.",tip:"The HRE after Westphalia = sovereign princes, not a unified state. This fragmentation persists until 1871. Brandenburg-Prussia's rise is the beginning of the story that ends with Bismarck and the German Empire — a long AP continuity thread."},
+  {cat:"Absolutism: East",q:"How did Peter the Great transform Russia, and what were the limits of his reforms?",a:"Peter I (r. 1682–1725) forcibly <strong>westernized Russia's military, administration, and culture</strong>: he built a new capital (St. Petersburg, 'a window to the West'), reorganized the army on Western lines, created a navy, imposed Western dress and customs on elites, subordinated the Orthodox Church to the state, and introduced a merit-based Table of Ranks for officials. His goal was to make Russia a competitive European great power.",tip:"Peter is a classic AP figure for 'enlightened' or 'reforming' absolutism. Key contrast: his reforms modernized Russia's military and state but imposed Western changes from above with brutal coercion — serfdom intensified, not abolished. He westernized the elite while the peasant majority remained untouched."},
+  {cat:"Absolutism: East",q:"What was the Ottoman Empire's relationship with Europe in the 17th century?",a:"The Ottomans remained a major military threat to Central Europe — their armies <strong>besieged Vienna twice</strong> (1529 and 1683). The failed second siege of Vienna (1683) marked the high-water mark of Ottoman expansion into Europe; afterward, Ottoman power began its long retreat. European powers (Austria, Poland, Venice, Russia) formed the Holy League to push the Ottomans back. The Ottoman Empire remained a major actor but was beginning its relative decline.",tip:"The Ottoman threat is context for much of Eastern European politics. The failed 1683 siege is a turning point — Habsburg Austria's defeat of the Ottomans is the foundation of Austrian imperial power in the Danube basin. Good for continuity questions about Ottoman decline."},
+
+  // Limited Monarchy & Republics
+  {cat:"Limited Monarchy & Republics",q:"What caused the English Civil War (1642–1649), and what were its key issues?",a:"A clash between <strong>Charles I and Parliament</strong> over taxation, religion, and the extent of royal prerogative. Charles tried to rule without Parliament (Personal Rule, 1629–1640), imposed unpopular religious reforms in Scotland (triggering revolt), and needed Parliament's money to fight. Parliament refused unless Charles accepted limits on royal power. War broke out between Royalists (Cavaliers) and Parliamentary forces (Roundheads), ending in Charles I's trial and execution (1649).",tip:"The English Civil War is fundamentally about who controls taxation and religion. It's the English version of the broader 17th-century conflict between crown and representative institutions. AP essays often ask you to compare it to absolutism on the continent — England went the other direction."},
+  {cat:"Limited Monarchy & Republics",q:"What was the Interregnum, and why did it fail?",a:"After Charles I's execution (1649), England became a <strong>Commonwealth</strong> (republic), then a <strong>Protectorate</strong> under Oliver Cromwell (1653–1658). Cromwell's military dictatorship alienated many; after his death his son Richard quickly resigned. The army and Parliament could not agree on a stable government, leading to the <strong>Restoration of Charles II</strong> (1660). The experiment showed England was not ready to abandon monarchy — but had permanently established that kings could be held accountable.",tip:"The Interregnum matters not for what it achieved but for what it proved: England couldn't govern without monarchy, but monarchy alone wasn't sufficient. It set the stage for the 'Glorious Revolution' settlement of 1688 — a constitutional monarchy."},
+  {cat:"Limited Monarchy & Republics",q:"What was the Glorious Revolution (1688–1689), and why is it historically significant?",a:"When James II (Catholic, pro-absolutist) threatened to overturn the Protestant settlement, Parliament invited the Dutch William of Orange and his wife Mary (James's Protestant daughter) to take the throne. James fled without a fight. William and Mary accepted the <strong>English Bill of Rights (1689)</strong>, which established: no taxation without Parliamentary consent, freedom of speech in Parliament, regular Parliamentary sessions, and no standing army in peacetime without Parliament's approval.",tip:"The Glorious Revolution is the founding moment of English constitutional monarchy. The Bill of Rights is the document — know its key provisions. This is also the model Enlightenment thinkers (Locke) used to argue for limited government. Contrast with French absolutism: England and France took opposite paths in this century."},
+  {cat:"Limited Monarchy & Republics",q:"What made the Dutch Republic politically and commercially unique in the 17th century?",a:"The Dutch Republic was governed by an <strong>oligarchy of merchant regents</strong> — wealthy urban elites who controlled the provincial Estates and the States-General. There was no absolute monarch (the stadtholder was a military executive, not a king). This political system served commercial interests: low taxes on trade, religious toleration attracting skilled refugees (Huguenots, Jews), and a stable legal environment for contracts and property. The result was the <strong>Dutch Golden Age</strong> — Europe's most dynamic economy.",tip:"The Dutch Republic is the alternative to absolutism — a commercially-driven republic that outperformed absolute monarchies economically. The AP often asks you to compare Dutch and French models. Dutch success undermined mercantilist assumptions that a strong central state was necessary for economic growth."},
+  {cat:"Limited Monarchy & Republics",q:"What were the social and political causes of the English Civil War beyond the immediate conflict?",a:"Deeper causes: the <strong>rise of a gentry class</strong> (educated, commercially active landowners) who sat in Parliament and resisted taxation without representation; <strong>Puritanism</strong> among the middling classes who resented Anglican conformity imposed by Archbishop Laud; tensions between a court culture oriented toward continental absolutism and a Parliamentary culture valuing common law traditions; and the structural problem that the English crown could not fund modern government without Parliamentary grants.",tip:"The Civil War's deep causes are social (gentry rise, Puritanism) and structural (fiscal-military state needs Parliament). This makes it comparable to the later French Revolution — both involved new economic elites challenging a fiscal-political system that no longer reflected social realities."},
+
+  // Peace of Westphalia
+  {cat:"Peace of Westphalia",q:"What did the Peace of Westphalia (1648) establish, and why is it considered a turning point in European history?",a:"Westphalia ended the Thirty Years' War and established several landmark principles: <strong>sovereign equality of states</strong> (no universal authority, not even the pope or emperor, above sovereign states); recognition of Calvinism alongside Catholicism and Lutheranism; confirmation of German princes' sovereignty; and a European state system based on <strong>balance of power</strong> diplomacy rather than religious unity. It is often cited as the birth of the modern international order.",tip:"Westphalia = birth of the modern state system. This is a massive AP concept. Key ideas: sovereignty, balance of power, secular diplomacy. Everything from modern international law to the UN system traces conceptually to Westphalia. Know it as both an end (Thirty Years' War) and a beginning (modern international order)."},
+
+  // Culture & Art
+  {cat:"Culture & Art",q:"What is the Baroque style, and how did it serve absolutist and Catholic Counter-Reformation purposes?",a:"Baroque art (c. 1600–1750) is characterized by <strong>dramatic movement, intense emotion, rich color, and grandeur</strong> — designed to overwhelm the viewer and inspire awe. The Catholic Church used it to communicate the faith's power and glory after the Reformation's challenge (Bernini's St. Peter's Basilica colonnade; Rubens's altarpieces). Absolute monarchs used it to project magnificence and authority (Versailles).",tip:"Baroque = emotional propaganda for Catholicism and absolutism. Contrast with Protestant/Dutch art, which favored intimate domestic scenes (Vermeer, Rembrandt). The contrast in artistic styles maps directly onto the contrast in political and religious systems — a great AP analytical move."},
+  {cat:"Culture & Art",q:"How did Dutch art of the Golden Age differ from Baroque court art, and what does this reveal about Dutch society?",a:"Dutch painting (Rembrandt, Vermeer, Jan Steen) favored <strong>domestic scenes, portraits, landscapes, and still lifes</strong> — subjects that appealed to a wealthy merchant class buying art for their homes rather than churches or palaces. The subjects were secular, intimate, and realistic rather than heroic or religious. This reflects Dutch society: Protestant (skeptical of religious images), commercially prosperous, and dominated by urban merchant elites rather than aristocratic courts.",tip:"Dutch art is a window into Dutch social structure. Merchant patrons → domestic subjects → realistic style. Contrast with Versailles Baroque: royal patron → heroic glorification → theatrical grandeur. Art style follows patronage system, which follows social structure."},
+  {cat:"Culture & Art",q:"What is Mannerism, and how did it reflect the anxieties of the late 16th century?",a:"Mannerism (c. 1520–1600) was an artistic style that <strong>deliberately violated Renaissance harmony and proportion</strong> — elongated figures, distorted space, garish colors, and complex poses. Associated with artists like El Greco and Pontormo, it expressed the spiritual and psychological anxiety of the Reformation era. It emerged as the confident Renaissance worldview fractured under religious conflict.",tip:"Mannerism is the artistic symptom of Reformation crisis — just as witchcraft trials are the social symptom. Both express the breakdown of the Renaissance's confident humanism. Good for connecting art history to broader historical context."},
+
+  // Broader Themes
+  {cat:"Broader Themes",q:"What is the fundamental difference between absolutism and constitutional monarchy as political systems?",a:"In <strong>absolutism</strong>, sovereignty resides in the monarch, who can make law, tax, and govern without institutional checks. In <strong>constitutional monarchy</strong>, sovereignty is shared or limited — a constitution, parliament, or law constrains royal power, protects subjects' rights, and requires the monarch to govern through representative institutions. England and the Dutch Republic represent constitutional/limited paths; France and most of Eastern Europe represent the absolutist path.",tip:"This contrast is the organizing framework for the entire chapter. AP essays often ask you to compare these models. Know the key examples: France/Prussia/Russia (absolutist), England/Dutch Republic (constitutional/republican). Also know that 'constitutional' in this period doesn't mean a written document — it means customary law and representative institutions."},
+  {cat:"Broader Themes",q:"How did the 17th century transform the concept of sovereignty and the European state system?",a:"The century produced two foundational ideas: <strong>sovereignty</strong> (the state as the supreme authority within its territory, owed no allegiance to external powers) theorized by Jean Bodin and institutionalized at Westphalia; and the <strong>balance of power</strong> (states should prevent any single power from dominating Europe through alliances). Together these created the modern European state system — a world of legally equal sovereign states managing their relations through diplomacy and war.",tip:"Sovereignty + balance of power = the conceptual foundations of modern international relations. These ideas are so fundamental that we still use them today. For the AP, always connect Westphalia to these two concepts."},
+  {cat:"Broader Themes",q:"How did the experience of the 17th century's wars and crises shape Enlightenment thinking in the 18th century?",a:"The century's violence — the Thirty Years' War, English Civil War, French Wars of Religion — convinced many thinkers that <strong>religious warfare was catastrophic and irrational</strong>. This pushed intellectuals toward secular, rational bases for political authority (Locke, Hobbes) and toleration (Bayle, Locke). The spectacle of absolute monarchs both building order and causing war drove Enlightenment debates about the proper limits of government.",tip:"17th-century crisis → 18th-century Enlightenment is a direct causal chain. Hobbes wrote Leviathan (1651) in response to civil war; Locke's Two Treatises (1689) responded to the Glorious Revolution. The Enlightenment grows directly from the problems this chapter describes. Always bridge forward."}
+];
+
+const VOCAB = [
+  {cat:"Politics & Theory",term:"Absolutism",pos:"noun",def:"A political system in which the monarch holds <strong>supreme, unchallengeable authority</strong> — legislative, executive, and judicial — theoretically limited only by divine law. Distinguished from tyranny (rule by self-interest) and from modern totalitarianism (which uses technology to control all aspects of life).",tip:"Know the theory AND the limits. Absolute monarchs were powerful but still depended on cooperation from nobles, churches, and local elites. The AP often asks about the 'limits of absolutism' — it was never truly unlimited in practice."},
+  {cat:"Politics & Theory",term:"Divine right of kings",pos:"noun phrase",def:"The doctrine that monarchs derive their authority <strong>directly from God</strong> and are accountable only to God, not to their subjects, Parliament, or the pope. Articulated most fully by <strong>Bishop Bossuet</strong> in 17th-century France.",tip:"Divine right is the theological justification for absolutism. Its logical implication: resistance to the king = resistance to God. Contrast with Locke's social contract theory, which derives political authority from the consent of the governed."},
+  {cat:"Politics & Theory",term:"Sovereignty",pos:"noun",def:"The principle that a state holds <strong>supreme and final authority within its territory</strong>, subject to no external power. Theorized by Jean Bodin in <em>Six Books of the Commonwealth</em> (1576) and institutionalized in the Peace of Westphalia (1648).",tip:"Sovereignty is the foundational concept of the modern state system. It means: no pope, no emperor, no other state can override a sovereign's authority within its borders. Everything in modern international law traces to this concept."},
+  {cat:"Politics & Theory",term:"Balance of power",pos:"noun",def:"The principle that no single state should be allowed to dominate Europe; weaker states should form alliances to counterbalance any rising hegemon. Emerged as the operating principle of European diplomacy after the Thirty Years' War and Peace of Westphalia (1648).",tip:"Balance of power + sovereignty = the twin pillars of the Westphalian state system. Know this as a diplomatic principle, not just a description. It explains why Catholic France allied with Protestant Sweden against the Habsburgs — state interest, not religion, drove alliances."},
+  {cat:"Politics & Theory",term:"Intendants",pos:"noun (plural)",def:"Royal officials appointed by and directly responsible to the French crown, sent to govern provinces and bypass local noble governors. Used systematically by <strong>Richelieu and Louis XIV</strong> to extend direct royal administration throughout France and undermine noble autonomy.",tip:"Intendants are the administrative machinery of French absolutism. They represent the state reaching into localities — the opposite of feudal delegation to nobles. Know them as a tool of centralization."},
+  {cat:"Politics & Theory",term:"Social contract",pos:"noun",def:"The political theory that legitimate government rests on an <strong>agreement between rulers and the governed</strong>. <strong>Thomas Hobbes</strong> (Leviathan, 1651) argued people surrender rights to an absolute sovereign to escape the violent 'state of nature.' <strong>John Locke</strong> (Two Treatises, 1689) argued government is founded on consent and exists to protect natural rights; people may resist rulers who violate the contract.",tip:"Hobbes vs. Locke is a critical AP distinction. Both use social contract theory but reach opposite conclusions: Hobbes → absolute sovereignty justified; Locke → limited government, right of revolution. Locke directly influenced the American and French Revolutions."},
+  {cat:"Politics & Theory",term:"Constitutional monarchy",pos:"noun",def:"A system of government in which the monarch's power is limited by a constitution, laws, or representative institutions (like Parliament). The monarch rules within legal constraints rather than by absolute will. England after 1689 is the paradigmatic example.",tip:"Constitutional monarchy vs. absolutism is the chapter's central contrast. England → Bill of Rights (1689); France → Louis XIV's absolutism. These two paths diverge in the 17th century and remain distinct for over a century."},
+  {cat:"War & Peace",term:"Thirty Years' War",pos:"noun (proper)",def:"A devastating series of conflicts (1618–1648) fought primarily in the HRE, beginning as a religious conflict between Catholic Habsburgs and Protestant princes and evolving into a general European war over the balance of power. Killed perhaps 8 million people through war, famine, and disease.",tip:"Know the four phases (Bohemian, Danish, Swedish, French) and the key shift: Catholic France allied with Protestant Sweden against Catholic Habsburgs — proving state interests overrode religious solidarity by the 1630s."},
+  {cat:"War & Peace",term:"Defenestration of Prague (1618)",pos:"noun (proper)",def:"The event that triggered the Thirty Years' War: Bohemian Protestant nobles <strong>threw three Catholic Habsburg royal officials out of a window</strong> of Prague Castle (they survived, landing in a dung heap). It symbolized Protestant rejection of Habsburg authority and launched the Bohemian revolt.",tip:"'Defenestration' literally means 'throwing out a window' — from the Latin fenestra. The Defenestration of Prague is the spark of the Thirty Years' War. Know it as the trigger event and its symbolic significance."},
+  {cat:"War & Peace",term:"Peace of Westphalia (1648)",pos:"noun (proper)",def:"The treaties ending the Thirty Years' War, establishing: <strong>sovereignty</strong> of German princes within the HRE; recognition of Calvinism alongside Catholicism and Lutheranism; and a European state system based on the balance of power. Often called the birth of the modern international order.",tip:"Westphalia is arguably the most important document/event in the chapter. Know its three main outcomes: religious settlement, German sovereignty, and the modern state system. It also effectively ended religious warfare as the dominant form of European conflict."},
+  {cat:"War & Peace",term:"Standing army",pos:"noun",def:"A permanent, professional military force maintained in peacetime, funded by the state rather than assembled for specific campaigns from feudal levies or mercenaries. Developed by absolute monarchs in the 17th century — <strong>Louis XIV's army</strong> reached 400,000 men.",tip:"Standing armies are the military dimension of state building. They required permanent taxation → bureaucracy to collect taxes → absolutism. The causal chain: standing army → fiscal-military state → absolutism. Know this sequence."},
+  {cat:"France",term:"Louis XIV",pos:"noun (proper)",def:"King of France (r. 1643–1715), the paradigmatic absolute monarch. Called the '<strong>Sun King</strong>,' he built Versailles, used intendants to administer France, employed Colbert for mercantilist economic policy, maintained a massive army, and revoked the Edict of Nantes (1685). His reign represented the apex of French absolutism.",tip:"Louis XIV is the AP's go-to example of absolutism. Know his key tools: Versailles (noble control), intendants (administration), Colbert (economy), standing army (military), Edict revocation (religion). His wars ultimately overextended France and left his successor in debt."},
+  {cat:"France",term:"Jean-Baptiste Colbert",pos:"noun (proper)",def:"Louis XIV's finance minister (1661–1683) who implemented French <strong>mercantilism</strong>: expanding manufacturing, building a merchant marine, imposing high tariffs, reducing internal tolls, and establishing overseas trading companies. His goal was a favorable balance of trade to fund Louis's state and wars.",tip:"Colbert = French mercantilism in action. He's the economic architect of Louis XIV's absolutism. His manufacturing legacy (French luxury goods) and his mercantilist policies are both AP-relevant. Note: his policies funded wars that ultimately exhausted France."},
+  {cat:"France",term:"Cardinal Richelieu",pos:"noun (proper)",def:"Chief minister of France under Louis XIII (1624–1642). He <strong>weakened the Huguenots' political power</strong>, undermined the nobility through intendants, and subordinated French foreign policy to raison d'état — allying with Protestant powers against the Catholic Habsburgs in the Thirty Years' War.",tip:"Richelieu is the architect of French absolutism before Louis XIV and the paradigmatic 'politique' statesman. His willingness to ally with Protestants against Catholics proves that by the 1630s, state interest (raison d'état) fully overrode religious loyalty in French foreign policy."},
+  {cat:"France",term:"Versailles",pos:"noun (proper)",def:"The royal palace built by Louis XIV outside Paris, serving as the seat of the French court and government. Its political function: requiring nobles to reside there <strong>removed them from their regional power bases</strong>, made them financially dependent on royal favor, and kept them occupied with court ritual. Its cultural function: projecting French magnificence and absolutist ideology.",tip:"Versailles is a political tool as much as a building. The AP expects you to analyze it functionally — what political problem did it solve? (Answer: the nobility.) Its style (Baroque grandeur) also served propaganda purposes."},
+  {cat:"England",term:"English Civil War",pos:"noun (proper)",def:"The armed conflict (1642–1649) between <strong>Charles I</strong> (Royalists/'Cavaliers') and Parliament (/'Roundheads'). Core issues: taxation without consent, royal prerogative vs. Parliamentary authority, and Anglican religious conformity vs. Puritan reform. Ended with Charles I's trial and execution — the first time a European monarch was publicly tried and executed by his own subjects.",tip:"Charles I's execution is a landmark event — it established that kings could be held accountable by law. Even though monarchy was restored (1660), this precedent was never forgotten. The Civil War is England's answer to the continent's absolutism: English history goes a different direction."},
+  {cat:"England",term:"Oliver Cromwell",pos:"noun (proper)",def:"Parliamentary general who dominated the English Civil War, became Lord Protector of the Commonwealth (1653–1658), and ruled as a military dictator. Puritan in religion, he dissolved Parliament when it challenged him, conquered Ireland brutally, and died leaving no stable successor.",tip:"Cromwell is a paradox: a Parliamentary champion who became more autocratic than the king he replaced. His rule shows the difficulty of governing England without monarchy — and why the Restoration happened. His brutal Irish campaigns have consequences that echo to the present."},
+  {cat:"England",term:"Glorious Revolution (1688)",pos:"noun (proper)",def:"The largely bloodless replacement of <strong>James II</strong> (Catholic, pro-absolutist) by <strong>William III of Orange</strong> and <strong>Mary II</strong> (Protestant), who accepted the English Bill of Rights (1689) limiting royal power. Established constitutional monarchy and Parliamentary supremacy in England.",tip:"'Glorious' because it was bloodless (in England — Ireland and Scotland were bloodier). It's the founding moment of English constitutional monarchy. John Locke's Two Treatises provided philosophical justification. The Bill of Rights is the document to know."},
+  {cat:"England",term:"English Bill of Rights (1689)",pos:"noun (proper)",def:"The constitutional document accepted by William and Mary establishing: <strong>no taxation without Parliamentary consent</strong>; freedom of speech in Parliament; regular Parliamentary sessions; no standing army in peacetime without Parliamentary approval; and no suspending of laws by royal decree.",tip:"Know the key provisions. The Bill of Rights is the legal foundation of English constitutional monarchy. Compare to the Magna Carta (1215) — both limit royal power, but the Bill of Rights is more specific and more democratic. Locke's natural rights theory provided its philosophical framework."},
+  {cat:"England",term:"Thomas Hobbes",pos:"noun (proper)",def:"English philosopher (1588–1679) whose <em>Leviathan</em> (1651) argued that without government, human life would be 'solitary, poor, nasty, brutish, and short' (the 'state of nature'). People surrender their rights to an <strong>absolute sovereign</strong> in exchange for security. Written in response to the English Civil War.",tip:"Hobbes justifies absolutism through secular rational argument — not divine right. He's using social contract theory but reaching an absolutist conclusion. Contrast with Locke, who uses the same framework to justify limited government and the right of revolution."},
+  {cat:"England",term:"John Locke",pos:"noun (proper)",def:"English philosopher (1632–1704) whose <em>Two Treatises of Government</em> (1689) argued that people have natural rights (life, liberty, property) and form governments by consent to protect those rights. If a government violates these rights, people have the <strong>right to revolution</strong>.",tip:"Locke is the most influential political thinker of the period for AP purposes. His ideas directly inspired the American Declaration of Independence and the French Revolution. Know: natural rights, consent of the governed, right of revolution. Contrast with Hobbes at every point."},
+  {cat:"Dutch Republic",term:"Dutch Golden Age",pos:"noun (proper)",def:"The 17th-century period of Dutch economic, cultural, and political dominance, characterized by the world's most dynamic commercial economy (VOC, Amsterdam Exchange Bank), a flourishing art scene (Rembrandt, Vermeer), religious tolerance attracting skilled refugees, and republican government.",tip:"The Dutch Golden Age is the alternative model to absolutism. Its commercial success, religious tolerance, and republican government all challenge mercantilist and absolutist assumptions. AP essays on 17th-century Europe should always include the Dutch Republic as a contrast case."},
+  {cat:"Culture",term:"Baroque",pos:"noun/adjective",def:"The dominant artistic and architectural style of the 17th century, characterized by <strong>dramatic movement, intense emotion, rich color, grandeur, and theatrical effects</strong>. Used by the Catholic Church to inspire religious awe (Counter-Reformation propaganda) and by absolute monarchs to project magnificence (Versailles).",tip:"Baroque = emotional power in service of religion and monarchy. Key artists: Bernini (sculpture, architecture), Rubens (painting), Caravaggio (chiaroscuro). Contrast with Dutch painting's intimate realism — the contrast maps onto different patronage systems and political cultures."},
+  {cat:"Culture",term:"Raison d'état",pos:"noun (French)",def:"'Reason of state' — the principle that the <strong>interests of the state justify actions</strong> that might otherwise be considered immoral or illegal. Associated with Machiavelli's Prince and Richelieu's statecraft: Catholic France allying with Protestant powers against Catholic Habsburgs is the paradigmatic example.",tip:"Raison d'état is the secularization of foreign policy — it means religion no longer determines alliances. It's the foreign policy equivalent of the 'politique' concept from Ch. 3. Both express the same idea: state survival trumps religious loyalty."},
+  {cat:"Culture",term:"Peter the Great",pos:"noun (proper)",def:"Tsar of Russia (r. 1682–1725) who forcibly <strong>westernized Russia's military, administration, and elite culture</strong>: built St. Petersburg as a Western-style capital, reorganized the army and created a navy, subordinated the Orthodox Church to the state, and imposed Western dress and customs on elites.",tip:"Peter is an absolutist who uses Western models to strengthen autocracy — not to liberalize Russia. He westernized the surface (clothes, buildings, bureaucracy) while keeping and intensifying Russian autocracy and serfdom. Know: St. Petersburg, Table of Ranks, subordination of Church."}
+];
+
+const DECKS = [CONCEPTS, VOCAB, [...CONCEPTS, ...VOCAB]];
+let currentDeck = 0, activeCat = "All", deck = [], idx = 0, revealed = false;
+
+function getCats(cards) {
+  return ["All", ...[...new Set(cards.map(c => c.cat))]];
+}
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  getCats(DECKS[currentDeck]).forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0; revealed = false; render();
+}
+function switchDeck(n) {
+  currentDeck = n; activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow(); buildDeck();
+}
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area";
+    area.className = "answer-area";
+    area.innerHTML = `<p class="answer-text">${isVocab ? c.def : c.a}</p>
+      <div class="context-box"><p class="context-label">${isVocab ? "why it matters" : "exam angle"}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>
