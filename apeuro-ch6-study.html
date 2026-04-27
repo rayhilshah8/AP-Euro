@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 6 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #1a4a5c;
+    --rule: #d4c9b0;
+    --tag-bg: #d8e8ee;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+  .deck-tabs { display: flex; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab {
+    flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+    background: transparent; border: none; cursor: pointer; color: var(--ink-muted);
+    text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s;
+    border-right: 1.5px solid var(--ink);
+  }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+    background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s;
+  }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+  .card-wrap { margin-bottom: 1.25rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-height: 220px;
+    cursor: pointer;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.12s, transform 0.12s;
+  }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+  .answer-area {
+    margin-top: 1.25rem; padding-top: 1.25rem;
+    border-top: 1px dashed var(--rule);
+    animation: fadein 0.2s ease;
+  }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    font-size: 12px; line-height: 1.65; color: var(--ink-muted);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px;
+    background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink); transition: all 0.12s;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px;
+    background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s;
+    letter-spacing: 0.05em;
+  }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-tag {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); align-self: flex-start; margin-bottom: 0.5rem;
+    padding: 2px 8px; background: var(--tag-bg); border-radius: 20px;
+  }
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 6 — <em>The Scientific Revolution</em></h1>
+    <p class="subtitle">A New Heaven and a New Earth · 16th–17th Century</p>
+  </header>
+
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+
+  <footer>AP Euro · Ch. 6 · <span>Scientific Revolution</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  // Background & Causes
+  {cat:"Background & Causes",q:"What intellectual and cultural conditions made the Scientific Revolution possible?",a:"Multiple factors converged: <strong>Renaissance humanism</strong> encouraged going back to original sources and questioning received authority; <strong>printing press</strong> disseminated new ideas faster than authorities could suppress them; <strong>technological innovation</strong> produced better instruments (telescope, microscope, barometer); <strong>mathematical advances</strong> (algebra, trigonometry) gave scientists precise tools; and <strong>Renaissance magic</strong> — alchemy and astrology — paradoxically encouraged close observation of nature even if for wrong reasons.",tip:"Causation question staple for the AP. Always list multiple causes across categories: intellectual (humanism), technological (instruments, printing press), mathematical. The Renaissance magic connection surprises students — alchemists' hands-on experimentation contributed to empirical habits even if their goals were mystical."},
+  {cat:"Background & Causes",q:"What was the medieval/classical worldview that the Scientific Revolution overthrew?",a:"Medieval Europeans inherited from Aristotle and Ptolemy a <strong>geocentric universe</strong> (Earth at the center, surrounded by crystalline spheres carrying the planets and stars) that was finite, hierarchical, and purposeful. From Galen they inherited a medical system based on <strong>four humors</strong> (blood, phlegm, yellow bile, black bile) that had to be balanced for health. Both systems were endorsed by the Church and considered harmonized with Christian theology.",tip:"Know the before-picture to understand what was revolutionary. Ptolemy (astronomy), Aristotle (physics/cosmology), and Galen (medicine) are the three ancient authorities the Scientific Revolution overturned. Always frame each Scientific Revolution discovery as a challenge to one of these."},
+  {cat:"Background & Causes",q:"How did Renaissance magic contribute to the Scientific Revolution despite being unscientific?",a:"Alchemists and astrologers, though working toward mystical goals (turning lead to gold, predicting fate), practiced <strong>close observation of natural materials and phenomena</strong>, developed laboratory techniques, and accumulated empirical knowledge about chemicals and the heavens. Figures like Paracelsus came from the alchemical tradition. This hands-on engagement with nature — however misguided its theory — helped build habits of empirical investigation that true science later adopted.",tip:"This is a historiographical nuance the AP rewards: the Scientific Revolution didn't emerge from nowhere. Even 'unscientific' traditions contributed. It shows that intellectual change is messy — new ideas grow out of old, sometimes irrational, soil."},
+
+  // Astronomy
+  {cat:"Astronomy",q:"What did Copernicus propose, and why was it revolutionary?",a:"Nicolaus Copernicus (1473–1543) proposed in <em>On the Revolutions of the Heavenly Spheres</em> (1543) that the <strong>Sun, not Earth, was at the center of the universe</strong> (heliocentrism), and that Earth rotated on its axis daily and orbited the Sun annually. This directly contradicted Ptolemy's geocentric system, endorsed by the Church for over a millennium. He kept circular orbits and didn't fully break with the crystalline spheres — those came later.",tip:"Copernicus is the starting point of the astronomical revolution. His heliocentric hypothesis was based on mathematical elegance, not observation. Note his limitation: he still used circular orbits. Each subsequent astronomer refined or corrected what Copernicus got wrong."},
+  {cat:"Astronomy",q:"What did Tycho Brahe contribute to the Scientific Revolution, and what were his limits?",a:"Brahe (1546–1601) was the greatest naked-eye astronomical observer before the telescope, accumulating <strong>decades of precise positional data</strong> on planetary movement. He rejected Copernican heliocentrism (his own compromise model had planets orbiting the Sun, but the Sun orbiting Earth) but his data was indispensable: his assistant <strong>Kepler used it to prove elliptical orbits</strong>.",tip:"Brahe's importance is his data, not his theory. He's the observational foundation for Kepler. AP essays on the Scientific Revolution should note the collaborative, cumulative nature of scientific progress — each figure built on predecessors."},
+  {cat:"Astronomy",q:"What were Kepler's laws of planetary motion, and why did they matter?",a:"Using Brahe's data, Johannes Kepler (1571–1630) proved that planetary orbits are <strong>ellipses</strong> (not circles) with the Sun at one focus; that planets move faster when closer to the Sun and slower when farther; and that the time for a planet to orbit is mathematically related to its distance from the Sun. These laws were purely mathematical descriptions of motion, without explaining why planets moved.",tip:"Kepler's laws are crucial because they proved heliocentrism mathematically using real observational data — something Copernicus could not do. They also broke with the ancient assumption of perfect circular motion. The 'why' question (gravity) was left for Newton."},
+  {cat:"Astronomy",q:"What did Galileo discover and argue, and why did he conflict with the Church?",a:"Galileo Galilei (1564–1642) used the <strong>telescope</strong> (improved from Dutch invention) to observe mountains on the Moon, moons orbiting Jupiter, and sunspots — all contradicting Aristotle's perfect, unchanging heavens. He also proved (through falling-body experiments) that Aristotle was wrong about motion. He publicly championed Copernican heliocentrism in his <em>Dialogue Concerning the Two Chief World Systems</em> (1632), was tried by the Inquisition, and forced to recant.",tip:"Galileo is the AP's paradigmatic Science vs. Church conflict. The key points: he used observation and experiment (not just theory); his telescope findings directly contradicted Aristotle; the Inquisition's action shows institutional resistance to new ideas. Know his trial (1633) as a landmark event."},
+  {cat:"Astronomy",q:"What was Newton's synthesis, and why is it the culmination of the Scientific Revolution?",a:"Isaac Newton (1643–1727) unified Kepler's celestial mechanics and Galileo's terrestrial physics under a single mathematical framework: <strong>universal gravitation</strong>. His <em>Principia Mathematica</em> (1687) showed that the same force (gravity) governed falling bodies on Earth and planetary orbits in space — dissolving the Aristotelian distinction between earthly and celestial physics. He also co-invented calculus as the mathematical tool to express these laws.",tip:"Newton is the capstone of the Scientific Revolution — he answers the 'why' that Kepler left open. His synthesis is the AP's key example of how individual discoveries accumulate into a total worldview transformation. The universe becomes a mathematical machine — a 'clockwork universe' governed by discoverable laws."},
+
+  // Medicine & Chemistry
+  {cat:"Medicine & Chemistry",q:"How did Vesalius revolutionize anatomy, and what was he challenging?",a:"Andreas Vesalius (1514–1564) performed systematic <strong>human dissections</strong> and published <em>On the Fabric of the Human Body</em> (1543 — same year as Copernicus), with detailed anatomical illustrations correcting over 200 errors in Galen's 1,400-year-old anatomy. He demonstrated that knowledge must come from <strong>direct observation</strong>, not ancient authority.",tip:"Vesalius is to medicine what Copernicus is to astronomy: the figure who challenges the ancient authority (Galen vs. Ptolemy) through direct investigation. Note the 1543 coincidence — Copernicus and Vesalius published the same year, marking 1543 as a symbolic turning point."},
+  {cat:"Medicine & Chemistry",q:"What did William Harvey discover, and why was it significant?",a:"William Harvey (1578–1657) demonstrated through careful experimentation that <strong>blood circulates continuously through the body</strong>, pumped by the heart — contradicting Galen's claim that blood was produced in the liver and consumed by the body. He published <em>On the Motion of the Heart and Blood</em> (1628). He couldn't explain how blood moved from arteries to veins (capillaries weren't discovered until after his death).",tip:"Harvey's discovery of blood circulation is the most important medical discovery of the period. Like Vesalius, he used direct experiment over ancient authority. His limitation (no capillaries) shows science is cumulative — each discovery opens new questions."},
+  {cat:"Medicine & Chemistry",q:"What was Paracelsus's contribution to medicine, and how did he bridge magic and science?",a:"Paracelsus (1493–1541) attacked Galenic humoral medicine from an alchemical tradition, arguing that <strong>specific chemical remedies</strong> (minerals, metals) rather than balancing humors could treat specific diseases. He introduced the use of mercury to treat syphilis and promoted chemical observation. Though mystical in outlook, his chemical approach to disease treatment laid groundwork for pharmacology.",tip:"Paracelsus is the messy, transitional figure between magic and science. He's not a 'scientist' by modern standards but his chemical approach was a step away from humoral theory. Good evidence for the argument that Renaissance magic contributed to scientific change."},
+
+  // Scientific Method
+  {cat:"Scientific Method",q:"What is the scientific method, and who were its key theorists?",a:"The scientific method involves: forming a hypothesis, testing it through <strong>controlled observation and experiment</strong>, collecting data, and drawing conclusions — repeating until results are consistent. <strong>Francis Bacon</strong> championed <em>inductive reasoning</em> (accumulating specific observations to reach general conclusions) and attacked reliance on ancient authority. <strong>René Descartes</strong> championed <em>deductive reasoning</em> (starting from self-evident principles and reasoning to conclusions mathematically).",tip:"Bacon vs. Descartes is a classic AP contrast: induction (Bacon, empirical observation) vs. deduction (Descartes, mathematical reasoning from first principles). In practice the Scientific Revolution used both — Newton's work combines Baconian observation (Brahe/Galileo's data) with Cartesian mathematics."},
+  {cat:"Scientific Method",q:"What was Francis Bacon's contribution to the Scientific Revolution?",a:"Bacon (1561–1626) argued in <em>Novum Organum</em> (1620) that the proper method for gaining knowledge was <strong>inductive reasoning</strong> — systematic accumulation of observations from which general principles are derived. He attacked 'idols' (mental biases) that distorted thinking and argued that useful knowledge required direct experience of the natural world. He envisioned organized, collaborative scientific research serving human welfare.",tip:"Bacon is the champion of empiricism and practical science. His vision of organized collaborative research prefigures the Royal Society. Key concept: science should improve human life, not just describe it — an Enlightenment idea avant la lettre."},
+  {cat:"Scientific Method",q:"What was Descartes's contribution to the Scientific Revolution?",a:"René Descartes (1596–1650) in <em>Discourse on Method</em> (1637) proposed starting from radical doubt — rejecting all received knowledge and building up from what could not be doubted (<em>cogito ergo sum</em>: 'I think, therefore I am'). He argued the universe was a <strong>mechanical system governed by mathematical laws</strong> (the 'Cartesian mechanical philosophy'), pioneered analytical geometry, and proposed the mind-body dualism that separates spirit from matter.",tip:"Descartes is the philosopher of the Scientific Revolution. His mechanical universe (matter governed by mathematical laws) is the conceptual framework Newton filled in. His mind-body dualism let Catholic thinkers accept a mechanical physical world while preserving the soul — an important accommodation."},
+  {cat:"Scientific Method",q:"How did scientific knowledge spread across Europe in the 17th century?",a:"Key institutions and media: <strong>scientific academies</strong> (the Royal Society in London, 1660; the French Académie des Sciences, 1666) provided institutional homes for research and peer review; <strong>scientific journals</strong> (Philosophical Transactions, 1665) published and distributed findings; <strong>correspondence networks</strong> connected scientists across national boundaries; and <strong>salons</strong> (especially in France) brought educated non-specialists into contact with new ideas.",tip:"The spread of science is as important as the discoveries themselves. Institutionalization (academies, journals) is what transformed individual breakthroughs into a self-sustaining scientific culture. The Royal Society is the most AP-relevant institution."},
+
+  // Women in Science
+  {cat:"Women in Science",q:"What barriers did women face in participating in the Scientific Revolution?",a:"Women were excluded from <strong>universities, scientific academies, and formal professional networks</strong> — the institutional infrastructure of the new science. They also faced cultural assumptions that women were intellectually inferior (debates about women's nature, influenced by both classical and religious traditions), and the association of women with irrational nature, witchcraft, and emotion rather than the rational, masculine pursuit of science.",tip:"Women's exclusion from the Scientific Revolution is evidence that the 'new science' was not as universally open or rational as its proponents claimed. It shows how social structures (gender norms, institutions) shaped who could participate in supposedly universal intellectual pursuits — a recurring AP theme."},
+  {cat:"Women in Science",q:"Who were the notable women who participated in early modern science, and what obstacles did they overcome?",a:"<strong>Margaret Cavendish</strong> (1623–1673) wrote prolifically on natural philosophy and was the first woman invited to the Royal Society — but only as a visitor, not a member. <strong>Maria Merian</strong> (1647–1717) made meticulous scientific illustrations of insects and plants in Suriname. <strong>Maria Winkelmann</strong> (1670–1720) discovered a comet but was denied the position of astronomer to the Berlin Academy because of her sex, despite her husband having held the post.",tip:"Know at least two specific women and their contributions/obstacles. Winkelmann is especially useful — she did the work and was still denied recognition. AP essays on women in the Scientific Revolution should emphasize both genuine contributions and systematic exclusion."},
+
+  // Science & Religion
+  {cat:"Science & Religion",q:"How did the Catholic Church respond to the Scientific Revolution, and why?",a:"Initial Church response was hostile where new science contradicted scripture or Aristotle. The <strong>Inquisition's trial of Galileo (1633)</strong> is the paradigmatic case. The Church placed Copernicus's and Galileo's works on the Index of Forbidden Books. However, many individual clergy supported scientific inquiry, and most scientific work proceeded without direct conflict. The Church's opposition was selective and inconsistent — focused on cosmological claims that directly contradicted scripture.",tip:"Avoid oversimplifying to 'science vs. religion.' Many scientists were devout (Newton, Kepler); many clergy supported science; most scientific work didn't involve religious conflict. The Galileo affair is real but exceptional. The AP rewards nuanced answers: selective conflict, not total war."},
+  {cat:"Science & Religion",q:"How did Protestant and Catholic attitudes toward the Scientific Revolution differ?",a:"Some historians (the 'Merton thesis') argue that Calvinist Protestantism was more conducive to scientific inquiry — emphasizing direct engagement with God's creation, practical utility, and individual observation over institutional authority. Others dispute this. In practice, both Catholic and Protestant scientists made major contributions; both Catholic and Protestant authorities sometimes persecuted unconventional ideas. The relationship was complex on both sides.",tip:"The Merton thesis is debated but AP-relevant — it connects religion to scientific culture. The key nuance: no simple correlation between Protestant = scientific, Catholic = anti-scientific. Descartes and Vesalius were Catholic; Galileo was tried by Catholics but also supported by them earlier."},
+  {cat:"Science & Religion",q:"How did the Scientific Revolution affect broader views of nature, God, and humanity?",a:"The mechanical universe model (Descartes, Newton) suggested the cosmos operated by <strong>discoverable mathematical laws</strong> rather than divine intervention in daily events. This opened space for <strong>Deism</strong> — the view that God created the universe and its laws but does not intervene in its ongoing operation (a 'clockmaker God'). It also shifted emphasis from human spiritual destiny to human rational capacity, contributing to Enlightenment secularism and confidence in human reason.",tip:"The Scientific Revolution → Enlightenment connection is fundamental. The clockwork universe, Deism, and confidence in human reason are the bridges. AP essays on the Enlightenment should always trace its intellectual roots to the Scientific Revolution."},
+
+  // Broader Themes
+  {cat:"Broader Themes",q:"How does the Scientific Revolution connect to earlier Renaissance ideals and to the later Enlightenment?",a:"From the Renaissance the Scientific Revolution inherited: humanism's willingness to challenge ancient authority; the printing press for dissemination; mathematical advances; and the empirical habits developed (however imperfectly) by Renaissance magic. To the Enlightenment it bequeathed: a model of human reason overcoming superstition and tradition; the concept of natural laws governing all phenomena; and confidence that rational methods could be applied to human society, politics, and morality — not just the physical universe.",tip:"This is the big synthesis question. Renaissance → Scientific Revolution → Enlightenment is a continuous intellectual chain. The AP loves asking you to trace ideas across chapters. Know what each era contributed to the next link in the chain."},
+  {cat:"Broader Themes",q:"What made the Scientific Revolution truly 'revolutionary,' and what were its limits?",a:"Revolutionary: it replaced a 1,500-year-old intellectual framework (Aristotle-Ptolemy-Galen) with a new one based on observation, experiment, and mathematics; it established that human reason, not ancient authority or Church tradition, was the proper judge of truth about the natural world. Limits: it primarily affected a small educated elite; it coexisted with widespread belief in magic, astrology, and witchcraft; it excluded women and most non-Europeans; and many scientists (including Newton) remained deeply religious and even mystical.",tip:"Qualification is sophistication on the AP. The Scientific Revolution was genuinely revolutionary in method and worldview but limited in reach. Newton spent more time on biblical prophecy than physics. Most Europeans never heard of Copernicus. These limits matter for assessing the revolution's actual 17th-century impact."}
+];
+
+const VOCAB = [
+  {cat:"Astronomy",term:"Geocentrism",pos:"noun",def:"The ancient model (Ptolemy, Aristotle) placing <strong>Earth at the center of the universe</strong>, with the Sun, Moon, planets, and stars orbiting Earth on crystalline spheres. Endorsed by the Church as harmonious with scripture for over a millennium.",tip:"Geocentrism is the 'before' picture. Know it well — you can't explain why heliocentrism was revolutionary without understanding what it replaced. Ptolemy's model was mathematically sophisticated and actually predicted planetary positions reasonably accurately."},
+  {cat:"Astronomy",term:"Heliocentrism",pos:"noun",def:"The model proposing that the <strong>Sun is at the center of the universe</strong> (or solar system), with Earth and other planets orbiting it. Proposed by Copernicus (1543), refined by Kepler (elliptical orbits), confirmed observationally by Galileo, and theoretically explained by Newton (gravity).",tip:"Heliocentrism is the central astronomical claim of the Scientific Revolution. Track its development: Copernicus (hypothesis, circular orbits) → Kepler (mathematical proof, elliptical orbits) → Galileo (observational evidence) → Newton (gravitational explanation)."},
+  {cat:"Astronomy",term:"Nicolaus Copernicus",pos:"noun (proper)",def:"Polish astronomer (1473–1543) who proposed in <em>On the Revolutions of the Heavenly Spheres</em> (1543) that the Sun, not Earth, was at the center of the universe. He retained circular orbits and did not live to see the controversy his work generated.",tip:"Copernicus = the starting gun. His work was based more on mathematical elegance than new observation. He published only as he was dying, avoiding the controversy Galileo later faced. Know his title, date, and his limits (circular orbits still)."},
+  {cat:"Astronomy",term:"Tycho Brahe",pos:"noun (proper)",def:"Danish astronomer (1546–1601) who compiled the most <strong>precise naked-eye positional data</strong> on planetary movement ever recorded. Rejected Copernican heliocentrism but his data, inherited by his assistant Kepler, made Kepler's laws possible.",tip:"Brahe = data without correct theory. His significance is what he enabled, not what he concluded. Good illustration of how scientific progress is cumulative and collaborative across generations."},
+  {cat:"Astronomy",term:"Johannes Kepler",pos:"noun (proper)",def:"German mathematician and astronomer (1571–1630) who used Brahe's observational data to prove that planetary orbits are <strong>ellipses</strong> (not circles), formulating three mathematical laws of planetary motion. He explained the geometry of orbits but not the force causing them.",tip:"Kepler = mathematical proof of heliocentrism with elliptical orbits. He bridges Copernicus (hypothesis) and Newton (causal explanation). His three laws are what Newton later explained with gravity."},
+  {cat:"Astronomy",term:"Galileo Galilei",pos:"noun (proper)",def:"Italian physicist and astronomer (1564–1642) who improved the <strong>telescope</strong> and used it to make discoveries contradicting Aristotle (mountains on Moon, moons of Jupiter, sunspots). Championed heliocentrism publicly, was tried by the Inquisition (1633), and forced to recant.",tip:"Galileo provides observational evidence for heliocentrism and destroys Aristotle's model of perfect, unchanging heavens. His trial is the AP's go-to example of Science vs. Church conflict. Know his key telescope observations and their implications."},
+  {cat:"Astronomy",term:"Isaac Newton",pos:"noun (proper)",def:"English mathematician and physicist (1643–1727) whose <em>Principia Mathematica</em> (1687) established the <strong>law of universal gravitation</strong> — proving the same force governs both earthly and celestial motion. He unified Kepler's and Galileo's findings and co-invented calculus.",tip:"Newton = the capstone of the Scientific Revolution. His gravitational theory answered the 'why' question Kepler left open and unified heaven and earth under one mathematical law. The Principia is the greatest scientific work of the period — know its title and date."},
+  {cat:"Astronomy",term:"Principia Mathematica",pos:"noun (proper)",def:"Isaac Newton's <em>Philosophiae Naturalis Principia Mathematica</em> (1687), establishing the <strong>laws of motion and universal gravitation</strong>. It showed mathematically that the same gravitational force governs both falling bodies on Earth and planetary orbits — unifying terrestrial and celestial physics.",tip:"Know the title (often shortened to Principia) and date (1687). It's the culminating document of the Scientific Revolution. Its mathematical rigor set the standard for all subsequent physics and inspired Enlightenment thinkers to seek similar laws governing human society."},
+  {cat:"Medicine",term:"Four humors",pos:"noun phrase",def:"Galen's medical theory (inherited from ancient Greece) that the body contains four fluids — <strong>blood, phlegm, yellow bile, and black bile</strong> — whose balance determines health. Illness resulted from imbalance; treatment aimed to restore balance (bloodletting, purging). Dominant in European medicine for 1,400 years.",tip:"The four humors is the 'before' picture for medicine. Know it well. Vesalius (anatomy) and Harvey (circulation) attacked it from different angles. Paracelsus attacked it from chemistry. Together they dismantled Galenic medicine over the 16th–17th centuries."},
+  {cat:"Medicine",term:"Andreas Vesalius",pos:"noun (proper)",def:"Flemish anatomist (1514–1564) who performed systematic human dissections and published <em>On the Fabric of the Human Body</em> (1543), correcting over 200 errors in Galen's anatomy through <strong>direct observation</strong>.",tip:"Vesalius is to medicine what Copernicus is to astronomy — both published in 1543 (a coincidence worth noting). Both challenged ancient authority through direct investigation. Vesalius's method (observe, don't just read ancient texts) is as important as his findings."},
+  {cat:"Medicine",term:"William Harvey",pos:"noun (proper)",def:"English physician (1578–1657) who demonstrated through experiment that <strong>blood circulates continuously</strong> through the body, pumped by the heart, published in <em>On the Motion of the Heart and Blood</em> (1628). Directly contradicted Galen's model of blood production and consumption.",tip:"Harvey's discovery of circulation is the most important medical breakthrough of the period. His experimental method (tying off blood vessels, measuring heart output) is a model of the scientific method applied to medicine."},
+  {cat:"Medicine",term:"Paracelsus",pos:"noun (proper)",def:"Swiss-German physician and alchemist (1493–1541) who attacked Galenic humoral medicine, arguing that <strong>specific chemical remedies</strong> treat specific diseases. Introduced chemical (especially mineral) treatments and bridged the alchemical and emerging scientific traditions in medicine.",tip:"Paracelsus is the transitional, messy figure — part alchemist, part proto-scientist. His importance: introducing chemistry into medicine and attacking Galenic authority before Vesalius's anatomical work. He shows the blurry boundary between magic and science."},
+  {cat:"Scientific Method",term:"Inductive reasoning",pos:"noun",def:"The method of drawing <strong>general conclusions from specific observations</strong> — accumulating evidence through experiment and observation, then inferring broader principles. Championed by <strong>Francis Bacon</strong> as the proper scientific method.",tip:"Induction = bottom-up (observations → principles). Contrasted with deduction = top-down (principles → conclusions). In practice the Scientific Revolution used both, but Bacon's emphasis on observation and experiment was crucial for establishing empiricism as the gold standard."},
+  {cat:"Scientific Method",term:"Deductive reasoning",pos:"noun",def:"The method of starting from <strong>general principles or axioms</strong> and reasoning mathematically to specific conclusions. Championed by <strong>René Descartes</strong>, who modeled scientific thinking on geometry — starting from self-evident truths and deriving everything else logically.",tip:"Deduction = top-down (principles → conclusions). Descartes's mathematical deduction gave the Scientific Revolution its mathematical rigor. Newton combined both: Baconian observational data (from Brahe, Galileo) + Cartesian mathematical deduction."},
+  {cat:"Scientific Method",term:"Francis Bacon",pos:"noun (proper)",def:"English philosopher and statesman (1561–1626) who championed <strong>inductive reasoning and empirical observation</strong> as the basis of knowledge in <em>Novum Organum</em> (1620). He attacked ancient authority and 'idols' (mental biases) and envisioned organized collaborative scientific research serving human welfare.",tip:"Bacon = empiricism and practical science. He didn't make scientific discoveries himself but provided the philosophical justification for the experimental method. His vision of organized research prefigures the Royal Society. Remember: Novum Organum, 1620, induction."},
+  {cat:"Scientific Method",term:"René Descartes",pos:"noun (proper)",def:"French philosopher and mathematician (1596–1650) who proposed radical methodological doubt, developed <strong>analytical geometry</strong>, and argued that the universe is a mechanical system governed by mathematical laws (<em>Discourse on Method</em>, 1637). His <em>cogito ergo sum</em> ('I think, therefore I am') is the foundation of his philosophical system.",tip:"Descartes = rationalism and the mechanical universe. His mechanical worldview (universe as a machine obeying mathematical laws) is the conceptual framework Newton filled in. Know: Discourse on Method (1637), cogito ergo sum, mechanical philosophy, analytical geometry."},
+  {cat:"Scientific Method",term:"Empiricism",pos:"noun",def:"The philosophical position that <strong>knowledge derives primarily from sensory experience and observation</strong>, not from innate ideas or pure reason. Francis Bacon is its Scientific Revolution champion; John Locke extended it to psychology and politics.",tip:"Empiricism vs. rationalism is a foundational philosophical distinction. Bacon (empiricism) vs. Descartes (rationalism) maps onto induction vs. deduction. Both traditions contributed to the Scientific Revolution; the debate between them runs through Enlightenment philosophy."},
+  {cat:"Scientific Method",term:"Mechanical philosophy",pos:"noun",def:"The view, associated with <strong>Descartes and Newton</strong>, that the universe operates like a machine — governed by mathematical laws of matter and motion, without innate purposes or spiritual forces. It replaced Aristotle's teleological nature (things move toward their proper purpose) with a purely mechanical model.",tip:"The mechanical philosophy is the Scientific Revolution's worldview — the universe as clockwork. Its implications: nature can be fully understood by human reason; God's role becomes that of the clockmaker who set the machine running (Deism). This is the bridge to the Enlightenment."},
+  {cat:"Scientific Method",term:"Royal Society",pos:"noun (proper)",def:"England's national scientific academy, founded in London in <strong>1660</strong>, providing an institutional home for scientific inquiry, facilitating peer review, and publishing the <em>Philosophical Transactions</em> (1665), the world's first scientific journal. Chartered by Charles II.",tip:"The Royal Society is the institutionalization of science. It transforms individual breakthroughs into a self-sustaining scientific culture. Know: founded 1660, London, Philosophical Transactions. France's equivalent: Académie des Sciences (1666)."},
+  {cat:"Scientific Method",term:"Scientific journal",pos:"noun",def:"A periodical publishing accounts of scientific research, enabling scientists to share findings, establish priority of discovery, and subject results to scrutiny. The <em>Philosophical Transactions</em> (Royal Society, 1665) was the <strong>first scientific journal</strong>.",tip:"Scientific journals are infrastructure for scientific culture. They create the cumulative, public, peer-reviewed character of modern science. Without them, discoveries stay isolated; with them, they build on each other. The journal is as important as the experiment."},
+  {cat:"Religion & Society",term:"Deism",pos:"noun",def:"The belief that God created the universe and established its natural laws but <strong>does not intervene in its ongoing operation</strong> — the 'clockmaker God.' Emerged from the mechanical philosophy of the Scientific Revolution. Influential among Enlightenment thinkers (Voltaire, many American Founding Fathers).",tip:"Deism is the religious consequence of the mechanical universe. It's not atheism — Deists believed in God — but it removes God from daily events, miracles, and providence. This is a crucial step toward Enlightenment secularism."},
+  {cat:"Religion & Society",term:"Heliocentrism and the Church",pos:"noun phrase",def:"The Catholic Church's condemnation of heliocentrism rested on scriptural passages implying Earth's immobility and on Aristotelian cosmology the Church had integrated into theology. Copernicus's work was placed on the <strong>Index of Forbidden Books</strong> (1616); Galileo was tried by the Inquisition (1633) and forced to recant.",tip:"Don't oversimplify: the Church supported much scientific work and many clergy were scientists. The conflict was specific: cosmological claims that directly contradicted scripture. The Galileo affair was a political and theological confrontation as much as a pure science-vs-religion clash."},
+  {cat:"Religion & Society",term:"Margaret Cavendish",pos:"noun (proper)",def:"English natural philosopher and writer (1623–1673) who published widely on science and philosophy, became the <strong>first woman invited to attend a Royal Society meeting</strong> (1667) — but only as an observer, never a member. Advocated for women's intellectual capacity.",tip:"Cavendish is your best example of a woman who engaged seriously with the Scientific Revolution and still faced institutional exclusion. She got through the door — but only barely, and only to watch. Use her to show both women's participation and their systematic marginalization."},
+  {cat:"Religion & Society",term:"Maria Winkelmann",pos:"noun (proper)",def:"German astronomer (1670–1720) who <strong>discovered a comet</strong> (1702) but had the discovery credited to her husband. After his death she was denied his position as astronomer to the Berlin Academy because of her sex, despite having effectively performed the job.",tip:"Winkelmann is the clearest example of a woman who did the scientific work and was denied recognition and position purely because of gender. Her case shows that exclusion was institutional, not based on ability."},
+  {cat:"Religion & Society",term:"Index of Forbidden Books",pos:"noun (proper)",def:"The Catholic Church's official list of books whose reading was prohibited for Catholics without special dispensation. Works by Copernicus (<em>On the Revolutions</em>, 1616) and Galileo (<em>Dialogue</em>, 1633) were placed on it, as were works by Erasmus, Machiavelli, and later many Enlightenment authors.",tip:"The Index is the institutional mechanism of Church censorship. It shows the Church's attempt to control the flow of information — and the limits of that control, since the printing press made suppression increasingly difficult. The Index persisted (though gradually emptied) until 1966."}
+];
+
+const DECKS = [CONCEPTS, VOCAB, [...CONCEPTS, ...VOCAB]];
+let currentDeck = 0, activeCat = "All", deck = [], idx = 0, revealed = false;
+
+function getCats(cards) {
+  return ["All", ...[...new Set(cards.map(c => c.cat))]];
+}
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  getCats(DECKS[currentDeck]).forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0; revealed = false; render();
+}
+function switchDeck(n) {
+  currentDeck = n; activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow(); buildDeck();
+}
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area";
+    area.className = "answer-area";
+    area.innerHTML = `<p class="answer-text">${isVocab ? c.def : c.a}</p>
+      <div class="context-box"><p class="context-label">${isVocab ? "why it matters" : "exam angle"}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>

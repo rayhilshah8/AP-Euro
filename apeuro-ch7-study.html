@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Euro — Chapter 7 Study</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card-bg: #fdfaf4;
+    --ink: #1a1410;
+    --ink-muted: #6b5e4e;
+    --ink-faint: #a8997f;
+    --accent: #4a6741;
+    --rule: #d4c9b0;
+    --tag-bg: #dde8da;
+    --shadow: 4px 4px 0px #c4b89a;
+    --radius: 3px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--rule); }
+  .eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  h1 { font-family: 'IM Fell English', serif; font-size: 2rem; line-height: 1.2; color: var(--ink); }
+  h1 em { color: var(--accent); font-style: italic; }
+  .subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 0.5rem; }
+  .deck-tabs { display: flex; margin-bottom: 1.5rem; border: 1.5px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+  .deck-tab {
+    flex: 1; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 12px;
+    background: transparent; border: none; cursor: pointer; color: var(--ink-muted);
+    text-align: center; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s;
+    border-right: 1.5px solid var(--ink);
+  }
+  .deck-tab:last-child { border-right: none; }
+  .deck-tab.active { background: var(--ink); color: var(--bg); }
+  .deck-tab:not(.active):hover { background: var(--tag-bg); }
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .cat-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    padding: 4px 10px; border: 1px solid var(--rule); border-radius: var(--radius);
+    background: transparent; cursor: pointer; color: var(--ink-muted); transition: all 0.12s;
+  }
+  .cat-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-btn.active { background: var(--accent); border-color: var(--accent); color: #fdfaf4; }
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .progress-track { flex: 1; height: 3px; background: var(--rule); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--ink-faint); white-space: nowrap; }
+  .card-wrap { margin-bottom: 1.25rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-height: 220px;
+    cursor: pointer;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.12s, transform 0.12s;
+  }
+  .card:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0px #c4b89a; }
+  .card:active { transform: translate(1px,1px); box-shadow: 2px 2px 0px #c4b89a; }
+  .card-front { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .card-q { font-family: 'IM Fell English', serif; font-size: 1.2rem; line-height: 1.55; color: var(--ink); text-align: center; }
+  .card-pos { font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; font-style: italic; }
+  .flip-hint { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 1rem; letter-spacing: 0.05em; }
+  .answer-area {
+    margin-top: 1.25rem; padding-top: 1.25rem;
+    border-top: 1px dashed var(--rule);
+    animation: fadein 0.2s ease;
+  }
+  @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .answer-text { font-size: 14px; line-height: 1.75; color: var(--ink); }
+  .answer-text strong { font-weight: 500; color: var(--accent); }
+  .context-box {
+    margin-top: 0.75rem; padding: 0.6rem 0.85rem;
+    background: var(--tag-bg); border-left: 3px solid var(--accent);
+    font-size: 12px; line-height: 1.65; color: var(--ink-muted);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .context-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+  .nav-row { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Mono', monospace; font-size: 13px; padding: 9px 20px;
+    background: transparent; border: 1.5px solid var(--ink); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink); transition: all 0.12s;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .shuffle-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; padding: 9px 14px;
+    background: transparent; border: 1.5px solid var(--rule); border-radius: var(--radius);
+    cursor: pointer; color: var(--ink-muted); margin-left: auto; transition: all 0.12s;
+    letter-spacing: 0.05em;
+  }
+  .shuffle-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .cat-tag {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); align-self: flex-start; margin-bottom: 0.5rem;
+    padding: 2px 8px; background: var(--tag-bg); border-radius: 20px;
+  }
+  footer { text-align: center; margin-top: 3rem; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.06em; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">AP European History</p>
+    <h1>Chapter 7 — <em>The Enlightenment</em></h1>
+    <p class="subtitle">An Age of Reason · 18th Century</p>
+  </header>
+
+  <div class="deck-tabs">
+    <button class="deck-tab active" onclick="switchDeck(0)">concepts &amp; themes</button>
+    <button class="deck-tab" onclick="switchDeck(1)">vocabulary</button>
+    <button class="deck-tab" onclick="switchDeck(2)">all cards</button>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-label" id="progress-label"></span>
+  </div>
+
+  <div class="card-wrap">
+    <div class="card" id="card" onclick="flip()">
+      <span class="cat-tag" id="cat-tag"></span>
+      <div class="card-front">
+        <p class="card-q" id="card-q"></p>
+        <p class="card-pos" id="card-pos"></p>
+      </div>
+      <p class="flip-hint" id="flip-hint">click to reveal</p>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="move(-1)">← prev</button>
+    <button class="nav-btn" id="next-btn" onclick="move(1)">next →</button>
+    <button class="shuffle-btn" onclick="shuffle()">⇄ shuffle</button>
+  </div>
+
+  <footer>AP Euro · Ch. 7 · <span>The Enlightenment</span></footer>
+</div>
+
+<script>
+const CONCEPTS = [
+  // Foundations
+  {cat:"Foundations",q:"What was the Enlightenment, and what were its core intellectual commitments?",a:"The Enlightenment (roughly 1680s–1780s) was an intellectual movement applying the <strong>methods and confidence of the Scientific Revolution to human affairs</strong> — politics, economics, society, and religion. Its core commitments: reason as the proper guide to knowledge and action; skepticism toward tradition and religious authority; belief in natural laws governing human society (as they governed the physical world); progress through education and reform; and the capacity of all humans to improve their condition.",tip:"The Enlightenment is not a single doctrine but a family of attitudes united by confidence in reason and critique of tradition. AP essays love asking about its origins (Scientific Revolution, Locke, Newton) and its legacy (revolutions, liberalism, secularism). Always trace it back to Ch. 6."},
+  {cat:"Foundations",q:"How did the Scientific Revolution directly give rise to Enlightenment thought?",a:"Newton's demonstration that the universe operates by discoverable mathematical laws inspired thinkers to seek equivalent natural laws governing <strong>human society, politics, and morality</strong>. John Locke applied Newtonian empiricism to the mind (tabula rasa) and politics (natural rights, consent). The philosophes modeled their approach on Newton: observe human society, reason from evidence, derive universal principles. The success of science made rational reform of society seem achievable.",tip:"Scientific Revolution → Enlightenment is the foundational causal chain for this chapter. Newton is the key bridge figure — philosophes explicitly idolized him. The AP frequently asks about the relationship between these two movements, so know the specific intellectual connections."},
+  {cat:"Foundations",q:"What was Locke's contribution to Enlightenment thought, and why was he foundational?",a:"John Locke (1632–1704) contributed two foundational ideas: in epistemology, the <strong>tabula rasa</strong> (mind as a blank slate shaped by experience — no innate ideas, so humans are shaped by environment and education); in politics, that humans possess natural rights (life, liberty, property) and form governments by consent to protect them, with the right to revolt against governments that fail. Both ideas were enormously influential on 18th-century reform thought.",tip:"Locke is the bridge from Ch. 5 (Glorious Revolution) to Ch. 7 (Enlightenment). His tabula rasa implies that better education and environment can improve humanity — a profoundly optimistic, reform-oriented idea. His political theory directly inspired the American and French Revolutions."},
+
+  // Philosophes
+  {cat:"Philosophes",q:"Who were the philosophes, and what was their common project?",a:"The philosophes were the leading intellectuals of the French Enlightenment — writers, critics, and reformers who used wit and reason to criticize traditional institutions. Though diverse in specific views, they shared: <strong>skepticism toward religious authority</strong> (especially the Catholic Church); belief in reason, tolerance, and human progress; desire to reform law, government, and social institutions; and commitment to spreading ideas through publication (most famously the <em>Encyclopédie</em>).",tip:"Philosophe (French for 'philosopher') is the AP's collective term for Enlightenment intellectuals. They weren't professional academics — they wrote for educated public audiences. Their social role (public intellectual, critic of power) was itself new and politically significant."},
+  {cat:"Philosophes",q:"What were Voltaire's core ideas, and what institutions did he attack?",a:"Voltaire (François-Marie Arouet, 1694–1778) was the Enlightenment's most effective polemicist. He attacked the Catholic Church with the battle cry <strong><em>Écrasez l'infâme!</em></strong> ('Crush the infamous thing!'), championed religious toleration, exposed judicial injustice (Calas Affair), promoted Newtonian science and Lockean politics to French audiences, and used satire (<em>Candide</em>) to demolish optimistic theology and social complacency.",tip:"Voltaire is the AP's go-to Enlightenment critic. Know: anti-clericalism (attack on the Church, not necessarily on God — he was a Deist), religious toleration, Candide as satire. He's also important as a popularizer — he brought Newton and Locke to a French audience."},
+  {cat:"Philosophes",q:"What was the Encyclopédie, and why was it significant?",a:"The <em>Encyclopédie</em> (1751–1772), edited by <strong>Denis Diderot</strong> and Jean d'Alembert, was a 28-volume compendium of all human knowledge organized by reason rather than theology. It systematically applied rational analysis to every field, often subtly undermining religious and political orthodoxy. Contributions from Voltaire, Rousseau, Montesquieu, and others made it the flagship publication of the French Enlightenment.",tip:"The Encyclopédie is the Enlightenment in book form — a project to reorganize all knowledge by reason, not faith. It was repeatedly condemned and censored by French authorities and the Church, making it more desirable. Know Diderot as editor, its size (28 volumes), and its political significance."},
+  {cat:"Philosophes",q:"What were Montesquieu's contributions to Enlightenment political thought?",a:"Charles-Louis de Secondat, Baron de Montesquieu (1689–1755) analyzed different forms of government in <em>The Spirit of the Laws</em> (1748), arguing that political institutions must fit the geography, climate, and customs of a people. He championed <strong>separation of powers</strong> (executive, legislative, judicial) as the key safeguard of liberty — drawing on his idealized reading of the English constitution. His ideas directly influenced the U.S. Constitution.",tip:"Montesquieu's separation of powers is his most enduring contribution — it's in the U.S. Constitution. On the AP, know him as the political theorist who applied comparative, empirical analysis to government. He's a bridge between Enlightenment theory and practical constitutional design."},
+  {cat:"Philosophes",q:"What were Rousseau's political ideas, and how did they differ from other Enlightenment thinkers?",a:"Jean-Jacques Rousseau (1712–1778) argued that humans are naturally good but corrupted by civilization and private property (<em>Discourse on Inequality</em>). His <em>Social Contract</em> (1762) proposed that legitimate government expresses the <strong>'general will'</strong> — the collective interest of the community, to which individuals must submit. Unlike Locke (individual rights protected from government), Rousseau emphasized collective sovereignty and could justify majoritarian coercion of the individual.",tip:"Rousseau is the most complex and dangerous Enlightenment thinker for the AP. His 'general will' can justify authoritarian democracy — his ideas fed both the French Revolution's democratic idealism and its Terror. Contrast with Locke: Locke protects individuals from government; Rousseau subordinates individuals to the collective."},
+  {cat:"Philosophes",q:"What was Adam Smith's economic philosophy, and how did it challenge mercantilism?",a:"Adam Smith (1723–1790) in <em>The Wealth of Nations</em> (1776) argued that economies grow most efficiently when <strong>individuals freely pursue their own economic interest</strong> — guided by the 'invisible hand' of market competition toward socially beneficial outcomes. He attacked mercantilism's state intervention, monopolies, and trade restrictions as counterproductive. Free trade, division of labor, and market pricing were more efficient than government regulation.",tip:"Smith = free market economics vs. Colbert's mercantilism. This is a fundamental opposition. The AP may ask you to compare mercantilist and Smithian economic theory. Smith's ideas became the foundation of classical liberalism and modern capitalism — know Wealth of Nations (1776) and the 'invisible hand.'"},
+
+  // Enlightened Despotism
+  {cat:"Enlightened Despotism",q:"What was 'enlightened despotism,' and which rulers exemplified it?",a:"Enlightened despots were absolute monarchs who adopted Enlightenment rhetoric and some reforms while preserving their own power. Key examples: <strong>Frederick the Great of Prussia</strong> (religious toleration, law reform, patronized Voltaire — but kept serfdom and military autocracy); <strong>Catherine the Great of Russia</strong> (corresponded with philosophes, reformed law, expanded the Empire — but actually worsened serfdom); <strong>Joseph II of Austria</strong> (abolished serfdom, extended toleration, reorganized the Church — reforms later reversed).",tip:"Enlightened despotism is a contradiction the AP loves to probe: rulers claimed Enlightenment ideals but rarely enacted them fully, and never where they threatened their own power. Joseph II went furthest and faced the most resistance. Know all three rulers and their specific reforms and limits."},
+  {cat:"Enlightened Despotism",q:"How did Frederick the Great embody and contradict Enlightenment ideals?",a:"Frederick II (r. 1740–1786) of Prussia embodied Enlightenment ideals by: tolerating religious minorities, reforming the legal code, abolishing judicial torture, patronizing arts and philosophy (he hosted Voltaire). He contradicted them by: <strong>maintaining serfdom</strong>, waging aggressive wars (Silesia from Austria, partition of Poland), preserving the Junker (noble) class's privileges, and treating Prussia as a military state where his own will was absolute.",tip:"Frederick is the paradigmatic enlightened despot — smart, reform-minded in some areas, autocratic in others. His wars reveal that Enlightenment ideals about reason and progress didn't prevent power politics. A useful case study for the limits of enlightened despotism."},
+  {cat:"Enlightened Despotism",q:"How did Catherine the Great's reign illustrate the contradictions of enlightened despotism?",a:"Catherine II (r. 1762–1796) of Russia corresponded with Voltaire and Diderot, wrote a reform document (<em>Nakaz</em>) drawing on Montesquieu, and convened a Legislative Commission. But she <strong>actually intensified serfdom</strong> after the Pugachev Rebellion (1773–1775), granted the nobility greater power over their serfs, expanded Russian territory, and partitioned Poland. Her 'Enlightenment' was largely performative.",tip:"Catherine is the most contradictory enlightened despot. The gap between her Enlightenment rhetoric and her actual policies (especially regarding serfdom) is stark. The Pugachev Rebellion is key context — when peasants revolted invoking liberation, she crushed them and tightened control."},
+
+  // Women & Society
+  {cat:"Women & Society",q:"What was Rousseau's view of women, and how did it constrain Enlightenment feminism?",a:"Rousseau argued in <em>Émile</em> (1762) that women's nature was fundamentally different from men's — women were emotional, domestic, and meant to please men, not to engage in public life or rational discourse. His ideal woman (<strong>Sophie</strong>) was educated only for her role as wife and mother. This view, despite its apparent contradiction with Enlightenment universalism, was enormously influential and used to exclude women from the political benefits of Enlightenment reform.",tip:"Rousseau's gender ideology is the AP's central example of the Enlightenment's limits for women. The very philosopher who championed human equality and natural goodness explicitly excluded women from rational civic life. This contradiction sets up Wollstonecraft's response."},
+  {cat:"Women & Society",q:"Who was Mary Wollstonecraft, and what was her argument?",a:"Mary Wollstonecraft (1759–1797) wrote <em>A Vindication of the Rights of Woman</em> (1792), directly attacking Rousseau. She argued that if reason is the basis of rights (as the Enlightenment claimed), then <strong>women — equally capable of reason — deserve the same rights as men</strong>. Women's apparent inferiority was the result of inadequate education, not nature. She demanded equal access to education and civic life.",tip:"Wollstonecraft is the AP's key figure for Enlightenment-era feminism. Know her title, date (1792 — during the French Revolution), and her argument: the same logic that justifies men's rights justifies women's. She's using Enlightenment reasoning against the Enlightenment's own exclusions."},
+  {cat:"Women & Society",q:"What role did salons play in the Enlightenment, and what did they reveal about women's participation?",a:"Salons were <strong>intellectual gatherings hosted by educated women</strong> (salonnières) in their homes, where philosophes, artists, and aristocrats exchanged ideas. Famous salonnières include Marie Thérèse Rodet Geoffrin, Suzanne Necker, and Julie de Lespinasse. Salons were crucial to the Enlightenment's social infrastructure — philosophes needed access to patrons, publishers, and aristocratic protection. Women shaped the Enlightenment's social world even while excluded from formal academic institutions.",tip:"Salons are evidence that women were not absent from the Enlightenment — they were essential to its social functioning. But they participated as hosts and facilitators, not as recognized intellectuals. This ambiguity (present but marginalized) is exactly what AP essays on gender and the Enlightenment should capture."},
+
+  // Religion & Culture
+  {cat:"Religion & Culture",q:"How did the Enlightenment challenge the institutional Church, and how did the Church respond?",a:"Philosophes attacked the Church on multiple fronts: <strong>Voltaire</strong> mocked clerical superstition and intolerance; Diderot's <em>Encyclopédie</em> undermined theological authority; Hume and others questioned miracles and religious epistemology. Deism (God as clockmaker, not interventionist) spread among educated elites. The Church responded with censorship (Index of Forbidden Books), Jesuit pressure, and political alliance with conservative monarchs — but increasingly lost the battle for educated opinion.",tip:"Church vs. Enlightenment is a major AP theme. Key distinction: most philosophes were Deists (believed in God but not Church authority), not atheists. The attack was on institutional religion and superstition, not necessarily on God's existence. Voltaire's 'Écrasez l'infâme' targets the Church, not religion per se."},
+  {cat:"Religion & Culture",q:"What was the role of popular religion in the 18th century, despite Enlightenment critique?",a:"Despite elite skepticism, popular religious practice remained intense: <strong>Pietism</strong> in Germany and the Netherlands (emphasizing personal, emotional faith over formal doctrine); <strong>Methodism</strong> in England (John Wesley, evangelical preaching to working-class audiences); and continued Catholic popular devotion (saints, pilgrimages, confraternities). The Enlightenment's skepticism affected primarily educated urban elites — the majority of Europeans remained devoutly religious.",tip:"Don't let the philosophes' loud voices make you think all of Europe became secular. The AP rewards nuance: Enlightenment critique of religion was real but limited to educated elites. Popular religious revivalism (Pietism, Methodism) was a concurrent movement — and in some ways a reaction against Enlightenment rationalism."},
+  {cat:"Religion & Culture",q:"How did Enlightenment ideas change views on crime and punishment?",a:"Cesare Beccaria's <em>On Crimes and Punishments</em> (1764) argued that punishment should be <strong>proportional to the crime, swift, and certain — not brutal</strong>. He opposed torture (which produced unreliable confessions) and capital punishment (which he argued was ineffective as a deterrent). His work influenced legal reform across Europe and is the foundation of modern criminology.",tip:"Beccaria is a key Enlightenment reformer. His book applied Enlightenment rationalism to criminal justice: treat punishment as a rational, social instrument, not divine vengeance. Frederick the Great and other enlightened despots cited him when abolishing judicial torture. Know the title and date (1764)."},
+  {cat:"Religion & Culture",q:"How did art and literature change during the Enlightenment, and what replaced Baroque?",a:"The dominant style shifted from Baroque (dramatic, emotional, grandiose — serving monarchy and Church) to <strong>Neoclassicism</strong> (clean lines, rationality, classical models — reflecting Enlightenment values of reason and order) and the <strong>novel</strong> as the new literary form. The novel (Defoe's <em>Robinson Crusoe</em>, Richardson's <em>Pamela</em>, Fielding's <em>Tom Jones</em>) addressed middle-class readers with realistic characters and moral themes. Music saw the shift from Baroque (Bach) to Classical style (Haydn, Mozart).",tip:"Art history in this period maps onto social history: Baroque served courts and churches; neoclassicism and the novel served the educated middle class (bourgeoisie). The AP may ask about the relationship between Enlightenment culture and the emerging middle class — art style is your evidence."},
+
+  // Broader Themes
+  {cat:"Broader Themes",q:"What is the relationship between the Enlightenment and the revolutions that followed?",a:"The Enlightenment provided the intellectual framework for both the American (1776) and French (1789) Revolutions: <strong>natural rights</strong> (Locke) justified revolution against tyranny; <strong>separation of powers</strong> (Montesquieu) shaped constitutional design; <strong>popular sovereignty</strong> (Rousseau) underpinned democratic claims; and <strong>free market economics</strong> (Smith) challenged mercantile regulation. The Declaration of Independence and the Declaration of the Rights of Man are essentially Enlightenment documents.",tip:"Enlightenment → Revolutions is the most important forward-looking connection. The AP frequently asks about the intellectual origins of revolution. Know which philosophe contributed which idea to which revolutionary document. Locke → natural rights; Montesquieu → separation of powers; Rousseau → popular sovereignty."},
+  {cat:"Broader Themes",q:"What were the limits and contradictions of the Enlightenment?",a:"The Enlightenment championed universal reason but in practice was deeply limited: most philosophes were <strong>elite, educated men</strong> who excluded women (Rousseau), ignored the enslaved (few philosophes actively opposed slavery), and disdained popular culture. Its 'universal' claims masked European cultural chauvinism — Enlightenment 'reason' was often used to justify colonial hierarchies. Rousseau's 'noble savage' critiqued European civilization but still patronized non-European peoples.",tip:"The AP increasingly rewards students who can identify the Enlightenment's internal contradictions and limits. Universal reason that excluded women, the enslaved, and non-Europeans was not truly universal. This critical perspective is essential for sophisticated essays on the Enlightenment's legacy."},
+  {cat:"Broader Themes",q:"What is the 'public sphere,' and why was it significant for the Enlightenment?",a:"The 'public sphere' (concept developed by philosopher Jürgen Habermas) refers to the <strong>space for rational public debate</strong> that emerged in 18th-century Europe through coffeehouses, salons, newspapers, pamphlets, and journals. It created a forum outside the Church and state where educated citizens could criticize existing institutions. The growth of literacy and printing made this possible; salons and coffeehouses were its physical locations.",tip:"The public sphere concept is crucial for explaining how Enlightenment ideas spread and gained political force. Ideas need social infrastructure to become movements. The coffeehouse, salon, and printed pamphlet are what turned individual philosophes' writings into a cultural revolution."}
+];
+
+const VOCAB = [
+  {cat:"Core Concepts",term:"Enlightenment",pos:"noun (proper)",def:"The 18th-century intellectual movement applying <strong>reason, empiricism, and skepticism</strong> to human affairs — politics, economics, religion, and society. It built on the Scientific Revolution's confidence that natural laws govern all phenomena and that human reason can discover and apply them to improve human life.",tip:"The Enlightenment is the chapter's organizing concept. Know its key characteristics: reason, natural law, progress, toleration, skepticism of tradition. It's not a single philosophy but a family of attitudes united by these commitments."},
+  {cat:"Core Concepts",term:"Natural law",pos:"noun",def:"The principle that universal laws govern human society and morality, <strong>discoverable by reason</strong> — just as Newton discovered natural laws governing the physical universe. Enlightenment thinkers argued that just governments, free markets, and rational morality were all expressions of natural law.",tip:"Natural law is the conceptual bridge from Scientific Revolution to Enlightenment. If Newton found laws governing planets, surely reason can find laws governing human society. It underlies natural rights theory, free market economics, and Enlightenment political theory."},
+  {cat:"Core Concepts",term:"Natural rights",pos:"noun phrase",def:"Rights that all humans possess by virtue of their nature, independent of governments or traditions — especially <strong>life, liberty, and property</strong> (Locke). They cannot be legitimately taken away by any ruler. The basis of Enlightenment political theory and of both the American and French Revolutions.",tip:"Natural rights + consent of the governed = the two core ideas of Lockean political theory. Know them together. They appear in the Declaration of Independence ('life, liberty, and the pursuit of happiness' is Jefferson's adaptation of Locke)."},
+  {cat:"Core Concepts",term:"Tabula rasa",pos:"noun (Latin)",def:"'Blank slate' — John Locke's claim that the human mind at birth contains <strong>no innate ideas</strong>; all knowledge comes from sensory experience. This implied that human beings are shaped by their environment and education — a profoundly reformist idea, since improving education and institutions could improve humanity.",tip:"Tabula rasa is Locke's most influential idea for the Enlightenment. Its implication: humans are not fixed by nature or sin — they are malleable by education and environment. This optimism about human improvement is foundational to Enlightenment reform projects."},
+  {cat:"Core Concepts",term:"Progress",pos:"noun",def:"The Enlightenment belief that human society can <strong>improve over time through the application of reason</strong>, education, and reform — a sharp break from the medieval emphasis on decline from a golden past or preparation for the afterlife. Thinkers like Condorcet argued human perfectibility was virtually unlimited.",tip:"Progress is the Enlightenment's most optimistic and consequential idea. It reoriented European culture from looking backward (classical antiquity, religious tradition) to looking forward. It also created the expectation that suffering could be eliminated — with political consequences for the revolutions ahead."},
+  {cat:"Core Concepts",term:"Toleration",pos:"noun",def:"The Enlightenment principle that <strong>individuals should be free to hold different religious and philosophical beliefs</strong> without persecution by the state or Church. Championed especially by Voltaire (following the Calas Affair) and Locke (<em>A Letter Concerning Toleration</em>). Distinguished from approval — tolerating a belief doesn't mean endorsing it.",tip:"Toleration is both an Enlightenment value and a practical political proposal. After a century of religious warfare, toleration was presented as the rational alternative to persecution. It's a direct response to the wars of religion from Ch. 3 — know this connection."},
+  {cat:"Philosophes",term:"Philosophes",pos:"noun (plural, French)",def:"The leading French Enlightenment intellectuals — writers, critics, and reformers who used reason and wit to criticize traditional religious, political, and social institutions. Key figures: Voltaire, Diderot, Montesquieu, Rousseau. They wrote for educated public audiences, not academic specialists.",tip:"Philosophe (philosopher) is the AP's collective term for Enlightenment intellectuals. Their importance is not just their ideas but their role — they created the model of the public intellectual who uses writing to influence society and challenge power."},
+  {cat:"Philosophes",term:"Voltaire",pos:"noun (proper)",def:"Pen name of François-Marie Arouet (1694–1778), the Enlightenment's most effective polemicist. Attacked the Catholic Church (<em>Écrasez l'infâme!</em>), championed religious toleration, promoted Newton and Locke to French audiences, and used satirical fiction (<em>Candide</em>, 1759) to demolish theological optimism.",tip:"Voltaire = anti-clericalism + toleration + satire. Know his battle cry and Candide. He was a Deist, not an atheist — he believed in God but rejected Church authority. His exile and imprisonment (Bastille, exile to England, exile to Switzerland) show the personal risks of Enlightenment criticism."},
+  {cat:"Philosophes",term:"Denis Diderot",pos:"noun (proper)",def:"French philosopher and editor (1713–1784) who directed the <em>Encyclopédie</em> (1751–1772), the flagship publication of the French Enlightenment. He pushed the project through censorship, imprisonment, and the withdrawal of key contributors to complete all 28 volumes.",tip:"Diderot's significance is the Encyclopédie — both the project and his heroic persistence in completing it. Know him as editor of the Encyclopédie, not for a specific philosophical doctrine. The Encyclopédie itself is as important as any individual philosophe's work."},
+  {cat:"Philosophes",term:"Montesquieu",pos:"noun (proper)",def:"French political philosopher (1689–1755) whose <em>The Spirit of the Laws</em> (1748) championed <strong>separation of powers</strong> (executive, legislative, judicial) as the key safeguard of political liberty, based on his analysis of the English constitution. Directly influenced the U.S. Constitution's framers.",tip:"Montesquieu = separation of powers. That's his contribution. Know The Spirit of the Laws (1748) and the three branches. His influence on the American founders is direct — Madison and Hamilton cited him. He's also notable for applying comparative, empirical analysis to political systems."},
+  {cat:"Philosophes",term:"Rousseau",pos:"noun (proper)",def:"French philosopher (1712–1778) who argued humans are naturally good but corrupted by civilization. His <em>Social Contract</em> (1762) proposed government based on the <strong>'general will'</strong> — the collective interest of the community. His <em>Émile</em> (1762) excluded women from civic life, drawing Wollstonecraft's response.",tip:"Rousseau is the most complex and double-edged philosophe. His 'general will' can justify both democracy and authoritarian collectivism — his ideas fueled the French Revolution's radical phase. Know: Social Contract (general will), Émile (gender), Discourse on Inequality (civilization corrupts)."},
+  {cat:"Philosophes",term:"General will",pos:"noun",def:"Rousseau's concept of the <strong>collective interest of the community</strong> as a whole, distinct from the sum of individual interests. Legitimate government expresses and implements the general will. Individuals who resist the general will can be 'forced to be free' — a phrase that foreshadows authoritarian interpretations.",tip:"'Forced to be free' is the phrase that makes Rousseau dangerous. The general will can be used to justify overriding individual rights in the name of the collective — the Jacobins during the Terror cited Rousseau. Contrast with Locke: Locke protects individuals from the majority; Rousseau can subordinate individuals to it."},
+  {cat:"Philosophes",term:"Adam Smith",pos:"noun (proper)",def:"Scottish economist and philosopher (1723–1790) whose <em>Wealth of Nations</em> (1776) argued that free markets, guided by the <strong>'invisible hand'</strong> of competition, allocate resources more efficiently than government intervention. He attacked mercantilism's monopolies and trade restrictions.",tip:"Smith = free market economics. Know Wealth of Nations (1776) and the invisible hand. His ideas are the foundation of classical liberalism and modern capitalism. Published the same year as the Declaration of Independence — the conjunction is not coincidental: 1776 was a watershed year for liberal ideas."},
+  {cat:"Philosophes",term:"Invisible hand",pos:"noun phrase",def:"Adam Smith's metaphor for the <strong>self-regulating mechanism of free markets</strong>: when individuals pursue their own economic interest, they are led 'as if by an invisible hand' to promote the general welfare — even though that was not their intention. Competition and price signals coordinate economic activity without central direction.",tip:"The invisible hand is Smith's core insight against mercantilism. Mercantilist policy assumed economic activity needed government direction; Smith argued self-interest + competition = efficient outcomes without direction. This is still the foundational argument for free market economics."},
+  {cat:"Philosophes",term:"Encyclopédie",pos:"noun (proper)",def:"A 28-volume compendium of all human knowledge edited by <strong>Denis Diderot</strong> and Jean d'Alembert (1751–1772), organizing knowledge by reason rather than theology. Contributions from all major philosophes. Repeatedly censored; its persistence and completion was a victory for Enlightenment ideas over censorship.",tip:"The Encyclopédie is the Enlightenment's collective monument. Know: Diderot as editor, 28 volumes, 1751–1772, censored but completed. Its significance: systematically replacing religious with rational organization of knowledge — a revolution in epistemology as well as politics."},
+  {cat:"Enlightened Despotism",term:"Enlightened despotism",pos:"noun",def:"A form of absolute monarchy in which rulers <strong>adopted Enlightenment rhetoric and some reforms</strong> (religious toleration, legal rationalization, educational improvement) while preserving autocratic power. Key rulers: Frederick the Great (Prussia), Catherine the Great (Russia), Joseph II (Austria).",tip:"Enlightened despotism is a contradiction in terms — and the AP rewards noticing that. These rulers used Enlightenment ideas selectively, never where they threatened their own power. Joseph II went furthest in genuine reform; Frederick and Catherine were more performative."},
+  {cat:"Enlightened Despotism",term:"Frederick the Great",pos:"noun (proper)",def:"King of Prussia (r. 1740–1786) who embodied enlightened despotism: tolerated religious minorities, abolished judicial torture, reformed law, patronized arts (hosted Voltaire). Also waged aggressive wars (seized Silesia), maintained serfdom, and kept Prussia a military autocracy.",tip:"Frederick = the enlightened despot who shows the limits of the model. His wars (War of Austrian Succession, Seven Years' War) reveal that Enlightenment rhetoric didn't prevent power politics. Know: Prussia, 1740–1786, Voltaire connection, Silesia."},
+  {cat:"Enlightened Despotism",term:"Catherine the Great",pos:"noun (proper)",def:"Empress of Russia (r. 1762–1796) who corresponded with philosophes (Voltaire, Diderot), wrote the reform-minded <em>Nakaz</em>, and convened a Legislative Commission — but <strong>intensified serfdom</strong> after the Pugachev Rebellion, granted nobles greater control over serfs, and expanded Russian territory through partition of Poland.",tip:"Catherine is the most contradictory enlightened despot. Her Enlightenment was largely performative — real power and real policy went against Enlightenment principles. The Pugachev Rebellion (1773–75) is the turning point: when serfs invoked liberation, she crushed them."},
+  {cat:"Enlightened Despotism",term:"Joseph II of Austria",pos:"noun (proper)",def:"Holy Roman Emperor (r. 1780–1790) who enacted the most ambitious reforms of any enlightened despot: <strong>abolished serfdom</strong>, extended religious toleration (Edict of Toleration, 1781), subordinated the Church to the state, streamlined administration, and abolished torture. Most of his reforms were reversed by his successor after his death.",tip:"Joseph II went furthest — and faced the most resistance. His reforms were too radical too fast; nobles, clergy, and peasants all revolted in different ways. His reign shows both the potential and the limits of top-down Enlightenment reform without popular support."},
+  {cat:"Women",term:"Mary Wollstonecraft",pos:"noun (proper)",def:"British writer (1759–1797) whose <em>A Vindication of the Rights of Woman</em> (1792) argued that if reason is the basis of rights, then women — equally rational — deserve equal rights and education. Directly challenged Rousseau's exclusion of women from civic life.",tip:"Wollstonecraft = Enlightenment feminism. Know her title, date (1792), and argument: apply Enlightenment logic consistently and it demands women's equality. She's the direct precursor to 19th-century feminist movements."},
+  {cat:"Women",term:"Salonnières",pos:"noun (plural, French)",def:"The educated women who <strong>hosted salons</strong> — intellectual gatherings in their homes where philosophes, artists, and aristocrats exchanged Enlightenment ideas. Key figures: Marie Thérèse Rodet Geoffrin, Suzanne Necker, Julie de Lespinasse. They shaped the Enlightenment's social and intellectual environment.",tip:"Salonnières are evidence that women shaped the Enlightenment even without formal recognition. Their social role (facilitating, networking, patronizing) was essential — without salons, philosophes lacked the social infrastructure for their ideas. Good evidence against the narrative of complete female exclusion."},
+  {cat:"Culture",term:"Neoclassicism",pos:"noun",def:"The dominant artistic style of the late 18th century, characterized by <strong>clean lines, rationality, order, and classical (Greek and Roman) models</strong>. It replaced Baroque's dramatic emotionalism and reflected Enlightenment values of reason and civic virtue. Jacques-Louis David is its leading painter.",tip:"Neoclassicism = Enlightenment aesthetics. Where Baroque served monarchy and Church with emotion and grandeur, neoclassicism served the educated middle class and civic ideals with reason and restraint. The contrast in style maps onto the contrast in patronage and values."},
+  {cat:"Culture",term:"Cesare Beccaria",pos:"noun (proper)",def:"Italian philosopher (1738–1794) whose <em>On Crimes and Punishments</em> (1764) argued that criminal justice should be <strong>rational, proportional, and humane</strong> — opposing torture, which produced unreliable confessions, and capital punishment, which he argued was ineffective as a deterrent. Founded modern criminology.",tip:"Beccaria applies Enlightenment rationalism to criminal justice. Know: On Crimes and Punishments (1764), opposition to torture and capital punishment, proportionality of punishment. His ideas influenced legal reform by enlightened despots (Frederick the Great abolished judicial torture) and shaped modern criminal justice."},
+  {cat:"Culture",term:"Pietism",pos:"noun",def:"A Protestant religious movement emphasizing <strong>personal, emotional religious experience</strong> over doctrinal correctness or formal Church ritual. Emerged in Germany and the Netherlands in the late 17th century; influenced John Wesley's Methodist movement in England. A popular religious response concurrent with (and partly against) Enlightenment rationalism.",tip:"Pietism is evidence that the Enlightenment's rationalism did not go uncontested — a powerful counter-movement of heartfelt popular religion arose at the same time. The AP rewards noting this: religious revival (Pietism, Methodism) coexisted with Enlightenment skepticism, showing Europe's intellectual diversity."},
+  {cat:"Culture",term:"Public sphere",pos:"noun",def:"The space for rational public debate outside state and Church control, created in the 18th century through <strong>coffeehouses, salons, newspapers, pamphlets, and journals</strong>. Enabled educated citizens to discuss and criticize political and social institutions. Theorized by philosopher Jürgen Habermas.",tip:"The public sphere concept explains how ideas become movements. Without coffeehouses, salons, and the press, the philosophes were just writers. With them, Enlightenment ideas reached a political audience. The infrastructure of debate (press freedom, literacy, gathering places) is as important as the ideas themselves."}
+];
+
+const DECKS = [CONCEPTS, VOCAB, [...CONCEPTS, ...VOCAB]];
+let currentDeck = 0, activeCat = "All", deck = [], idx = 0, revealed = false;
+
+function getCats(cards) {
+  return ["All", ...[...new Set(cards.map(c => c.cat))]];
+}
+function buildFilterRow() {
+  const fr = document.getElementById("filter-row");
+  fr.innerHTML = "";
+  getCats(DECKS[currentDeck]).forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (cat === activeCat ? " active" : "");
+    b.textContent = cat;
+    b.onclick = () => {
+      activeCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      buildDeck();
+    };
+    fr.appendChild(b);
+  });
+}
+function buildDeck() {
+  const source = DECKS[currentDeck];
+  deck = activeCat === "All" ? [...source] : source.filter(c => c.cat === activeCat);
+  idx = 0; revealed = false; render();
+}
+function switchDeck(n) {
+  currentDeck = n; activeCat = "All";
+  document.querySelectorAll(".deck-tab").forEach((t, i) => t.classList.toggle("active", i === n));
+  buildFilterRow(); buildDeck();
+}
+function render() {
+  const c = deck[idx];
+  const isVocab = c.term !== undefined;
+  document.getElementById("cat-tag").textContent = c.cat;
+  document.getElementById("card-q").innerHTML = isVocab ? c.term : c.q;
+  document.getElementById("card-pos").textContent = isVocab ? c.pos : "";
+  document.getElementById("flip-hint").textContent = revealed ? "" : "click to reveal";
+  const existing = document.getElementById("answer-area");
+  if (existing) existing.remove();
+  if (revealed) {
+    const area = document.createElement("div");
+    area.id = "answer-area";
+    area.className = "answer-area";
+    area.innerHTML = `<p class="answer-text">${isVocab ? c.def : c.a}</p>
+      <div class="context-box"><p class="context-label">${isVocab ? "why it matters" : "exam angle"}</p>${c.tip}</div>`;
+    document.getElementById("card").appendChild(area);
+  }
+  document.getElementById("prev-btn").disabled = idx === 0;
+  document.getElementById("next-btn").disabled = idx === deck.length - 1;
+  document.getElementById("progress-label").textContent = `${idx + 1} / ${deck.length}`;
+  document.getElementById("progress-fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
+function flip() { revealed = !revealed; render(); }
+function move(d) { idx += d; revealed = false; render(); }
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  idx = 0; revealed = false; render();
+}
+buildFilterRow();
+buildDeck();
+</script>
+</body>
+</html>
