@@ -1,0 +1,328 @@
+
+<h2 class="sr-only">APEH comprehensive chronology — parallel timeline showing intellectual, artistic, political, economic, and religious developments from 1450 to 1991</h2>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.tl-wrap{font-family:var(--font-sans);padding:1rem 0 2rem}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem;align-items:center}
+.era-btn{font-size:11px;padding:4px 10px;border-radius:99px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.era-btn:hover{background:var(--color-background-secondary)}
+.era-btn.active{font-weight:500}
+.filter-label{font-size:11px;color:var(--color-text-tertiary);margin-right:2px}
+.track-toggle{font-size:11px;padding:3px 9px;border-radius:99px;border:0.5px solid;cursor:pointer;transition:all .15s;font-weight:400}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:1rem}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.timeline-outer{overflow-x:auto;padding-bottom:8px}
+.timeline-inner{min-width:900px}
+.axis-row{display:flex;align-items:flex-end;margin-bottom:4px;padding-left:110px}
+.axis-tick{flex:1;text-align:center;font-size:10px;color:var(--color-text-tertiary);border-left:0.5px solid var(--color-border-tertiary);padding-bottom:4px;padding-top:2px}
+.track-row{display:flex;align-items:stretch;margin-bottom:3px;min-height:28px}
+.track-label{width:110px;flex-shrink:0;font-size:11px;color:var(--color-text-secondary);padding-right:8px;text-align:right;display:flex;align-items:center;justify-content:flex-end;line-height:1.3}
+.track-body{flex:1;position:relative;border-left:0.5px solid var(--color-border-tertiary);min-height:28px}
+.bar{position:absolute;top:4px;height:20px;border-radius:3px;cursor:pointer;display:flex;align-items:center;padding:0 6px;font-size:10px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .15s}
+.bar:hover{opacity:0.8}
+.point-event{position:absolute;top:2px;width:2px;cursor:pointer;display:flex;flex-direction:column;align-items:center}
+.point-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-left:-3px}
+.point-label{font-size:9px;white-space:nowrap;margin-top:2px;color:var(--color-text-secondary);transform:rotate(-40deg);transform-origin:top left;margin-left:4px}
+.section-divider{height:8px}
+.section-head{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;padding:6px 0 2px 110px}
+.tooltip{position:absolute;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:12px;z-index:100;max-width:260px;pointer-events:none;display:none;line-height:1.5}
+.tt-title{font-weight:500;font-size:13px;color:var(--color-text-primary);margin-bottom:3px}
+.tt-date{font-size:11px;color:var(--color-text-tertiary);margin-bottom:6px}
+.tt-body{color:var(--color-text-secondary)}
+.ask-btn{margin-top:8px;font-size:11px;color:var(--color-text-info);cursor:pointer;border:none;background:none;padding:0;pointer-events:all}
+</style>
+
+<div class="tl-wrap">
+<div class="controls">
+  <span class="filter-label">Jump to era:</span>
+  <button class="era-btn active" onclick="jumpTo(1450)" id="eb0">1450–1600</button>
+  <button class="era-btn" onclick="jumpTo(1600)" id="eb1">1600–1750</button>
+  <button class="era-btn" onclick="jumpTo(1750)" id="eb2">1750–1850</button>
+  <button class="era-btn" onclick="jumpTo(1850)" id="eb3">1850–1945</button>
+  <button class="era-btn" onclick="jumpTo(1945)" id="eb4">1945–1991</button>
+</div>
+<div class="controls" style="margin-top:-4px">
+  <span class="filter-label">Tracks:</span>
+</div>
+<div class="legend" id="legend"></div>
+<div class="timeline-outer" id="scroller">
+  <div class="timeline-inner" id="tl"></div>
+</div>
+<div class="tooltip" id="tt">
+  <div class="tt-title" id="tt-title"></div>
+  <div class="tt-date" id="tt-date"></div>
+  <div class="tt-body" id="tt-body"></div>
+  <button class="ask-btn" id="tt-ask" onclick="askAbout()">Ask about this ↗</button>
+</div>
+</div>
+
+<script>
+const START = 1450, END = 1991, SPAN = END - START;
+
+const tracks = [
+  {id:'intel', label:'Intellectual', color:'#534AB7', textColor:'#EEEDFE'},
+  {id:'art',   label:'Art & culture', color:'#0F6E56', textColor:'#E1F5EE'},
+  {id:'relig', label:'Religion', color:'#993C1D', textColor:'#FAECE7'},
+  {id:'polit', label:'Political', color:'#185FA5', textColor:'#E6F1FB'},
+  {id:'econ',  label:'Economic', color:'#854F0B', textColor:'#FAEEDA'},
+  {id:'mil',   label:'Wars & conflict', color:'#A32D2D', textColor:'#FCEBEB'},
+];
+
+const bars = [
+  {track:'intel', start:1350, end:1600, label:'Italian Renaissance humanism', note:'Shifted focus from God to human potential. Petrarch, Pico della Mirandola. Spread via printing press after 1450.'},
+  {track:'intel', start:1543, end:1700, label:'Scientific Revolution', note:'Copernicus (1543) to Newton (1687). Empiricism replaced scholasticism. Galileo, Kepler, Bacon, Descartes.'},
+  {track:'intel', start:1690, end:1789, label:'Enlightenment', note:'Applied reason to society and politics. Locke, Voltaire, Montesquieu, Rousseau. Challenged divine right and religious authority.'},
+  {track:'intel', start:1800, end:1850, label:'Romanticism (intellectual)', note:'Reaction against Enlightenment rationalism. Emphasized emotion, nature, and the nation. Herder, Hegel, German Idealism.'},
+  {track:'intel', start:1830, end:1900, label:'Positivism & Social Darwinism', note:'Comte: apply scientific method to society. Spencer adapted Darwin to justify capitalism and imperialism.'},
+  {track:'intel', start:1848, end:1900, label:'Marxist thought', note:'Communist Manifesto (1848). Historical materialism, class struggle. Influenced socialist and labor movements across Europe.'},
+  {track:'intel', start:1880, end:1940, label:'Modernism & Nietzsche', note:'Nietzsche declared "God is dead." Freud, irrationalism, rejection of Victorian certainty. Laid ground for 20th-century anxiety.'},
+
+  {track:'art', start:1450, end:1527, label:'High Renaissance', note:'Leonardo, Michelangelo, Raphael. Patronage in Florence and Rome. Ended with Sack of Rome (1527).'},
+  {track:'art', start:1520, end:1600, label:'Mannerism', note:'Distorted figures, complex poses. Reaction to High Renaissance harmony. El Greco, Pontormo.'},
+  {track:'art', start:1600, end:1750, label:'Baroque', note:'Drama, grandeur, emotion — instrument of Counter-Reformation and absolutism. Bernini, Caravaggio, Rubens, Handel, Bach.'},
+  {track:'art', start:1700, end:1780, label:'Rococo', note:'Lighter, decorative, playful. French aristocratic taste. Watteau, Fragonard. Criticized by Enlightenment thinkers.'},
+  {track:'art', start:1770, end:1830, label:'Neoclassicism', note:'Revival of Greek/Roman ideals. Linked to Enlightenment and Revolution. David painted Napoleon, Roman virtues.'},
+  {track:'art', start:1800, end:1850, label:'Romanticism (art)', note:'Emotion over reason. Nationalism, nature, the sublime. Delacroix, Caspar David Friedrich, Turner, Byron, Goethe.'},
+  {track:'art', start:1840, end:1880, label:'Realism', note:'Depicted ordinary working-class life. Courbet, Dickens, Flaubert. Reaction to Romantic idealism; linked to industrial society.'},
+  {track:'art', start:1870, end:1900, label:'Impressionism', note:'Monet, Renoir, Degas. Captured light and sensation over exact form. Rejected by Paris Salon; became revolutionary.'},
+  {track:'art', start:1886, end:1914, label:'Post-Impressionism & Symbolism', note:'Van Gogh, Gauguin, Cézanne. More subjective, structural. Symbolists (Klimt) rejected materialism for inner life.'},
+  {track:'art', start:1905, end:1940, label:'Modernist movements', note:'Fauvism, Cubism (Picasso), Expressionism, Dada, Surrealism. Fragmented form reflecting fragmented world post-WWI.'},
+
+  {track:'relig', start:1517, end:1555, label:'Protestant Reformation', note:'Luther 1517, Calvin 1536, Henry VIII 1534. Split Western Christianity permanently.'},
+  {track:'relig', start:1540, end:1648, label:'Counter-Reformation', note:'Council of Trent (1545–63), Jesuits (1540), Index of Forbidden Books. Clarified and hardened Catholic doctrine.'},
+  {track:'relig', start:1555, end:1555, label:'Peace of Augsburg', note:'Cuius regio, eius religio. Recognized Lutheranism only — excluded Calvinism, planting seeds of Thirty Years\' War.', point:true},
+  {track:'relig', start:1562, end:1598, label:'French Wars of Religion', note:'Huguenot minority vs Catholic majority. St Bartholomew\'s Day Massacre (1572). Ended: Edict of Nantes (1598).'},
+  {track:'relig', start:1648, end:1648, label:'Peace of Westphalia', note:'Added Calvinism to recognized faiths. Established cuius regio more broadly. Ended religious war as Europe\'s primary conflict driver.', point:true},
+  {track:'relig', start:1685, end:1685, label:'Revocation of Edict of Nantes', note:'Louis XIV expelled Huguenots — 200,000 fled France, damaging its economy and benefiting rivals like Prussia.', point:true},
+  {track:'relig', start:1730, end:1780, label:'Pietism & Methodism', note:'Emotional, personal faith as reaction to cold state churches. Wesley in England, Pietism in Germany.'},
+  {track:'relig', start:1789, end:1815, label:'Dechristianization (France)', note:'Revolution attacked the Church — seized lands, closed monasteries, created Civil Constitution of the Clergy. Napoleon later reconciled with Pope.'},
+
+  {track:'polit', start:1450, end:1527, label:'Italian city-states', note:'Florence, Venice, Milan, Rome, Naples. Developed balance of power diplomacy. Vulnerable to foreign invasion after 1494.'},
+  {track:'polit', start:1494, end:1559, label:'Italian Wars', note:'French and Spanish intervention in Italy. Ended with Treaty of Cateau-Cambrésis (1559) — Spain dominant.'},
+  {track:'polit', start:1519, end:1556, label:'Charles V / Habsburg dominance', note:'Holy Roman Emperor + King of Spain. Fought Lutherans, Ottomans, France. Abdicated 1556.'},
+  {track:'polit', start:1588, end:1588, label:'Spanish Armada defeated', note:'England repelled Philip II\'s Armada. Marked beginning of English naval ascendancy and Spanish decline.', point:true},
+  {track:'polit', start:1618, end:1648, label:'Thirty Years\' War', note:'Started as Bohemian revolt. Became European power struggle. Peace of Westphalia: princes gained sovereignty, Habsburg power curtailed.'},
+  {track:'polit', start:1642, end:1651, label:'English Civil War', note:'Parliament vs Charles I. Divine right vs constitutional monarchy. Cromwell\'s Republic. Restored 1660.'},
+  {track:'polit', start:1643, end:1715, label:'Louis XIV — absolutism', note:'Sun King. Versailles as political tool. Revoked Edict of Nantes. Wars of Spanish Succession depleted France.'},
+  {track:'polit', start:1688, end:1689, label:'Glorious Revolution', note:'James II ousted; William III invited. Bill of Rights (1689) permanently limited monarchy. Model for Enlightenment thinkers.', point:true},
+  {track:'polit', start:1740, end:1748, label:'War of Austrian Succession', note:'Frederick the Great seized Silesia. Austria vs Prussia rivalry began reshaping Central Europe.'},
+  {track:'polit', start:1756, end:1763, label:'Seven Years\' War', note:'First "world war." Britain vs France globally. Prussia survived against Austria-France-Russia. Britain gained colonial dominance.'},
+  {track:'polit', start:1789, end:1799, label:'French Revolution', note:'Estates-General → Declaration of Rights → Terror → Directory. Overthrew Old Regime; spread revolutionary ideas across Europe.'},
+  {track:'polit', start:1799, end:1815, label:'Napoleonic era', note:'Napoleonic Code, wars of expansion, nationalism awakened in conquered peoples. Ended at Waterloo; Congress of Vienna restored order.'},
+  {track:'polit', start:1815, end:1848, label:'Concert of Europe', note:'Austria, Prussia, Russia, Britain managed crises collectively. Suppressed liberalism and nationalism — but could not stop them.'},
+  {track:'polit', start:1848, end:1849, label:'Revolutions of 1848', note:'Liberal and nationalist uprisings across Europe. All failed by 1849. Showed need for realpolitik over idealism.'},
+  {track:'polit', start:1859, end:1871, label:'German & Italian unification', note:'Bismarck used wars (Austria 1866, France 1870). Piedmont used Cavour. Realpolitik defeated liberal nationalism of 1848.'},
+  {track:'polit', start:1871, end:1914, label:'New German Empire dominant', note:'Unified Germany disrupted balance of power. Bismarck\'s alliances kept peace; Wilhelm II\'s aggression dismantled them.'},
+  {track:'polit', start:1914, end:1918, label:'WWI', note:'Alliance system, arms race, nationalism, Sarajevo. Trenches. 20 million dead. Collapse of four empires.'},
+  {track:'polit', start:1919, end:1939, label:'Interwar instability', note:'Versailles resentments, Weimar weakness, Depression, rise of fascism. Appeasement at Munich (1938) failed.'},
+  {track:'polit', start:1939, end:1945, label:'WWII', note:'Hitler\'s ideological war. Holocaust. 70 million dead. Europe devastated. US and USSR emerged as superpowers.'},
+  {track:'polit', start:1945, end:1991, label:'Cold War division', note:'NATO vs Warsaw Pact. Marshall Plan. Berlin Wall. Europe divided; decolonization accelerated; EEC founded 1957.'},
+
+  {track:'econ', start:1450, end:1600, label:'Commercial Revolution', note:'Joint-stock companies, banking (Medici, Fugger), bills of exchange. Atlantic trade displaced Mediterranean.'},
+  {track:'econ', start:1492, end:1600, label:'Columbian Exchange & silver', note:'Massive silver from Americas caused Price Revolution — inflation devastated fixed-income groups; enriched merchants.'},
+  {track:'econ', start:1600, end:1800, label:'Mercantilism', note:'States controlled trade to accumulate bullion. Navigation Acts, chartered companies, colonial exploitation. Challenged by Physiocrats and Smith.'},
+  {track:'econ', start:1650, end:1750, label:'Dutch & British commercial dominance', note:'Dutch East India Co., Amsterdam exchange bank. Britain overtook after 1688 Glorious Revolution and financial revolution.'},
+  {track:'econ', start:1760, end:1840, label:'First Industrial Revolution', note:'Britain: steam, textiles, coal, iron. Factory system, urbanization, new social classes (bourgeoisie, proletariat).'},
+  {track:'econ', start:1776, end:1776, label:'Wealth of Nations (Smith)', note:'Adam Smith argued free markets, division of labor, opposed mercantilism. Foundation of classical liberal economics.', point:true},
+  {track:'econ', start:1840, end:1914, label:'Second Industrial Revolution', note:'Steel, chemicals, electricity, oil. Germany and USA challenged Britain. Railroads, telegraphs, mass production.'},
+  {track:'econ', start:1873, end:1896, label:'Long Depression', note:'Global price deflation. Pushed European states toward tariffs and imperialism to secure markets and resources.'},
+  {track:'econ', start:1929, end:1939, label:'Great Depression', note:'Wall Street crash (1929) triggered global collapse. Mass unemployment destabilized democracies; fueled extremism.'},
+  {track:'econ', start:1947, end:1991, label:'Marshall Plan & EEC', note:'Marshall Plan rebuilt Western Europe under US influence. EEC (1957) began economic integration. "Economic miracle" in West Germany.'},
+
+  {track:'mil', start:1494, end:1559, label:'Italian Wars', note:'France vs Spain for Italian dominance. Treaty of Cateau-Cambrésis (1559): Spain won, Italy lost independence.'},
+  {track:'mil', start:1562, end:1598, label:'French Wars of Religion', note:'Catholics vs Huguenots. Massacre of St Bartholomew (1572). Henry IV ended wars by converting and issuing Edict of Nantes.'},
+  {track:'mil', start:1618, end:1648, label:'Thirty Years\' War', note:'Most destructive European war before 20th century. Germany lost ~1/3 population. Westphalia ended it.'},
+  {track:'mil', start:1642, end:1651, label:'English Civil War', note:'Roundheads vs Cavaliers. Charles I executed 1649. Cromwell\'s Protectorate. Restored 1660.'},
+  {track:'mil', start:1700, end:1721, label:'Great Northern War', note:'Sweden vs Russia. Peter the Great\'s victory established Russia as major European power.'},
+  {track:'mil', start:1740, end:1763, label:'Mid-century wars', note:'Austrian Succession (1740–48) and Seven Years\' War (1756–63). Redrew colonial and European maps.'},
+  {track:'mil', start:1792, end:1815, label:'Revolutionary & Napoleonic Wars', note:'France vs shifting coalitions. Spread revolutionary ideals; awakened nationalism. Ended: Congress of Vienna.'},
+  {track:'mil', start:1853, end:1856, label:'Crimean War', note:'Britain, France, Ottoman vs Russia. First "modern" war (telegraphs, railroads). Exposed Russian backwardness; triggered reforms.'},
+  {track:'mil', start:1859, end:1871, label:'Wars of unification', note:'Austro-Sardinian (1859), Austro-Prussian (1866), Franco-Prussian (1870–71). Created unified Italy and Germany.'},
+  {track:'mil', start:1914, end:1918, label:'WWI', note:'Industrial-scale slaughter. Trenches, poison gas, tanks. 20 million dead. Four empires collapsed.'},
+  {track:'mil', start:1936, end:1939, label:'Spanish Civil War', note:'Fascists (Franco, aided by Hitler/Mussolini) vs Republicans. Dress rehearsal for WWII. Guernica.'},
+  {track:'mil', start:1939, end:1945, label:'WWII', note:'Blitzkrieg, Holocaust, Eastern Front, D-Day, atomic bomb. 70 million dead. Most destructive conflict in history.'},
+  {track:'mil', start:1946, end:1989, label:'Cold War proxy conflicts', note:'Korea, Vietnam, Angola, Afghanistan. Superpowers fought indirectly. Berlin crises, Cuban Missile Crisis.'},
+];
+
+let visibleTracks = new Set(tracks.map(t=>t.id));
+let currentTooltip = null;
+
+function pct(year){ return ((year - START) / SPAN * 100).toFixed(4) + '%'; }
+function pctW(start,end){ return (Math.max(0,(Math.min(end,END)-Math.max(start,START))/SPAN*100)).toFixed(4)+'%'; }
+function pctL(start){ return ((Math.max(start,START)-START)/SPAN*100).toFixed(4)+'%'; }
+
+function buildTimeline(){
+  const tl = document.getElementById('tl');
+  tl.innerHTML = '';
+
+  const decades = [];
+  for(let y=START;y<=END;y+=10) decades.push(y);
+
+  const axisRow = document.createElement('div');
+  axisRow.className = 'axis-row';
+  decades.forEach(y=>{
+    const t = document.createElement('div');
+    t.className = 'axis-tick';
+    t.textContent = y;
+    t.style.width = (10/SPAN*100).toFixed(4)+'%';
+    t.style.flex = 'none';
+    axisRow.appendChild(t);
+  });
+  tl.appendChild(axisRow);
+
+  const sections = [
+    {label:'Intellectual & artistic', ids:['intel','art']},
+    {label:'Religion', ids:['relig']},
+    {label:'Political', ids:['polit']},
+    {label:'Economic', ids:['econ']},
+    {label:'Wars & conflict', ids:['mil']},
+  ];
+
+  sections.forEach(sec=>{
+    const secIds = sec.ids.filter(id=>visibleTracks.has(id));
+    if(!secIds.length) return;
+
+    const sh = document.createElement('div');
+    sh.className = 'section-head';
+    sh.textContent = sec.label;
+    tl.appendChild(sh);
+
+    secIds.forEach(tid=>{
+      const track = tracks.find(t=>t.id===tid);
+      const row = document.createElement('div');
+      row.className = 'track-row';
+
+      const lbl = document.createElement('div');
+      lbl.className = 'track-label';
+      lbl.textContent = track.label;
+      row.appendChild(lbl);
+
+      const body = document.createElement('div');
+      body.className = 'track-body';
+
+      const trackBars = bars.filter(b=>b.track===tid);
+      const rowAssign = [];
+
+      trackBars.forEach(b=>{
+        if(b.point){
+          const pt = document.createElement('div');
+          pt.className = 'point-event';
+          pt.style.left = pct(b.start);
+          pt.style.top = '4px';
+          const dot = document.createElement('div');
+          dot.className = 'point-dot';
+          dot.style.background = track.color;
+          const lbl2 = document.createElement('div');
+          lbl2.className = 'point-label';
+          lbl2.style.color = 'var(--color-text-secondary)';
+          lbl2.textContent = b.label.length > 18 ? b.label.slice(0,18)+'…' : b.label;
+          pt.appendChild(dot);
+          pt.appendChild(lbl2);
+          pt.addEventListener('click',(e)=>showTip(e,b,track));
+          body.appendChild(pt);
+          return;
+        }
+
+        let lane = 0;
+        while(rowAssign[lane] && rowAssign[lane] > b.start) lane++;
+        rowAssign[lane] = b.end;
+
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.left = pctL(b.start);
+        bar.style.width = pctW(b.start, b.end);
+        bar.style.top = (4 + lane*24)+'px';
+        bar.style.background = track.color;
+        bar.style.color = track.textColor;
+        bar.textContent = b.label;
+        bar.title = b.label;
+        bar.addEventListener('click',(e)=>showTip(e,b,track));
+        body.appendChild(bar);
+      });
+
+      const maxLane = Math.max(0,...trackBars.filter(b=>!b.point).map(b=>{
+        let l=0;
+        return l;
+      }));
+      body.style.minHeight = '52px';
+
+      row.appendChild(body);
+      tl.appendChild(row);
+    });
+
+    const div = document.createElement('div');
+    div.className = 'section-divider';
+    tl.appendChild(div);
+  });
+}
+
+function showTip(e, b, track){
+  const tt = document.getElementById('tt');
+  document.getElementById('tt-title').textContent = b.label;
+  document.getElementById('tt-date').textContent = b.point ? b.start : b.start + '–' + b.end;
+  document.getElementById('tt-body').textContent = b.note;
+  document.getElementById('tt-ask').dataset.q = 'Tell me more about: ' + b.label + ' (' + (b.point ? b.start : b.start+'-'+b.end) + ') and its significance for APEH';
+  tt.style.display = 'block';
+  const rect = e.target.closest('.tl-wrap').getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const clickY = e.clientY - rect.top;
+  tt.style.left = Math.min(clickX + 8, rect.width - 270) + 'px';
+  tt.style.top = (clickY + 8) + 'px';
+  tt.style.position = 'absolute';
+  currentTooltip = b;
+  e.stopPropagation();
+}
+
+function askAbout(){
+  const q = document.getElementById('tt-ask').dataset.q;
+  document.getElementById('tt').style.display = 'none';
+  sendPrompt(q);
+}
+
+document.addEventListener('click', ()=>{ document.getElementById('tt').style.display='none'; });
+
+function buildLegend(){
+  const leg = document.getElementById('legend');
+  leg.innerHTML = '';
+  const controls = document.querySelector('.controls:nth-child(2)');
+
+  tracks.forEach(t=>{
+    const item = document.createElement('span');
+    item.className = 'leg-item';
+    const dot = document.createElement('span');
+    dot.className = 'leg-dot';
+    dot.style.background = t.color;
+    dot.style.opacity = visibleTracks.has(t.id) ? '1' : '0.3';
+    const lbl = document.createElement('span');
+    lbl.textContent = t.label;
+    lbl.style.opacity = visibleTracks.has(t.id) ? '1' : '0.4';
+    item.appendChild(dot);
+    item.appendChild(lbl);
+    item.style.cursor = 'pointer';
+    item.onclick = ()=>{
+      if(visibleTracks.has(t.id)) visibleTracks.delete(t.id);
+      else visibleTracks.add(t.id);
+      buildLegend();
+      buildTimeline();
+    };
+    leg.appendChild(item);
+  });
+}
+
+function jumpTo(year){
+  const scroller = document.getElementById('scroller');
+  const inner = document.getElementById('tl');
+  const totalWidth = inner.scrollWidth;
+  const frac = (year - START) / SPAN;
+  scroller.scrollLeft = frac * totalWidth - 110;
+  document.querySelectorAll('.era-btn').forEach((b,i)=>{
+    const starts = [1450,1600,1750,1850,1945];
+    b.classList.toggle('active', starts[i]===year);
+  });
+}
+
+buildLegend();
+buildTimeline();
+</script>
