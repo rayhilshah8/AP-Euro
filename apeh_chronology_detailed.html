@@ -437,6 +437,26 @@ footer {
   transition: color 0.12s, border-color 0.12s;
 }
 .back-link:hover { color: var(--text); border-color: var(--text); }
+  .quizlet-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quizlet-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--text2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-med);
+  padding-bottom: 1px;
+  transition: color 0.12s, border-color 0.12s;
+}
+.quizlet-link:hover { color: var(--text); border-color: var(--text); }
 </style>
 </head>
 <body>
@@ -464,7 +484,12 @@ footer {
   <button class="era-btn" onclick="jumpTo(1939,this)">1939</button>
   <button class="era-btn" onclick="jumpTo(1945,this)">1945</button>
 </div>
-
+<div class="quizlet-bar">
+  <span class="ctrl-label">Flashcards</span>
+  <a class="quizlet-link" href="https://quizlet.com/682981182/ap-euro-anchor-dates-flash-cards/" target="_blank" rel="noopener">
+    AP Euro Anchor Dates — Quizlet ↗
+  </a>
+</div>
 <div class="main">
   <div class="timeline-outer" id="scroller">
     <div class="timeline-inner" id="tl"></div>
