@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEH Chronology</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f6f4ef;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --surface3: #e8e4da;
+  --border: rgba(0,0,0,0.09);
+  --border-med: rgba(0,0,0,0.14);
+  --border-strong: rgba(0,0,0,0.22);
+  --text: #18160f;
+  --text2: #52503f;
+  --text3: #9b9680;
+  --text4: #c4c0ac;
+
+  --c-intel: #433a9a;
+  --c-intel-lt: #eeedfe;
+  --c-art: #0c6248;
+  --c-art-lt: #dff5ed;
+  --c-relig: #872f14;
+  --c-relig-lt: #faece7;
+  --c-polit: #124f87;
+  --c-polit-lt: #e4f0fb;
+  --c-econ: #734208;
+  --c-econ-lt: #faeeda;
+  --c-mil: #8c2424;
+  --c-mil-lt: #fbeaea;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* HEADER */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-med);
+  padding: 2rem 2.5rem 1.25rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.header-left h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.header-left p {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+}
+.header-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+}
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity .15s;
+}
+.leg-item.hidden { opacity: 0.35; }
+.leg-swatch {
+  width: 22px;
+  height: 9px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* CONTROLS */
+.controls {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-label {
+  font-size: 9px;
+  color: var(--text4);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-right: 2px;
+}
+.era-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 4px 11px;
+  border-radius: 2px;
+  border: 1px solid var(--border-med);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .12s;
+  letter-spacing: 0.02em;
+}
+.era-btn:hover { background: var(--surface2); border-color: var(--border-strong); }
+.era-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+.sep { width: 1px; height: 18px; background: var(--border-med); margin: 0 4px; }
+
+/* MAIN AREA */
+.main { padding: 1.5rem 2.5rem 5rem; }
+
+.timeline-outer {
+  overflow-x: auto;
+  border: 1px solid var(--border-med);
+  background: var(--surface);
+  border-radius: 5px;
+}
+.timeline-inner { min-width: 1400px; }
+
+/* AXIS */
+.axis-wrap {
+  margin-left: 140px;
+  display: flex;
+  border-bottom: 1px solid var(--border-med);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 10;
+}
+.axis-century {
+  flex: none;
+  border-left: 2px solid var(--border-med);
+  font-size: 8px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  padding: 5px 0 3px 5px;
+  font-weight: 500;
+}
+.axis-decade {
+  flex: none;
+  border-left: 1px solid var(--border);
+  font-size: 8px;
+  color: var(--text4);
+  letter-spacing: 0.04em;
+  padding: 5px 0 3px 3px;
+}
+
+/* SECTION */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 4px 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 2px;
+}
+.section-header:first-of-type { border-top: none; margin-top: 0; }
+.section-title {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  font-weight: 500;
+}
+
+/* TRACK ROW */
+.track-row {
+  display: flex;
+  min-height: 34px;
+  align-items: stretch;
+}
+.track-label-cell {
+  width: 140px;
+  flex-shrink: 0;
+  font-size: 9.5px;
+  color: var(--text3);
+  padding: 0 10px 0 16px;
+  text-align: right;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-top: 8px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+.track-body {
+  flex: 1;
+  position: relative;
+  border-left: 1px solid var(--border);
+}
+
+/* BARS */
+.bar {
+  position: absolute;
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 7px;
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.03em;
+  height: 22px;
+  top: 5px;
+  transition: filter .1s, transform .1s;
+  user-select: none;
+}
+.bar:hover { filter: brightness(1.1); transform: scaleY(1.04); }
+
+/* POINT EVENTS */
+.point-wrap {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  top: 3px;
+  z-index: 2;
+}
+.point-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+.point-stem {
+  width: 1px;
+  height: 10px;
+  opacity: 0.25;
+}
+.point-lbl {
+  font-size: 8px;
+  white-space: nowrap;
+  color: var(--text3);
+  transform: rotate(-40deg);
+  transform-origin: top left;
+  margin-left: 5px;
+  margin-top: 1px;
+  letter-spacing: 0.02em;
+}
+
+.row-gap { height: 5px; }
+.section-gap { height: 10px; }
+
+/* TOOLTIP */
+.tt-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+}
+.tt-backdrop.open { display: block; }
+
+.tooltip {
+  display: none;
+  position: fixed;
+  z-index: 400;
+  width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07);
+}
+.tooltip.open { display: block; }
+
+.tt-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.tt-track-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.tt-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+.tt-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 3px;
+}
+.tt-dates {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.04em;
+}
+
+.tt-body {
+  padding: 14px 16px;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.tt-section {
+  margin-bottom: 14px;
+}
+.tt-section:last-child { margin-bottom: 0; }
+.tt-section-label {
+  font-size: 8.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text4);
+  font-weight: 500;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
+.tt-section-text {
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.72;
+}
+.tt-section-text p { margin-bottom: 8px; }
+.tt-section-text p:last-child { margin-bottom: 0; }
+
+.tt-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+.tt-pill {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.tt-keyevents { list-style: none; }
+.tt-keyevents li {
+  font-size: 12px;
+  font-family: 'Source Serif 4', serif;
+  color: var(--text2);
+  padding: 4px 0 4px 12px;
+  border-left: 2px solid var(--border-med);
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+.tt-keyevents li:last-child { margin-bottom: 0; }
+.tt-keyevents li strong {
+  font-weight: 600;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  display: block;
+  margin-bottom: 1px;
+}
+
+.tt-saq {
+  background: var(--surface2);
+  border-radius: 3px;
+  padding: 10px 12px;
+}
+.tt-saq-q {
+  font-size: 11.5px;
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--text2);
+  line-height: 1.55;
+  margin-bottom: 5px;
+  padding-left: 8px;
+  border-left: 2px solid var(--border-strong);
+}
+.tt-saq-q:last-child { margin-bottom: 0; }
+
+.tt-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 16px;
+  color: var(--text3);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: monospace;
+  line-height: 1;
+  padding: 2px 5px;
+}
+.tt-close:hover { color: var(--text); }
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  font-size: 9.5px;
+  color: var(--text4);
+  letter-spacing: 0.06em;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>APEH — European History Chronology</h1>
+    <p>1450 – 1991 &nbsp;·&nbsp; Click any bar or event to read full details &nbsp;·&nbsp; Scroll right to navigate &nbsp;·&nbsp; Toggle tracks in legend</p>
+  </div>
+  <div class="header-legend" id="legend"></div>
+</header>
+
+<div class="controls" id="controls">
+  <span class="ctrl-label">Jump to</span>
+  <button class="era-btn active" onclick="jumpTo(1450,this)">1450</button>
+  <button class="era-btn" onclick="jumpTo(1550,this)">1550</button>
+  <button class="era-btn" onclick="jumpTo(1618,this)">1618</button>
+  <button class="era-btn" onclick="jumpTo(1680,this)">1680</button>
+  <button class="era-btn" onclick="jumpTo(1750,this)">1750</button>
+  <button class="era-btn" onclick="jumpTo(1789,this)">1789</button>
+  <button class="era-btn" onclick="jumpTo(1815,this)">1815</button>
+  <button class="era-btn" onclick="jumpTo(1848,this)">1848</button>
+  <button class="era-btn" onclick="jumpTo(1871,this)">1871</button>
+  <button class="era-btn" onclick="jumpTo(1914,this)">1914</button>
+  <button class="era-btn" onclick="jumpTo(1939,this)">1939</button>
+  <button class="era-btn" onclick="jumpTo(1945,this)">1945</button>
+</div>
+
+<div class="main">
+  <div class="timeline-outer" id="scroller">
+    <div class="timeline-inner" id="tl"></div>
+  </div>
+</div>
+
+<div class="tt-backdrop" id="backdrop" onclick="closeTip()"></div>
+<div class="tooltip" id="tt">
+  <button class="tt-close" onclick="closeTip()">✕</button>
+  <div class="tt-header">
+    <div class="tt-track-badge" id="tt-badge">
+      <span class="tt-badge-dot" id="tt-bdot"></span>
+      <span id="tt-btext"></span>
+    </div>
+    <div class="tt-title" id="tt-title"></div>
+    <div class="tt-dates" id="tt-dates"></div>
+  </div>
+  <div class="tt-body" id="tt-body"></div>
+</div>
+
+<footer>APEH Study Tool · 1450–1991 · All major intellectual, artistic, religious, political, economic & military developments</footer>
+
+<script>
+const START = 1450, END = 1991, SPAN = END - START;
+
+const TRACKS = [
+  {id:'intel', label:'Intellectual', color:'#433a9a', lt:'#eeedfe'},
+  {id:'art',   label:'Art & culture', color:'#0c6248', lt:'#dff5ed'},
+  {id:'relig', label:'Religion',      color:'#872f14', lt:'#faece7'},
+  {id:'polit', label:'Political',     color:'#124f87', lt:'#e4f0fb'},
+  {id:'econ',  label:'Economic',      color:'#734208', lt:'#faeeda'},
+  {id:'mil',   label:'Wars',          color:'#8c2424', lt:'#fbeaea'},
+];
+
+// Each entry: track, start, end (or point:true), label, then rich fields:
+// overview, context, significance, figures, keyEvents:[{date,text}], saq:[strings]
+const DATA = [
+
+  // ── INTELLECTUAL ──────────────────────────────────────────────
+  {
+    track:'intel', start:1350, end:1600, label:'Renaissance humanism',
+    overview:'A fundamental reorientation of European intellectual life away from medieval scholasticism and toward human potential, classical antiquity, and the study of the natural world. Humanists argued that the proper object of study was the human being — his dignity, capacity for reason, and place in the world — rather than abstract theological questions.',
+    context:'The Italian city-states provided the material conditions for humanism: merchant wealth funded patronage, trade with Byzantium brought Greek manuscripts westward, and the relative weakness of the Church in northern Italy allowed secular thought to flourish. The Black Death (1347–51) had already shaken confidence in the Church\'s authority, and a century of questioning had made space for new frameworks.',
+    significance:'Humanism transformed education (studia humanitatis: grammar, rhetoric, history, poetry, moral philosophy), art (perspective, naturalism), political thought (Machiavelli), and eventually science. Its emphasis on reading primary texts — ad fontes — would directly fuel the Protestant Reformation when applied to the Bible. The printing press (1450) turned what had been a narrow elite phenomenon into a broad European movement.',
+    figures:'Petrarch (father of humanism), Pico della Mirandola (Oration on the Dignity of Man), Erasmus (Christian humanism, In Praise of Folly), Machiavelli (The Prince, applied secular reason to politics), Thomas More (Utopia).',
+    keyEvents:[
+      {date:'1341', text:'Petrarch crowned poet laureate in Rome — symbolic start of humanist revival of classical culture.'},
+      {date:'1397', text:'Manuel Chrysoloras teaches Greek in Florence — opens direct access to Greek texts.'},
+      {date:'c.1450', text:'Gutenberg\'s printing press allows rapid, cheap reproduction of humanist texts across Europe.'},
+      {date:'1486', text:'Pico della Mirandola\'s Oration on the Dignity of Man — high-water mark of Renaissance optimism about human potential.'},
+      {date:'1509', text:'Erasmus publishes In Praise of Folly, targeting Church corruption through irony rather than open confrontation.'},
+      {date:'1527', text:'Sack of Rome by Charles V\'s troops ends the High Renaissance in Italy.'},
+    ],
+    saq:['Explain one cause of Renaissance humanism in Italy.','Explain one way humanism differed from medieval scholasticism.','Explain one way the printing press changed the spread of humanist ideas.','Explain one connection between Renaissance humanism and the Protestant Reformation.'],
+  },
+  {
+    track:'intel', start:1543, end:1700, label:'Scientific Revolution',
+    overview:'A fundamental transformation in how Europeans understood and investigated the natural world. The authority of ancient texts (Aristotle, Galen, Ptolemy) was replaced by systematic observation, mathematical description, and experimental testing. By 1700, nature was understood as a machine governed by discoverable laws — a conception that had not existed a century and a half earlier.',
+    context:'The Renaissance recovery of Greek texts created a community of scholars familiar with mathematical astronomy and ancient debates. Patronage courts funded "natural philosophers." New instruments — the telescope, microscope, thermometer, and air pump — made observation precise. Crucially, the printing press allowed rapid, international sharing of results so that findings could be checked and built upon.',
+    significance:'The Scientific Revolution permanently changed the relationship between faith and reason. Copernicus\'s heliocentric model implied the Earth was not the center of creation; Galileo\'s condemnation showed the Church recognized the threat. Newton\'s synthesis unified terrestrial and celestial mechanics, suggesting God created a clockwork universe that ran by itself. These ideas fed directly into the Enlightenment\'s program of applying reason to human affairs.',
+    figures:'Copernicus (heliocentric theory), Tycho Brahe (precise astronomical data), Kepler (elliptical orbits), Galileo (telescope, mechanics, trial 1633), Vesalius (human anatomy), Harvey (circulation of blood), Bacon (empirical method), Descartes (rationalism, coordinate geometry), Newton (Principia 1687, calculus, universal gravitation).',
+    keyEvents:[
+      {date:'1543', text:'Copernicus publishes De Revolutionibus — heliocentric model proposed. He delayed publication until death fearing Church reaction.'},
+      {date:'1572', text:'Tycho Brahe observes a "new star" (supernova) — proves the heavens are not unchanging, contradicting Aristotle.'},
+      {date:'1609', text:'Galileo turns telescope on the sky; discovers Jupiter\'s moons, mountains on the Moon. Kepler publishes elliptical orbit laws.'},
+      {date:'1628', text:'Harvey publishes On the Motion of the Heart — blood circulates, not produced by the liver (contradicting Galen).'},
+      {date:'1633', text:'Galileo condemned by the Inquisition and forced to recant heliocentrism. Placed under house arrest.'},
+      {date:'1637', text:'Descartes publishes Discourse on Method — rationalist approach: doubt everything, build knowledge from clear and distinct ideas.'},
+      {date:'1687', text:'Newton\'s Principia Mathematica — universal gravitation, three laws of motion. Synthesizes and explains all previous work in one mathematical framework.'},
+    ],
+    saq:['Explain one cause of the Scientific Revolution.','Explain one way the Scientific Revolution challenged Church authority.','Explain one way the Scientific Revolution contributed to the Enlightenment.','Explain one similarity or difference between Bacon\'s empiricism and Descartes\'s rationalism.'],
+  },
+  {
+    track:'intel', start:1690, end:1789, label:'Enlightenment',
+    overview:'A broad intellectual movement that applied the methods and optimism of the Scientific Revolution to human society, politics, religion, and morality. Enlightenment thinkers (philosophes) believed reason could identify the natural laws governing human affairs, just as Newton had revealed the laws of nature, and that applying those laws would produce human progress and happiness.',
+    context:'The Enlightenment grew in a specific social context: the expansion of a literate public through coffeehouses, salons, reading clubs, and periodicals. The philosophes wrote not for universities but for this new "public sphere." France became the center, partly because royal absolutism and Church control were most oppressive there, making critique most urgent. The Encyclopédie (1751–72) was the movement\'s monument — a systematic summary of all human knowledge organized by reason rather than theology.',
+    significance:'The Enlightenment provided the intellectual vocabulary for the American and French Revolutions. Its language of rights, consent, reason, and progress made the Old Regime\'s inequalities newly illegitimate. It also contributed to religious toleration, legal reform, prison reform, and the beginnings of abolitionism. However, its assumptions (universal reason, progress, human perfectibility) were also challenged — by Romanticism, by the Terror, and eventually by the 20th century\'s catastrophes.',
+    figures:'Locke (natural rights, consent of governed), Montesquieu (separation of powers, Spirit of the Laws 1748), Voltaire (religious toleration, anti-clericalism), Rousseau (general will, Social Contract 1762, inequality), Hume (skepticism, empiricism), Kant (sapere aude — dare to know), Diderot (Encyclopédie editor), Adam Smith (Wealth of Nations 1776).',
+    keyEvents:[
+      {date:'1689', text:'Locke\'s Two Treatises of Government — natural rights, government by consent, right of revolution. Direct influence on American Declaration.'},
+      {date:'1721', text:'Montesquieu\'s Persian Letters — satirizes French society and absolutism through fictional Persian travelers.'},
+      {date:'1748', text:'Montesquieu\'s Spirit of the Laws — separation of powers into executive, legislative, judicial. Foundational for American Constitution.'},
+      {date:'1751–72', text:'The Encyclopédie edited by Diderot — 28 volumes, 70,000 articles. Systematic organization of knowledge by reason. Repeatedly banned.'},
+      {date:'1759', text:'Voltaire\'s Candide — satirizes optimism (Leibniz\'s "best of all possible worlds") and calls for practical reform.'},
+      {date:'1762', text:'Rousseau\'s Social Contract ("Man is born free, but everywhere is in chains") and Émile on natural education.'},
+      {date:'1776', text:'Adam Smith\'s Wealth of Nations — free markets, division of labor, critique of mercantilism.'},
+      {date:'1784', text:'Kant\'s What is Enlightenment? — "Dare to know. Have the courage to use your own understanding."'},
+    ],
+    saq:['Explain one way Enlightenment thought challenged existing political structures.','Explain one similarity or difference between Locke and Rousseau.','Explain one way the Enlightenment spread through European society.','Explain one way the Enlightenment contributed to the French Revolution.','Explain one tension or contradiction within Enlightenment thought.'],
+  },
+  {
+    track:'intel', start:1798, end:1850, label:'Romanticism (intellectual)',
+    overview:'A broad reaction against the Enlightenment\'s emphasis on reason, universalism, and progress. Romantics celebrated emotion, intuition, nature, the particular, the historical, and the organic. They rejected the mechanistic worldview that had grown from the Scientific Revolution and valued what was unique, spontaneous, and feeling-based over what was rational, systematic, and universal.',
+    context:'Romanticism grew directly out of disillusionment with the French Revolution and the Terror. If pure reason led to the guillotine, something was wrong with Enlightenment assumptions. German Romanticism in particular emphasized the Volk — the particular cultural-historical identity of a people — as the true basis of social life, in contrast to Enlightenment universalism. This had enormous consequences for nationalism.',
+    significance:'Romanticism fed directly into 19th-century nationalism by celebrating particular national cultures, languages, folk traditions, and histories. Herder\'s idea that each nation had its own unique spirit (Volksgeist) gave intellectual grounding to nationalist political movements. Romanticism also influenced historiography (history as narrative and organic process) and indirectly contributed to conservatism (Burke\'s critique of abstract reason in politics).',
+    figures:'Herder (Volksgeist, cultural nationalism), Hegel (dialectical historical process, World Spirit), Fichte (Addresses to the German Nation), Wordsworth, Byron, Keats (English Romantic poetry), Goethe (Faust, The Sorrows of Young Werther), Schiller, Burke (Reflections on the Revolution in France — conservative Romanticism).',
+    keyEvents:[
+      {date:'1790', text:'Burke\'s Reflections on the Revolution in France — attacks abstract reason in politics; defends inherited tradition and gradual reform.'},
+      {date:'1798', text:'Wordsworth and Coleridge\'s Lyrical Ballads — launches English Romanticism; celebrates nature, ordinary people, emotion.'},
+      {date:'1806', text:'Fichte\'s Addresses to the German Nation — calls on Germans to unite around cultural identity after Napoleon\'s defeat of Prussia.'},
+      {date:'1807', text:'Hegel\'s Phenomenology of Spirit — dialectical development of consciousness through history; massive influence on 19th-century thought including Marx.'},
+      {date:'1832', text:'Goethe completes Faust Part II — Romantic exploration of the striving human spirit, knowledge, and the limits of reason.'},
+    ],
+    saq:['Explain one way Romanticism differed from Enlightenment thought.','Explain one connection between Romanticism and 19th-century nationalism.','Explain one way Romanticism can be seen as a response to the French Revolution.'],
+  },
+  {
+    track:'intel', start:1830, end:1900, label:'Positivism & Social Darwinism',
+    overview:'Two related intellectual currents that attempted to apply scientific methods and frameworks to human society. Auguste Comte\'s positivism argued that society, like nature, was governed by laws discoverable through scientific observation. Social Darwinism adapted Darwin\'s evolutionary biology to justify existing social hierarchies, laissez-faire capitalism, and European imperial expansion.',
+    context:'The success of natural science in explaining the physical world created enormous pressure to extend scientific explanation to human society. The Industrial Revolution and its social dislocations made understanding social change urgent. Darwin\'s On the Origin of Species (1859) provided a powerful new framework; Social Darwinism was a selective misapplication of it to legitimize inequality.',
+    significance:'Positivism shaped the emerging social sciences (sociology, economics, history). Social Darwinism provided ideological justification for the New Imperialism ("survival of the fittest" applied to nations and races), resistance to welfare legislation (helping the "weak" would impede natural selection), and racial hierarchies that would later feed into fascism and genocide.',
+    figures:'Auguste Comte (positivism, law of three stages), Herbert Spencer (Social Darwinism, "survival of the fittest"), Francis Galton (eugenics), Ernst Haeckel (German Social Darwinism). Darwin himself did not advocate Social Darwinism.',
+    keyEvents:[
+      {date:'1830–42', text:'Comte\'s Course of Positive Philosophy — three stages of human knowledge: theological, metaphysical, positive (scientific).'},
+      {date:'1859', text:'Darwin\'s On the Origin of Species — natural selection and evolution. Does not address human society but immediately applied by others.'},
+      {date:'1864', text:'Spencer coins "survival of the fittest" — applies evolutionary language to social competition and laissez-faire economics.'},
+      {date:'1883', text:'Galton coins "eugenics" — selective human breeding to improve the species. Deeply influential and deeply destructive.'},
+    ],
+    saq:['Explain one way Social Darwinism was used to justify European imperialism.','Explain one reason Social Darwinism became influential in the late 19th century.','Explain one way positivism influenced 19th-century European thought.'],
+  },
+  {
+    track:'intel', start:1848, end:1917, label:'Marxism & socialism',
+    overview:'A body of thought arguing that history is driven by class struggle over control of the means of production, that capitalism necessarily exploits the working class, and that this system would eventually be overthrown by the proletariat, producing a classless communist society. More broadly, socialism encompassed a range of movements arguing that the economy should be organized collectively for human welfare rather than private profit.',
+    context:'The Industrial Revolution created vast urban working classes living in poverty while factory owners accumulated enormous wealth. Liberal reform had done little to address fundamental inequality. The 1848 revolutions failed, convincing some that peaceful reform was impossible. Marx provided a systematic theoretical framework explaining why capitalism produced misery and predicting its overthrow.',
+    significance:'Marxism became the dominant ideology of the European labor movement and gave intellectual grounding to trade unionism, socialist parties, and eventually communist revolution. The split between reformist social democrats (work within the system) and revolutionary Marxist-Leninists would define European left politics through the 20th century. Marxist thought also transformed history, sociology, economics, and cultural analysis.',
+    figures:'Karl Marx (Communist Manifesto 1848, Capital 1867), Friedrich Engels (co-author, funded Marx), Ferdinand Lassalle (German labor movement), Eduard Bernstein (revisionist/reformist socialism), Rosa Luxemburg (revolutionary socialism), Lenin (adapted Marxism to Russian conditions).',
+    keyEvents:[
+      {date:'1848', text:'Communist Manifesto published by Marx and Engels — "Workers of the world, unite!" Diagnosed capitalism, predicted revolution.'},
+      {date:'1864', text:'First International (International Workingmen\'s Association) founded — first attempt to organize workers across national lines.'},
+      {date:'1867', text:'Marx\'s Capital Vol. I — systematic analysis of capitalism: surplus value, alienation, inevitable crisis.'},
+      {date:'1875', text:'German Social Democratic Party (SPD) founded — becomes the largest socialist party in Europe and a model for others.'},
+      {date:'1889', text:'Second International founded — coordinates socialist parties across Europe; collapses in 1914 when national parties support WWI.'},
+      {date:'1917', text:'Russian Revolution — Bolsheviks seize power, claiming Marxist justification. Transforms Marxism from theory to state practice.'},
+    ],
+    saq:['Explain one reason Marxism emerged as a response to industrialization.','Explain one way Marxism differed from earlier socialist thought.','Explain one way European governments responded to the growth of socialist movements.','Explain one way the Russian Revolution changed European socialism.'],
+  },
+  {
+    track:'intel', start:1880, end:1940, label:'Modernism & irrationalism',
+    overview:'A broad cultural and intellectual crisis of confidence in Enlightenment rationalism, progress, and Victorian certainty. Modernist thinkers argued that reason could not fully explain human behavior, that traditional moral frameworks had collapsed, and that beneath surface rationality lay deeper irrational forces — the unconscious, the will to power, the instincts of the crowd.',
+    context:'The late 19th century\'s apparent stability concealed growing anxiety: imperial violence, rising nationalism, rapid social change, and the perceived decline of religious faith. Nietzsche\'s attack on morality, Freud\'s discovery of the unconscious, Bergson\'s celebration of intuition over intellect, and Sorel\'s glorification of violence all suggested that the Enlightenment\'s rational, progressive humanity was a fiction.',
+    significance:'Modernist irrationalism contributed to the climate that made fascism possible: Mussolini drew on Sorel\'s myth of violence; Nazi ideology exploited Nietzsche (selectively and dishonestly). More broadly, modernism transformed art, literature, philosophy, and psychology, producing some of the 20th century\'s greatest works while also destabilizing the foundations of liberal civilization.',
+    figures:'Nietzsche (will to power, God is dead, Übermensch), Freud (unconscious, id/ego/superego, psychoanalysis), Bergson (élan vital, intuition over intellect), Sorel (Reflections on Violence, myth and irrationalism in politics), Weber (rationalization and disenchantment of the world), Jung (collective unconscious).',
+    keyEvents:[
+      {date:'1882', text:'Nietzsche\'s The Gay Science — "God is dead. God remains dead. And we have killed him." Diagnoses the crisis of meaning in secular modernity.'},
+      {date:'1883–85', text:'Nietzsche\'s Thus Spoke Zarathustra — Übermensch, eternal recurrence, will to power. Widely misread and misappropriated.'},
+      {date:'1895', text:'Le Bon\'s The Crowd — argues crowds are irrational, suggestible, driven by emotion. Hugely influential on political manipulation.'},
+      {date:'1900', text:'Freud\'s The Interpretation of Dreams — launches psychoanalysis; the unconscious shapes behavior more than reason.'},
+      {date:'1908', text:'Sorel\'s Reflections on Violence — violence as creative myth, not rational calculation. Influences both fascism and revolutionary syndicalism.'},
+      {date:'1919', text:'Freud\'s Beyond the Pleasure Principle — death drive (Thanatos) alongside life drive (Eros). Deepens pessimism about human nature post-WWI.'},
+    ],
+    saq:['Explain one way modernist thought challenged Enlightenment assumptions.','Explain one connection between modernist irrationalism and the rise of fascism.','Explain one reason Nietzsche\'s ideas were popular in late 19th-century Europe.'],
+  },
+
+  // ── ART & CULTURE ─────────────────────────────────────────────
+  {
+    track:'art', start:1450, end:1527, label:'High Renaissance',
+    overview:'The period of greatest classical balance, technical mastery, and artistic harmony in Western European painting, sculpture, and architecture, centered in Florence and Rome. High Renaissance art idealized the human form, applied mathematical perspective, and expressed a confident vision of human dignity at the center of a comprehensible world.',
+    context:'Medici patronage in Florence (Cosimo, Lorenzo the Magnificent) and later papal patronage in Rome (Julius II, Leo X) funded the greatest projects. Artists were elevated from craftsmen to intellectual creators — Leonardo, Michelangelo, and Raphael were celebrities of their age. The recovery of classical sculpture (the Laocoön was unearthed in 1506) provided models. The discovery of linear perspective (Brunelleschi, c.1420) gave painters a scientific method for representing space.',
+    significance:'High Renaissance art established the canonical "Western" artistic tradition that dominated European and later global art for centuries. Its ideals of harmony, proportion, and naturalism became the standard against which later movements defined themselves — by imitation (Neoclassicism) or rejection (Mannerism, Baroque, Modernism). The period also established the model of the artist as creative genius rather than mere craftsman.',
+    figures:'Leonardo da Vinci (Last Supper, Mona Lisa, Vitruvian Man), Michelangelo (David, Sistine Chapel, Pietà, St Peter\'s dome), Raphael (School of Athens, Vatican Stanze), Bramante (St Peter\'s Basilica original design), Titian (Venetian colorism).',
+    keyEvents:[
+      {date:'1490s', text:'Leonardo\'s Last Supper (Milan) — psychological complexity, unified composition, dramatic moment.'},
+      {date:'1501–04', text:'Michelangelo\'s David — 17-foot marble statue, perfect classical anatomy, civic pride of Florence.'},
+      {date:'1508–12', text:'Michelangelo paints Sistine Chapel ceiling — Creation of Adam, prophets, sibyls. Completed while lying on scaffolding.'},
+      {date:'1510–11', text:'Raphael\'s School of Athens — Plato and Aristotle at center, all classical philosophers gathered. Synthesis of Athens and Rome.'},
+      {date:'1506', text:'Discovery of the Laocoön statue in Rome — ancient Hellenistic sculpture that profoundly influenced Michelangelo.'},
+      {date:'1527', text:'Sack of Rome by Charles V\'s mutinous troops — artists flee, High Renaissance ends. Rome never recovers its cultural dominance.'},
+    ],
+    saq:['Explain one way the High Renaissance reflected humanist ideas.','Explain one way patronage shaped Renaissance art.','Explain one way the Sack of Rome (1527) marked a turning point in European culture.'],
+  },
+  {
+    track:'art', start:1520, end:1600, label:'Mannerism',
+    overview:'An artistic style emerging from the High Renaissance that deliberately subverted classical balance and harmony with elongated figures, complex poses, artificial color, and psychological tension. Mannerism can be read as a reflection of the crisis of the age — Reformation, war, the Sack of Rome — in art.',
+    context:'After the perfection of the High Renaissance, the next generation of artists faced a dilemma: they could not surpass their masters by imitating them. Mannerism was one response — to take classical elements and stretch, distort, or complicate them. It is also associated with the anxious religious atmosphere of the Reformation era.',
+    figures:'Pontormo, Parmigianino (Madonna with the Long Neck), Rosso Fiorentino, Bronzino (court portraits), El Greco (in Spain — elongated religious figures), Giulio Romano.',
+    keyEvents:[
+      {date:'1534', text:'Parmigianino\'s Madonna with the Long Neck — deliberately impossible anatomy, elegant artificial distortion.'},
+      {date:'1545', text:'Bronzino\'s Allegory with Venus and Cupid — cold, polished, intellectually complex. Mannerist court style at its purest.'},
+    ],
+    saq:['Explain one way Mannerism differed from High Renaissance art.','Explain one way artistic styles reflected the religious conflicts of the 16th century.'],
+  },
+  {
+    track:'art', start:1600, end:1750, label:'Baroque',
+    overview:'A style of art, architecture, and music characterized by drama, grandeur, emotional intensity, movement, and the use of light and shadow (chiaroscuro). The Baroque emerged in Rome as a weapon of the Counter-Reformation — an art designed to overwhelm the senses and move the emotions rather than engage the intellect, persuading viewers of Catholic truth through feeling.',
+    context:'The Council of Trent (1545–63) had called for art that was emotionally engaging and accessible to ordinary believers, in contrast to what was seen as cold Protestant iconoclasm. The Jesuit order deployed Baroque art globally. But Baroque also served secular power: Louis XIV used it at Versailles, and Protestant nations developed their own versions (Rembrandt in Holland, Bach in Lutheran Germany).',
+    significance:'The Baroque represents one of the most complete fusions of art and ideology in European history — simultaneously the instrument of Catholic reconquest and royal absolutism. It produced some of the greatest works of Western civilization across all art forms: painting (Caravaggio\'s light, Rubens\'s energy), sculpture (Bernini\'s ecstasy), architecture (St Peter\'s Square), and music (Bach, Handel, Vivaldi).',
+    figures:'Caravaggio (dramatic realism, chiaroscuro), Bernini (St Peter\'s colonnade, Ecstasy of St Teresa), Rubens (dynamic energy, Flemish Baroque), Rembrandt (Dutch Baroque, psychological depth), Velázquez (Spanish court), Bach (Lutheran Baroque music), Handel (Messiah), Vivaldi (The Four Seasons).',
+    keyEvents:[
+      {date:'1600', text:'Caravaggio\'s The Calling of St Matthew — revolutionary realism, dramatic lighting from darkness. Transforms religious painting.'},
+      {date:'1623', text:'Bernini begins his career at St Peter\'s — colonnade, baldachin, Cathedra Petri. Turns architecture into theater.'},
+      {date:'1642', text:'Rembrandt\'s The Night Watch — monumental group portrait, movement, light. Dutch civic Baroque.'},
+      {date:'1647–52', text:'Bernini\'s Ecstasy of St Teresa — marble figure of mystic rapture. Baroque synthesis of architecture, sculpture, theater, and light.'},
+      {date:'1678', text:'Vivaldi born in Venice. Baroque music at its peak of formal and expressive complexity.'},
+      {date:'1685', text:'Bach and Handel both born — the two supreme masters of late Baroque music.'},
+      {date:'1726', text:'Versailles fully completed under Louis XIV — Baroque as political statement of absolute royal glory.'},
+    ],
+    saq:['Explain one way Baroque art served the purposes of the Counter-Reformation.','Explain one way Baroque style reflected the political values of absolutism.','Explain one similarity or difference between Baroque art in Catholic and Protestant contexts.'],
+  },
+  {
+    track:'art', start:1700, end:1780, label:'Rococo',
+    overview:'A lighter, more playful, and more decorative style that emerged from Baroque in France, characterized by asymmetry, pastel colors, curved forms, and an emphasis on pleasure, love, and aristocratic leisure rather than grandeur and religious emotion. Rococo was the art of the French court and aristocracy in the age of Versailles\'s declining prestige.',
+    context:'After Louis XIV\'s death (1715), the French court moved from formal grandeur toward intimate pleasure. The Rococo style expressed the values of an aristocracy that had been domesticated and depoliticized — its world was private, sensual, and decorative. It was simultaneously loved by its patrons and criticized by Enlightenment thinkers as frivolous and morally decadent.',
+    figures:'Watteau (Pilgrimage to the Island of Cythera, fêtes galantes), Fragonard (The Swing), Boucher (pastoral scenes, portraits of Madame de Pompadour), Tiepolo (Italian Rococo fresco).',
+    keyEvents:[
+      {date:'1717', text:'Watteau\'s Pilgrimage to the Island of Cythera — dreamlike, melancholy pleasure. Accepted to the Academy, inventing the fête galante genre.'},
+      {date:'1767', text:'Fragonard\'s The Swing — quintessential Rococo: playful, sensual, aristocratic. Commissioned by a courtier as a private scene.'},
+    ],
+    saq:['Explain one way Rococo reflected the values of the French aristocracy.','Explain one way Enlightenment thinkers critiqued Rococo art.'],
+  },
+  {
+    track:'art', start:1770, end:1830, label:'Neoclassicism',
+    overview:'A revival of classical Greek and Roman ideals of simplicity, order, civic virtue, and heroism in art and architecture. Neoclassicism was the art of the Enlightenment and the Revolutionary era — its clear lines, historical subjects, and moral seriousness expressed the values of reason and republican virtue against Rococo frivolity and aristocratic decadence.',
+    context:'The discovery of Pompeii (1748) and Herculaneum sparked enormous interest in antiquity. Winckelmann\'s History of Ancient Art (1764) argued that Greek art represented the highest achievement of beauty through "noble simplicity and calm grandeur." Neoclassicism became the visual language of the French Revolution and Napoleon: Roman virtues for a new Rome.',
+    figures:'Jacques-Louis David (Oath of the Horatii, Death of Marat, Napoleon Crossing the Alps), Antonio Canova (Neoclassical sculpture), Winckelmann (theorist of Greek art), Robert Adam (British Neoclassical architecture), Thomas Jefferson (American Neoclassical architecture).',
+    keyEvents:[
+      {date:'1748', text:'Excavation of Pompeii begins — direct access to Roman domestic life; triggers explosion of classical interest.'},
+      {date:'1785', text:'David\'s Oath of the Horatii — Stoic Roman heroism, sacrifice for the republic. Becomes the visual anthem of pre-Revolutionary idealism.'},
+      {date:'1793', text:'David\'s Death of Marat — murdered revolutionary as secular martyr. Neoclassicism as Revolutionary propaganda.'},
+      {date:'1800', text:'David\'s Napoleon Crossing the Alps — Napoleon as Roman hero. Neoclassicism serves imperial self-fashioning.'},
+    ],
+    saq:['Explain one way Neoclassical art reflected Enlightenment values.','Explain one way art was used as political propaganda during the French Revolution and Napoleonic era.'],
+  },
+  {
+    track:'art', start:1800, end:1860, label:'Romanticism (art & literature)',
+    overview:'An artistic and literary movement that celebrated emotion, imagination, nature, the individual, the nation, and the past against Enlightenment rationalism, industrialization, and classical restraint. Romantic artists valued what was wild, particular, historical, and feeling-based over what was orderly, universal, and rational.',
+    context:'Romanticism emerged partly as a reaction against both the Enlightenment (too cold and abstract) and the French Revolution\'s rational terror. German Romantics sought the authentic national soul in folk traditions, medieval history, and natural landscapes. Romantic literature gave nationalism its emotional vocabulary: the nation as something to love, die for, and feel, not merely reason about.',
+    significance:'Romanticism\'s most lasting political consequence was its contribution to 19th-century nationalism — the emotional identification with a particular nation, its landscape, language, history, and folk culture. Romantic historiography (Michelet in France, Treitschke in Germany) wrote history as national epic. Romantic music (national anthems, folk melodies) gave nations their emotional soundtracks.',
+    figures:'Delacroix (Liberty Leading the People, Romanticism\'s energy and color), Caspar David Friedrich (German Romantic landscape, the sublime), Turner (British landscape, light and storm), Géricault (Raft of the Medusa), Byron (romantic poet-hero), Goethe (Faust, Sorrows of Young Werther), Victor Hugo (Les Misérables, Notre-Dame de Paris), Beethoven (Romantic music\'s father).',
+    keyEvents:[
+      {date:'1808', text:'Goethe\'s Faust Part I — Romantic exploration of striving, knowledge, temptation, and the restless human spirit.'},
+      {date:'1819', text:'Géricault\'s Raft of the Medusa — real shipwreck scandal, massive canvas, raw human suffering. Breaks with Neoclassical composure.'},
+      {date:'1824', text:'Delacroix\'s Massacre at Chios — Greek independence war, Romantic sympathy for national liberation, vivid color and movement.'},
+      {date:'1830', text:'Delacroix\'s Liberty Leading the People — allegorical figure of France leads the July Revolution. Iconic image of Romantic nationalism.'},
+      {date:'1824', text:'Beethoven\'s 9th Symphony premiered — written when deaf; Romantic triumph of artistic will over physical limitation.'},
+    ],
+    saq:['Explain one way Romanticism differed from Neoclassicism.','Explain one connection between Romantic art and 19th-century nationalism.','Explain one way Romanticism can be seen as a reaction against the French Revolution or Enlightenment.'],
+  },
+  {
+    track:'art', start:1848, end:1885, label:'Realism',
+    overview:'An artistic and literary movement that rejected idealized or historical subjects in favor of accurate, unsentimental depiction of contemporary life — especially the lives of ordinary working people, the poor, and the socially marginalized. Realism treated the everyday as worthy of serious artistic attention.',
+    context:'The Industrial Revolution created a new urban working class and revealed extreme social inequality. The 1848 revolutions made politics visible. Realist artists and writers rejected both Romantic idealism and Neoclassical grandeur as evasions of contemporary social reality. Photography (invented 1839) also challenged painters to think about what painting could do that a camera could not.',
+    figures:'Gustave Courbet (The Stone Breakers, A Burial at Ornans), Jean-François Millet (The Gleaners, The Angelus), Honoré Daumier (political cartoons, social criticism), Charles Dickens (Oliver Twist, Bleak House), Gustave Flaubert (Madame Bovary), Émile Zola (Germinal — working-class mining community).',
+    keyEvents:[
+      {date:'1849', text:'Courbet\'s A Burial at Ornans — enormous canvas (22 feet wide) depicting an ordinary provincial funeral with no sentimentality. Scandalous.'},
+      {date:'1857', text:'Courbet\'s The Stone Breakers (1849) and Flaubert\'s Madame Bovary published — both prosecuted for obscenity/immorality.'},
+      {date:'1857', text:'Millet\'s The Gleaners — poor women gleaning leftover grain, depicted with dignity. Middle-class critics found it politically threatening.'},
+      {date:'1885', text:'Zola\'s Germinal — documentary realist novel of coal miners\' strike. Most famous work of French naturalism (extreme realism).'},
+    ],
+    saq:['Explain one way Realism reflected the social changes of industrialization.','Explain one way Realist art differed from Romanticism.','Explain one reason Realist works were considered politically controversial.'],
+  },
+  {
+    track:'art', start:1865, end:1900, label:'Impressionism & Post-Impressionism',
+    overview:'Impressionism rejected academic finish and historical subjects in favor of capturing light, atmosphere, and momentary sensation using broken brushwork and pure color. Post-Impressionism extended these experiments toward more structural, expressive, or symbolic goals. Together they transformed Western painting and established the foundation of modern art.',
+    context:'The Paris Salon\'s rigid academic hierarchy excluded experimental work. The Impressionists exhibited independently starting in 1874. Their subjects — leisure, urban life, natural light — were distinctly modern. New materials (portable paint tubes) allowed painting outdoors (en plein air). Photography further freed painting from the obligation to record reality accurately.',
+    figures:'Monet (series paintings — Water Lilies, Haystacks, Rouen Cathedral), Renoir (Moulin de la Galette), Degas (dancers, café scenes), Pissarro, Manet (Le Déjeuner sur l\'herbe — scandalous). Post-Impressionism: Cézanne (geometric structure, proto-Cubism), Van Gogh (emotional color, expressive brushwork), Gauguin (primitivism, Tahiti), Seurat (pointillism).',
+    keyEvents:[
+      {date:'1863', text:'Salon des Refusés — Napoleon III orders exhibition of rejected works. Manet\'s Le Déjeuner sur l\'herbe scandalizes Paris.'},
+      {date:'1874', text:'First Impressionist exhibition — critics mock the style; the name "Impressionism" is taken from Monet\'s Impression, Sunrise.'},
+      {date:'1886', text:'Last Impressionist exhibition. Seurat shows Sunday on La Grande Jatte — pointillism, scientific color theory applied to painting.'},
+      {date:'1888', text:'Van Gogh moves to Arles, creates his greatest works. Gauguin visits; they quarrel; Van Gogh cuts off his ear. Mental breakdown follows.'},
+      {date:'1892', text:'Monet begins series paintings — same subject at different times of day. Systematic exploration of changing light.'},
+    ],
+    saq:['Explain one way Impressionism represented a break from academic artistic tradition.','Explain one way new technology or social conditions influenced Impressionist subject matter.'],
+  },
+  {
+    track:'art', start:1905, end:1940, label:'Modernist art movements',
+    overview:'A cluster of radical artistic movements that collectively rejected traditional representation, perspective, and beauty in favor of abstraction, fragmentation, emotional expression, and formal experimentation. Modernism in art reflected the intellectual crisis of the early 20th century — the collapse of certainty, the trauma of WWI, the irrationalism of Nietzsche and Freud.',
+    context:'Each movement responded to a specific context: Fauvism (pure color emotion), Expressionism (psychological anguish), Cubism (multiple simultaneous perspectives — reality is not one fixed view), Futurism (celebrating industrial speed and violence — dangerously close to fascism), Dada (nihilist response to WWI\'s absurdity), Surrealism (Freudian unconscious, dreams, juxtaposition).',
+    figures:'Matisse (Fauvism), Kirchner (German Expressionism), Picasso and Braque (Cubism), Marinetti (Futurism), Duchamp (Dada — Fountain), André Breton (Surrealism), Dalí and Magritte (Surrealist painting), Kandinsky (abstraction).',
+    keyEvents:[
+      {date:'1905', text:'Fauvist exhibition at Paris Salon d\'Automne — Matisse and others use color emotionally, not descriptively. Critics call them "wild beasts" (fauves).'},
+      {date:'1907', text:'Picasso\'s Les Demoiselles d\'Avignon — proto-Cubism, African mask influence, shatters conventional representation. Privately shown; publicly shocking.'},
+      {date:'1909', text:'Futurist Manifesto — Marinetti celebrates speed, machines, violence, war. Glorifies destruction of museums and past.'},
+      {date:'1916', text:'Dada founded in Zurich — nihilist anti-art response to WWI\'s senseless destruction. Nothing means anything.'},
+      {date:'1917', text:'Duchamp\'s Fountain — signed urinal submitted to art exhibition. Defines Dada: art is whatever the artist declares art.'},
+      {date:'1924', text:'Breton\'s Surrealist Manifesto — art should express the unconscious, dreams, the irrational. Influenced by Freud.'},
+    ],
+    saq:['Explain one way early 20th-century artistic movements reflected broader intellectual changes.','Explain one way WWI influenced modernist art.','Explain one similarity or difference between Dada and Surrealism.'],
+  },
+
+  // ── RELIGION ──────────────────────────────────────────────────
+  {
+    track:'relig', start:1517, end:1555, label:'Protestant Reformation',
+    overview:'The permanent fracture of Western Christendom that began with Martin Luther\'s challenge to the Catholic Church in 1517 and produced multiple distinct Protestant traditions — Lutheranism, Calvinism, Anglicanism, and radical Anabaptism — within two generations. The Reformation transformed not only religion but politics, society, education, and culture across Europe.',
+    context:'The late medieval Church faced deep criticism for corruption (simony, nepotism), the sale of indulgences, and the gap between clerical wealth and apostolic poverty. Humanists like Erasmus had demanded reform. What made Luther\'s challenge uniquely explosive was the printing press: his 95 Theses (1517) were reproduced and distributed across Germany within weeks, transforming a local academic dispute into a continent-wide crisis.',
+    significance:'The Reformation permanently ended the unity of Western Christianity and made religious diversity a fact of European life. It also had profound political consequences: princes who adopted Lutheranism gained control of Church lands and personnel; the Bible in vernacular languages boosted literacy and national languages; the doctrine of the priesthood of all believers challenged clerical hierarchy. The Wars of Religion that followed lasted more than a century.',
+    figures:'Luther (95 Theses, sola fide, sola scriptura, German Bible), Calvin (predestination, Geneva as a godly city, Institutes of Christian Religion), Zwingli (Zurich reformation), Henry VIII (Anglican break — political rather than doctrinal), Cranmer (English Protestant theology), Anabaptists (radical reformers — believers\' baptism, pacifism, separation of church and state).',
+    keyEvents:[
+      {date:'1517', text:'Luther posts 95 Theses attacking indulgences. Within months, reproduced across Germany by printing press.'},
+      {date:'1521', text:'Diet of Worms — Luther refuses to recant before Emperor Charles V: "Here I stand, I can do no other." Declared an outlaw.'},
+      {date:'1522', text:'Luther\'s German Bible New Testament published — vernacular scripture accessible to literate laypeople. Massive for literacy and German language.'},
+      {date:'1524–25', text:'German Peasants\' War — peasants use Luther\'s ideas to demand social equality. Luther sides with the princes; ~100,000 killed.'},
+      {date:'1529', text:'Marburg Colloquy — Luther and Zwingli cannot agree on the Eucharist. Protestant movement permanently splits.'},
+      {date:'1534', text:'Henry VIII\'s Act of Supremacy — English break with Rome. Political, not theological — driven by desire to annul his marriage.'},
+      {date:'1536', text:'Calvin\'s Institutes of Christian Religion — systematic Protestant theology. Geneva becomes a model Reformed city.'},
+      {date:'1555', text:'Peace of Augsburg — cuius regio, eius religio. Lutheranism recognized; Calvinism excluded. Temporary settlement.'},
+    ],
+    saq:['Explain one cause of the Protestant Reformation.','Explain one way the printing press contributed to the Reformation\'s spread.','Explain one political consequence of the Protestant Reformation.','Explain one way the Reformation changed the relationship between rulers and the Church.'],
+  },
+  {
+    track:'relig', start:1540, end:1648, label:'Counter-Reformation',
+    overview:'The Catholic Church\'s response to the Protestant challenge — a combination of internal reform, theological clarification, institutional renewal, and aggressive evangelization. The Counter-Reformation revitalized Catholicism, halted Protestant expansion in many regions, and reclaimed some territory, while also creating the framework of a more disciplined, centralized, and doctrinally precise Church.',
+    context:'The Church initially underestimated Lutheranism as a local German problem. By the 1540s it was clear that half of Europe was in danger of leaving Catholicism. The Council of Trent was convened to clarify doctrine and reform abuses. The Society of Jesus (Jesuits), founded by Ignatius of Loyola, provided an educated, disciplined, and mobile force for both internal renewal and global mission.',
+    significance:'The Counter-Reformation produced the "confessional age" — a period when Catholic and Protestant identities hardened into distinct, rival cultures with their own art (Baroque vs plain), education, and politics. It was highly successful in southern Germany, Poland, and the Habsburg lands (reversing early Protestant gains), and spread Catholicism globally through Jesuit missions. The Inquisition and Index of Forbidden Books demonstrated its repressive dimension.',
+    figures:'Ignatius of Loyola (Society of Jesus), Francis Xavier (Jesuit missions to Asia), Teresa of Ávila and John of the Cross (Spanish mysticism), Pope Paul III (convened Trent), Pope Gregory XIII (Gregorian calendar reform), Cardinal Bellarmine (anti-Protestant apologetics).',
+    keyEvents:[
+      {date:'1540', text:'Society of Jesus (Jesuits) officially recognized by Pope Paul III — educated, disciplined, vowed to papal obedience. Becomes spearhead of Catholic reform.'},
+      {date:'1542', text:'Roman Inquisition reestablished — central body to combat heresy. Less brutal than Spanish Inquisition but systematic.'},
+      {date:'1545–63', text:'Council of Trent — reaffirmed transubstantiation, seven sacraments, authority of tradition alongside Scripture, Latin Vulgate. Reformed abuses of clergy.'},
+      {date:'1559', text:'Index of Forbidden Books established — lists works Catholics may not read. Includes Copernicus, Erasmus, Machiavelli.'},
+      {date:'1582', text:'Gregorian calendar reform — corrects Julian calendar\'s drift. Protestant states refuse to adopt it for over a century.'},
+    ],
+    saq:['Explain one way the Catholic Church responded to the Protestant Reformation.','Explain one similarity or difference between the Reformation and Counter-Reformation.','Explain one way the Jesuits contributed to the Counter-Reformation.','Explain one way the Council of Trent strengthened the Catholic Church.'],
+  },
+  {
+    track:'relig', start:1555, end:1555, label:'Peace of Augsburg', point:true,
+    overview:'A treaty between Holy Roman Emperor Charles V and the Schmalkaldic League of Lutheran princes that temporarily ended religious conflict in the Empire by establishing that each ruler (not each individual) would determine the religion of his territory.',
+    context:'After decades of war between Lutheran princes and the Emperor, neither side could achieve total victory. Charles V, exhausted and about to abdicate, negotiated this compromise. The principle cuius regio, eius religio gave rulers religious sovereignty within their territories.',
+    significance:'Augsburg created a fragile peace, but its exclusion of Calvinism was its fatal flaw. Calvinism spread rapidly in the following decades — into France, the Netherlands, Hungary, and parts of Germany — but had no legal protection. Calvinist rulers existed in a legal gray zone. When Emperor Ferdinand II tried to reverse Protestant gains in Bohemia in 1618, the conflict that resulted — the Thirty Years\' War — was directly traceable to Augsburg\'s incompleteness.',
+    figures:'Charles V (negotiated the peace), Philip of Hesse and John Frederick of Saxony (Lutheran princes), Ferdinand I (Charles\'s brother, administered the settlement).',
+    keyEvents:[
+      {date:'1555', text:'Peace of Augsburg signed — cuius regio, eius religio established. Calvinism explicitly excluded. Ecclesiastical Reservation clause protected Catholic Church property.'},
+    ],
+    saq:['Explain one limitation of the Peace of Augsburg.','Explain one way the Peace of Augsburg contributed to the Thirty Years\' War.','Explain one way the Peace of Augsburg changed the political structure of the Holy Roman Empire.'],
+  },
+  {
+    track:'relig', start:1562, end:1598, label:'French Wars of Religion',
+    overview:'A series of eight civil wars fought between Catholics and Protestant Huguenots in France between 1562 and 1598, combining genuine religious conflict with aristocratic power struggles, foreign intervention, and dynastic crisis. The wars killed hundreds of thousands and left France deeply traumatized before Henry IV\'s Edict of Nantes provided a temporary settlement.',
+    context:'Calvinism spread rapidly in France in the 1540s–50s, gaining significant noble support (up to 40–50% of nobles became Huguenot). This threatened both the Catholic monarchy and the Church. The Guise family led the ultra-Catholic faction; the Bourbon family (Protestant) led the opposition. Foreign powers intervened: Spain backed Catholics, England backed Huguenots.',
+    significance:'The French Wars of Religion produced one of the most important ideas of early modern politics: the politique argument that political stability and civil peace were more important than religious uniformity. This prefigured the secular state. Henry IV\'s Edict of Nantes (1598) was groundbreaking in granting religious toleration — though it was revoked by Louis XIV in 1685, triggering a crisis.',
+    figures:'Catherine de Medici (Queen Mother, attempted to balance factions), Henry of Guise (ultra-Catholic), Admiral Coligny (Huguenot leader, killed in Massacre), Henry of Navarre/Henry IV (converted to Catholicism 1593, "Paris is worth a Mass"), Pope Gregory XIII, Philip II of Spain.',
+    keyEvents:[
+      {date:'1562', text:'Massacre of Vassy — Guise troops kill Huguenot worshippers. Triggers first war.'},
+      {date:'1572', text:'St Bartholomew\'s Day Massacre — Catherine de Medici orders killing of Huguenot leaders in Paris. ~3,000 killed in Paris, ~10,000 nationwide. Shocks Protestant Europe.'},
+      {date:'1576', text:'Catholic League formed by Henry of Guise — ultramontane, backed by Spain, refuses any toleration.'},
+      {date:'1589', text:'Henry III assassinated — Henry of Navarre (Protestant) legally heir to throne. War of the Three Henrys climax.'},
+      {date:'1593', text:'Henry IV converts to Catholicism — "Paris is worth a Mass." Politically necessary to be accepted as French king.'},
+      {date:'1598', text:'Edict of Nantes — Huguenots granted freedom of worship in designated towns, legal equality, and military strongholds. First significant European religious toleration.'},
+    ],
+    saq:['Explain one cause of the French Wars of Religion.','Explain one way the French Wars of Religion differed from the Thirty Years\' War.','Explain one significance of the Edict of Nantes.','Explain one way the French Wars of Religion contributed to the development of political thought.'],
+  },
+  {
+    track:'relig', start:1648, end:1648, label:'Peace of Westphalia', point:true,
+    overview:'Two treaties (Osnabrück and Münster, 1648) that ended the Thirty Years\' War and the Eighty Years\' War. Westphalia extended the religious settlement of Augsburg by recognizing Calvinism alongside Lutheranism and Catholicism, establishing a new framework of religious coexistence, and confirming the sovereignty of individual states within the Holy Roman Empire.',
+    context:'After 30 years of devastating war that killed up to a third of Germany\'s population, all parties were exhausted. Negotiations began in 1643 — the first modern multilateral peace congress. The final settlement was pragmatic rather than ideological: it accepted the reality of religious diversity and the impossibility of imposing uniformity by force.',
+    significance:'Westphalia is often cited as the foundation of the modern state system: it confirmed that each sovereign state has the right to determine its own internal affairs without external (including papal or imperial) interference. This principle of sovereignty became the bedrock of international law. In religious terms, it moved beyond the binary of Augsburg to accept three-way coexistence, demonstrating that political order did not require religious uniformity.',
+    figures:'Cardinal Mazarin (France), Count Trautmansdorff (Austria), Axel Oxenstierna (Sweden), Spanish and Dutch delegates — the congress involved virtually every European power.',
+    keyEvents:[
+      {date:'1643', text:'Westphalian Congress opens in Osnabrück and Münster — first international peace conference in European history.'},
+      {date:'1648', text:'Peace signed — Calvinism recognized; princes gain Landeshoheit (right to conduct own foreign policy); Swiss independence from Empire confirmed; Netherlands independence confirmed.'},
+    ],
+    saq:['Explain one way the Peace of Westphalia differed from the Peace of Augsburg.','Explain one way Westphalia changed the political structure of the Holy Roman Empire.','Explain one long-term consequence of Westphalia for European international relations.'],
+  },
+  {
+    track:'relig', start:1685, end:1685, label:'Revocation — Edict of Nantes', point:true,
+    overview:'Louis XIV\'s 1685 revocation of Henry IV\'s 1598 Edict of Nantes, ending French Protestants\' legal right to practice their faith, forcing ~200,000 Huguenots to flee France.',
+    context:'Louis XIV pursued religious uniformity as part of his absolutist program — "one king, one law, one faith." He had been pressuring Huguenots for years (dragonnades — quartering soldiers in Protestant homes). The revocation was his most dramatic step and was wildly popular among French Catholics.',
+    significance:'The economic and demographic consequences were severe: Huguenots were disproportionately skilled craftsmen, merchants, and professionals. France\'s loss was Prussia\'s, England\'s, and the Netherlands\'s gain — the Great Elector of Prussia explicitly welcomed them. The revocation also shocked Protestant Europe and contributed to anti-French coalition building in the Nine Years\' War.',
+    figures:'Louis XIV, Bishop Bossuet (theological justification), Frederick William of Brandenburg (welcomed Huguenot refugees).',
+    keyEvents:[
+      {date:'1681–85', text:'Dragonnades — soldiers quartered in Protestant homes to pressure conversion. ~300,000 formally abjure Protestantism under duress.'},
+      {date:'1685', text:'Edict of Fontainebleau revokes Edict of Nantes. Protestant churches demolished, schools closed, pastors exiled. Laypeople forbidden to leave France.'},
+      {date:'1685', text:'~200,000 Huguenots flee illegally to Prussia, England, Netherlands, South Africa. French silk, glass, and clockmaking industries devastated.'},
+    ],
+    saq:['Explain one consequence of Louis XIV\'s revocation of the Edict of Nantes.','Explain one connection between Louis XIV\'s religious policies and European power politics.'],
+  },
+  {
+    track:'relig', start:1730, end:1790, label:'Pietism & Methodism',
+    overview:'Evangelical movements within Protestantism that emphasized personal, emotional religious experience — conversion, prayer, Bible reading, charitable work — over formal doctrine and Church ritual. They were partly a reaction against cold, bureaucratic state churches and partly a response to the perceived spiritual emptiness of polite, Enlightened religion.',
+    context:'Pietism developed in German Lutheran churches in the late 17th century (Spener\'s Pia Desideria, 1675), then spread to Britain through the Wesley brothers. John Wesley founded Methodism after a conversion experience in 1738; he preached to enormous crowds of working-class people excluded from the established Church.',
+    significance:'Pietism and Methodism revitalized Protestant Christianity from the bottom up, outside official church structures. Methodism became enormously important in Britain and America, particularly among the working and lower-middle classes. Both movements fueled social reform movements (prison reform, anti-slavery) — evangelical Christianity was a major force behind 18th–19th century abolitionism.',
+    figures:'Philip Jakob Spener (Pietism founder), August Hermann Francke (Halle Pietists), John Wesley (Methodism founder), Charles Wesley (hymns), George Whitefield (revivalist preacher).',
+    keyEvents:[
+      {date:'1675', text:'Spener\'s Pia Desideria — calls for small group Bible study, lay involvement, and practical Christianity over doctrinal dispute.'},
+      {date:'1738', text:'John Wesley\'s Aldersgate conversion — "heart strangely warmed." Begins open-air preaching across Britain.'},
+      {date:'1739', text:'Wesley preaches to 3,000 coal miners at Kingswood — Methodism spreads rapidly among working-class communities without parish church access.'},
+    ],
+    saq:['Explain one way evangelical movements like Pietism or Methodism differed from established churches.','Explain one connection between evangelical Christianity and 18th–19th century social reform.'],
+  },
+  {
+    track:'relig', start:1789, end:1815, label:'Dechristianization (France)',
+    overview:'The French Revolution\'s systematic attack on the Catholic Church — seizing its property, closing its institutions, persecuting its clergy, and attempting to replace Christianity with secular and then deist civic religions.',
+    context:'The Church was the largest landowner in France and deeply associated with the Old Regime. The Revolution nationalized Church property (1789), imposed the Civil Constitution of the Clergy (requiring priests to swear loyalty to the state), and eventually launched active Dechristianization (1793–94): churches closed or converted, Christian calendar replaced, clergy forced to marry or renounce their vows.',
+    significance:'The Revolution\'s assault on the Church created the "religious question" that would define French politics for over a century — the bitter conflict between Catholic conservatives and secular republicans, still visible in the Dreyfus Affair (1890s) and the separation of Church and state (1905). Napoleon\'s Concordat (1801) pragmatically restored a reduced Church role, setting the pattern of tense Church-state negotiation.',
+    figures:'Bishop Talleyrand (proposed nationalization of Church lands), Abbé Grégoire (Constitutional priest), Napoleon (negotiated Concordat with Pius VII).',
+    keyEvents:[
+      {date:'1789', text:'National Assembly nationalizes Church property — becomes collateral for assignats (paper money). Church loses its economic foundation.'},
+      {date:'1790', text:'Civil Constitution of the Clergy — priests become state employees; must take loyalty oath. Half refuse — "refractory priests" go underground.'},
+      {date:'1793–94', text:'Active Dechristianization — churches closed, Christian calendar replaced by Republican calendar, Cult of Reason installed in Notre-Dame de Paris.'},
+      {date:'1794', text:'Robespierre introduces Cult of the Supreme Being — deist alternative to atheism; he executes leaders of Dechristianization as extremists.'},
+      {date:'1801', text:'Napoleon\'s Concordat with Pope Pius VII — Catholicism recognized as religion of "the great majority of French citizens," but Church subordinated to state.'},
+    ],
+    saq:['Explain one reason the French Revolution attacked the Catholic Church.','Explain one consequence of the Revolution\'s religious policies for French society.','Explain one way Napoleon\'s religious policies differed from the Revolution\'s.'],
+  },
+
+  // ── POLITICAL ─────────────────────────────────────────────────
+  {
+    track:'polit', start:1450, end:1527, label:'Italian city-states',
+    overview:'The northern Italian peninsula in the 15th century was home to a system of independent city-states — Florence, Venice, Milan, Naples, and the Papal States — that developed sophisticated diplomacy, republican and princely government, and early modern state-craft in competition with each other.',
+    context:'The absence of a strong central authority (the Holy Roman Empire was distant and weak in Italy) created both the need and the space for these states to develop their own institutions. The Peace of Lodi (1454) established a balance of power among the five major states that lasted 40 years. This interstate system prefigured later European diplomacy.',
+    significance:'The Italian city-states pioneered the resident ambassador (replacing occasional envoys), the balance of power concept, and political analysis divorced from moral theology (Machiavelli). Their wealth and patronage funded the Renaissance. Their vulnerability to foreign invasion (France 1494) demonstrated the limits of small-state politics in an era of rising national monarchies.',
+    figures:'Lorenzo de Medici (the Magnificent — Florence), Ludovico Sforza (Milan), Francesco Sforza, Cesare Borgia, Pope Alexander VI (Borgia), Machiavelli (observed these states and drew lessons in The Prince).',
+    keyEvents:[
+      {date:'1454', text:'Peace of Lodi — balance of power among five major Italian states. First systematic European balance of power diplomacy.'},
+      {date:'1469–92', text:'Lorenzo de Medici rules Florence — golden age of Renaissance patronage; diplomatic genius maintains Italian stability.'},
+      {date:'1494', text:'Charles VIII of France invades Italy — destroys the Italian state system. Foreign intervention becomes permanent.'},
+      {date:'1513', text:'Machiavelli writes The Prince — analysis of power divorced from conventional morality. Dedicated to Lorenzo de Medici.'},
+    ],
+    saq:['Explain one way Italian city-states contributed to European political development.','Explain one reason Italy was vulnerable to foreign invasion in the late 15th century.'],
+  },
+  {
+    track:'polit', start:1519, end:1556, label:'Charles V & Habsburg power',
+    overview:'Charles I of Spain became Holy Roman Emperor Charles V in 1519, ruling the largest European empire since Charlemagne: Spain, the Netherlands, Naples, Sicily, the Americas, and the Holy Roman Empire. His reign was defined by four simultaneous crises: the Protestant Reformation, the Ottoman threat, war with France, and the conquest of the Americas.',
+    context:'Charles inherited his vast dominions through dynastic accident (the convergence of Burgundian, Spanish, and Habsburg inheritances). He spent almost his entire reign fighting — against Luther\'s princes, against Suleiman the Magnificent, against Francis I of France. His attempted universal monarchy alarmed virtually every other European power.',
+    significance:'Charles\'s failure to suppress Lutheranism in Germany (Peace of Augsburg, 1555) established the principle that religious diversity could not be eliminated by force. His exhausted abdication in 1556, dividing his empire between his son Philip II (Spain) and brother Ferdinand I (Empire), showed the impossibility of ruling such a vast polyglot empire from one center.',
+    figures:'Charles V (Holy Roman Emperor, 1519–56), Francis I (France — chief rival), Suleiman the Magnificent (Ottoman challenger), Ferdinand I (brother, managed Empire), Philip II (son, received Spain and Netherlands).',
+    keyEvents:[
+      {date:'1519', text:'Charles elected Holy Roman Emperor — controls more territory than any European ruler since Charlemagne.'},
+      {date:'1521', text:'Diet of Worms — Charles condemns Luther. But cannot enforce it — too many German princes protect him.'},
+      {date:'1525', text:'Battle of Pavia — Francis I captured. Habsburg dominance in Italy confirmed.'},
+      {date:'1527', text:'Sack of Rome by Charles\'s unpaid mutinous troops — Pope Clement VII imprisoned. Shocks Christendom.'},
+      {date:'1529', text:'Ottoman siege of Vienna fails — limits Ottoman expansion into Central Europe.'},
+      {date:'1555', text:'Peace of Augsburg — Charles accepts religious division of Germany. Abdicates shortly after.'},
+      {date:'1556', text:'Abdication — gives Spain/Netherlands to Philip II, Holy Roman Empire to Ferdinand I. Retires to monastery.'},
+    ],
+    saq:['Explain one challenge Charles V faced in governing his empire.','Explain one way Charles V\'s reign demonstrated the limits of Habsburg power.','Explain one consequence of Charles V\'s abdication for European politics.'],
+  },
+  {
+    track:'polit', start:1618, end:1648, label:'Thirty Years\' War',
+    overview:'The most destructive European conflict before the 20th century, beginning as a religious war in Bohemia and expanding into a general European struggle for power. By its end, it had killed up to a third of Germany\'s population and fundamentally reshaped the political and religious order of Europe.',
+    context:'The war went through four phases: Bohemian (1618–25), Danish (1625–29), Swedish (1630–35), and French (1635–48). What began as a Bohemian Protestant revolt against Catholic Habsburg Emperor Ferdinand II gradually drew in Denmark, Sweden, France, Spain, and virtually every European power. France — Catholic — entered on the Protestant side in 1635, making clear that power politics had overtaken religious motivation.',
+    significance:'The war\'s end (Peace of Westphalia, 1648) reshaped Europe: the Holy Roman Empire became a loose confederation of sovereign states; France emerged as the dominant European power; Sweden gained Baltic territories; the Netherlands gained formal independence from Spain. Most importantly, Westphalia established the framework of sovereign nation-states as the basis of European order — a system that persisted until 1914 and beyond.',
+    figures:'Ferdinand II (Catholic Habsburg Emperor), Frederick V of the Palatinate (briefly "Winter King" of Bohemia), Christian IV of Denmark, Gustavus Adolphus of Sweden (brilliant general, died 1632), Cardinal Richelieu (guided French strategy), Wallenstein (Habsburg commander, murdered 1634), Tilly (Catholic League commander).',
+    keyEvents:[
+      {date:'1618', text:'Defenestration of Prague — Bohemian Protestant nobles throw Catholic royal officials from a castle window. Conventional start of the war.'},
+      {date:'1620', text:'Battle of White Mountain — Habsburg forces crush Bohemian revolt. Frederick V flees. Bohemia re-Catholicized.'},
+      {date:'1625', text:'Christian IV of Denmark intervenes to help German Protestants. Defeated by 1629.'},
+      {date:'1630', text:'Gustavus Adolphus of Sweden enters war — brilliant victories. Sweden becomes major European power.'},
+      {date:'1631', text:'Sack of Magdeburg — Catholic forces massacre ~20,000 civilians. Most destructive single event of the war.'},
+      {date:'1632', text:'Battle of Lützen — Swedish victory but Gustavus Adolphus killed. War loses its most dynamic commander.'},
+      {date:'1635', text:'France enters war against Spain and Habsburgs — Cardinal Richelieu\'s power politics: Catholic France fights for Protestant side.'},
+      {date:'1648', text:'Peace of Westphalia signed — ends both the Thirty Years\' War and the Eighty Years\' War (Dutch independence from Spain).'},
+    ],
+    saq:['Explain one factor that contributed to the outbreak of the Thirty Years\' War.','Explain one way the war changed the political structure of Central Europe.','Explain one reason the Thirty Years\' War became less about religion over time.','Explain one long-term consequence of the Thirty Years\' War.'],
+  },
+  {
+    track:'polit', start:1642, end:1660, label:'English Civil War & Interregnum',
+    overview:'A series of armed conflicts between the English Parliament and King Charles I (1642–51), followed by the period of republican government under Oliver Cromwell (1649–60), ending with the restoration of the monarchy under Charles II.',
+    context:'The conflict had deep roots: Parliament\'s centuries-old role in approving taxation conflicted with Stuart claims of divine right. Charles I tried to rule without Parliament for 11 years (1629–40), alienating both political and religious opponents. When he needed money to fight Scottish rebellion, he had to reconvene Parliament — which promptly challenged his authority. Religious conflicts (Anglicanism vs Puritanism vs Presbyterianism) overlapped with constitutional ones.',
+    significance:'The Civil War established that the English monarch could not rule without Parliament\'s consent, and that Parliament could, in extremis, depose and execute a king. The Glorious Revolution of 1688 would complete this settlement. England\'s constitutional development made it the model for Enlightenment thinkers (especially Locke and Montesquieu) contrasting it with French absolutism.',
+    figures:'Charles I (executed 1649), Oliver Cromwell (Parliamentary general, Lord Protector), Thomas Fairfax (Parliamentary commander), John Pym (Parliamentary leader), Archbishop Laud (royal religious policy), John Lilburne and the Levellers (radical democrats).',
+    keyEvents:[
+      {date:'1629–40', text:'Charles I\'s "Personal Rule" — governs without Parliament. Raises Ship Money tax illegally. Alienates gentry and merchants.'},
+      {date:'1641', text:'Grand Remonstrance — Parliament lists its grievances. Charles attempts to arrest five MPs. Civil War becomes inevitable.'},
+      {date:'1642', text:'Charles raises his standard at Nottingham — Civil War begins. Royalists (Cavaliers) vs Parliamentarians (Roundheads).'},
+      {date:'1645', text:'Battle of Naseby — New Model Army (Cromwell\'s professional force) decisively defeats Royalists.'},
+      {date:'1649', text:'Charles I tried and executed — the first time a European monarch was put on trial and killed by his own subjects.'},
+      {date:'1653', text:'Cromwell dissolves Parliament — "Rump Parliament" dismissed. Cromwell rules as Lord Protector until death 1658.'},
+      {date:'1660', text:'Restoration of Charles II — monarchy returns. Settlement restores Parliament\'s essential powers.'},
+    ],
+    saq:['Explain one cause of the English Civil War.','Explain one way England\'s political development differed from France\'s in the 17th century.','Explain one significance of the execution of Charles I for European political thought.'],
+  },
+  {
+    track:'polit', start:1643, end:1715, label:'Louis XIV — French absolutism',
+    overview:'The reign of Louis XIV represents the high-water mark of European royal absolutism — the concentration of all effective political power in the monarch, the subordination of aristocracy, Church, and law to royal will, and the projection of royal glory through art, architecture, and military power.',
+    context:'Louis came to power after the Fronde rebellions (1648–53), in which discontented nobles and the Parlement of Paris challenged royal authority. This formative trauma convinced him that nobles must be kept under royal surveillance and control. After his chief minister Mazarin died (1661), Louis personally directed government — "l\'état, c\'est moi" ("I am the state"), though he probably never said it.',
+    significance:'Versailles was Louis\'s most brilliant political instrument: by requiring powerful nobles to reside at court, he removed them from their provincial power bases, domesticated them through elaborate ceremonial, and made royal favor the source of all status. His wars expanded French territory but ultimately exhausted France\'s economy and energized a coalition of European powers (Grand Alliance) against French hegemony.',
+    figures:'Louis XIV (the Sun King), Colbert (finance and mercantilism), Louvois (war minister, military reforms), Vauban (fortification engineer), Bossuet (divine right theorist, bishop), Madame de Maintenon (morganatic wife, influenced revocation of Edict of Nantes), Marlborough and Eugene of Savoy (defeated France in Spanish Succession war).',
+    keyEvents:[
+      {date:'1648–53', text:'The Fronde — aristocratic and parliamentary rebellion against royal authority. Traumatizes young Louis, convinces him nobles must be controlled.'},
+      {date:'1661', text:'Mazarin dies — Louis announces he will govern personally. No more chief ministers.'},
+      {date:'1668', text:'Versailles construction begins — palace of political control and royal glorification.'},
+      {date:'1672–78', text:'Dutch War — France invades Netherlands. William of Orange leads resistance.'},
+      {date:'1685', text:'Revocation of Edict of Nantes — ~200,000 Huguenots flee. Economically damaging; alarms Protestant Europe.'},
+      {date:'1701–14', text:'War of Spanish Succession — Louis places grandson on Spanish throne. Grand Alliance (Britain, Austria, Netherlands) fights to limit French power. France survives but exhausted.'},
+    ],
+    saq:['Explain one way Louis XIV consolidated royal authority.','Explain one way Versailles functioned as a political instrument.','Explain one consequence of Louis XIV\'s religious policies.','Explain one way French absolutism differed from English constitutionalism.'],
+  },
+  {
+    track:'polit', start:1688, end:1689, label:'Glorious Revolution', point:true,
+    overview:'The largely peaceful overthrow of Catholic King James II of England and his replacement by the Dutch Protestant William III and his wife Mary II, followed by the Bill of Rights (1689) that permanently established parliamentary supremacy over the monarchy.',
+    context:'James II\'s Catholicism alarmed Protestant England; his Declaration of Indulgence (suspending penal laws against Catholics and Dissenters) alarmed Parliament. When James produced a Catholic male heir (removing the expectation that the Protestant Mary would eventually inherit), seven leading nobles invited William of Orange to invade. James fled without fighting — the "Glorious" Revolution was glorious partly because it was bloodless.',
+    significance:'The Bill of Rights established that the monarch could not suspend laws, maintain a standing army in peacetime, or levy taxes without parliamentary consent, and that Parliament must meet regularly. This gave England a constitutional framework that made it the envy of Enlightenment thinkers. Locke\'s Two Treatises (1689) provided the philosophical justification, making the Glorious Revolution the intellectual template for later liberal revolutions.',
+    figures:'James II, William III of Orange, Mary II, John Churchill (later Duke of Marlborough), John Locke (philosophical justification), the "Immortal Seven" (nobles who invited William).',
+    keyEvents:[
+      {date:'1688', text:'James II\'s son born Catholic — removes expectation of Protestant succession. "Immortal Seven" invite William of Orange to invade.'},
+      {date:'Nov 1688', text:'William lands in England with 15,000 troops. James\'s army melts away; James flees to France.'},
+      {date:'1689', text:'Bill of Rights — Parliament enumerates royal limitations. No taxation, no standing army, no suspension of laws without parliamentary consent.'},
+      {date:'1689', text:'Toleration Act — Dissenters allowed to worship freely. Catholics excluded.'},
+      {date:'1694', text:'Bank of England founded — financial revolution follows political. Government can borrow at low rates; funds wars effectively.'},
+    ],
+    saq:['Explain one significance of the Glorious Revolution for English political development.','Explain one way the Glorious Revolution differed from the earlier English Civil War.','Explain one way the Glorious Revolution influenced Enlightenment political thought.'],
+  },
+  {
+    track:'polit', start:1756, end:1763, label:'Seven Years\' War',
+    overview:'A truly global conflict fought simultaneously in Europe, North America, the Caribbean, West Africa, India, and the Philippines — often called the first world war. In Europe: Prussia (Frederick the Great) and Britain against Austria, France, Russia, and Sweden. Outside Europe: Britain against France and Spain for colonial dominance.',
+    context:'The "diplomatic revolution" of 1756 reversed traditional alliances — France and Austria allied (previously enemies), while Britain allied with Prussia (previously allied with Austria). This realignment reflected shifting power dynamics as Prussia emerged as a major continental power and Britain and France competed for global colonial empire.',
+    significance:'Britain\'s victories established its colonial dominance: gaining Canada, most of India, and Caribbean islands from France. France\'s humiliation stoked the resentment that led it to support the American Revolution, which then destabilized French finances and contributed to the French Revolution. Prussia\'s survival against overwhelming odds confirmed it as a major power and established the Austria-Prussia rivalry that would define Central Europe for a century.',
+    figures:'Frederick the Great of Prussia (military genius, survived against 3:1 odds), William Pitt the Elder (British war minister, genius for global strategy), Maria Theresa (Austria), Elizabeth of Russia, Louis XV (France).',
+    keyEvents:[
+      {date:'1756', text:'Diplomatic Revolution — France allies with Austria; Britain allies with Prussia. Overturns all previous alliance patterns.'},
+      {date:'1757', text:'Battle of Rossbach — Frederick defeats French-Austrian force twice his size. Establishes Prussian military reputation.'},
+      {date:'1759', text:'"Year of Victories" — Britain wins Quebec (Wolfe), Minden, Lagos, Quiberon Bay. Pitt\'s global strategy succeeds everywhere simultaneously.'},
+      {date:'1762', text:'Russia withdraws from war after Elizabeth dies and Peter III (Frederick\'s admirer) takes over. Saves Prussia from likely defeat.'},
+      {date:'1763', text:'Treaty of Paris — Britain gains Canada, Florida, most French Caribbean islands, dominance in India. France humiliated globally.'},
+    ],
+    saq:['Explain one reason the Seven Years\' War is considered the first world war.','Explain one consequence of the Seven Years\' War for the balance of power in Europe.','Explain one way the Seven Years\' War contributed to the French Revolution.'],
+  },
+  {
+    track:'polit', start:1789, end:1799, label:'French Revolution',
+    overview:'The political, social, and cultural revolution that overthrew the French monarchy and Old Regime, established new principles of liberty, equality, and popular sovereignty, and unleashed forces that transformed Europe for generations. It passed through distinct phases: constitutional monarchy (1789–92), radical republic and Terror (1792–94), and the more conservative Directory (1795–99).',
+    context:'The Revolution had long-term causes (Enlightenment ideas, social inequality, Estates system), medium-term causes (financial crisis from wars, particularly American Revolution), and short-term triggers (1788 harvest failure, bread prices, Estates-General). The speed of collapse — from Estates-General to constitutional crisis in weeks — reflected how completely the Old Regime had lost legitimacy.',
+    significance:'The Revolution permanently destroyed the Old Regime in France and eventually across Europe. Its principles — liberty, equality, fraternity, popular sovereignty, nationalism — became the language of all subsequent political movements, liberal and radical alike. The Terror showed what happened when those principles were applied without compromise; Napoleon showed they could be partially preserved while reversing democratic participation.',
+    figures:'Louis XVI, Marie Antoinette, Mirabeau, Robespierre, Danton, Marat, Olympe de Gouges (women\'s rights), Lafayette, Abbé Sieyès (What is the Third Estate?), Napoleon Bonaparte.',
+    keyEvents:[
+      {date:'May 1789', text:'Estates-General convened — first time since 1614. Third Estate refuses to meet separately; becomes National Assembly.'},
+      {date:'Jun 1789', text:'Tennis Court Oath — Third Estate swears not to disperse until a constitution is written.'},
+      {date:'Jul 1789', text:'Storming of the Bastille — symbolic beginning of popular revolution.'},
+      {date:'Aug 1789', text:'Declaration of Rights of Man and Citizen — liberty, equality, popular sovereignty, property rights.'},
+      {date:'Aug 1789', text:'Nobles\' Night — aristocrats voluntarily surrender feudal privileges in atmosphere of panic and enthusiasm.'},
+      {date:'1791', text:'Constitutional monarchy established — Louis XVI accepts constitution; limited monarchy with elected legislature.'},
+      {date:'1792', text:'War declared on Austria — radicalization begins; monarchy under suspicion of treason.'},
+      {date:'Aug 1792', text:'Monarchy overthrown — Louis arrested; First French Republic declared.'},
+      {date:'Jan 1793', text:'Louis XVI executed — shocks Europe; intensifies foreign war.'},
+      {date:'1793–94', text:'Reign of Terror — Committee of Public Safety under Robespierre; ~17,000 officially executed.'},
+      {date:'Jul 1794', text:'Thermidorian Reaction — Robespierre guillotined; Terror ends. More conservative Directory follows.'},
+    ],
+    saq:['Explain one long-term cause of the French Revolution.','Explain one short-term cause of the French Revolution.','Explain one way Enlightenment ideas contributed to the Revolution.','Explain one way the Revolution changed French society.'],
+  },
+  {
+    track:'polit', start:1799, end:1815, label:'Napoleon & Napoleonic Wars',
+    overview:'Napoleon Bonaparte\'s rise from Revolutionary general to First Consul (1799) to Emperor (1804), his conquest of most of continental Europe, and his eventual defeat — first in Russia (1812), then at Leipzig (1813), and finally at Waterloo (1815). Napoleon simultaneously preserved and betrayed the Revolution\'s ideals.',
+    context:'The Directory (1795–99) was corrupt, unstable, and militarily struggling. Napoleon\'s coup (18 Brumaire, November 1799) was welcomed by many who were exhausted by revolutionary instability. He offered order, competent government, and continued military glory. His legal and administrative reforms (Napoleonic Code, prefect system, Concordat, lycées) were genuinely lasting.',
+    significance:'Napoleon spread the Revolution\'s principles across Europe — legal equality, meritocracy, religious toleration, abolition of feudalism — through the Napoleonic Code. But he also awakened nationalism in conquered peoples, who united against French domination. The Congress of Vienna (1815) attempted to restore the old order but could not undo the Revolution\'s fundamental changes.',
+    figures:'Napoleon Bonaparte, Josephine (first wife), Talleyrand (foreign minister, survived every regime), Fouché (police minister), Wellington (British commander), Metternich (Austrian diplomat, architect of Congress of Vienna), Tsar Alexander I.',
+    keyEvents:[
+      {date:'Nov 1799', text:'18 Brumaire coup — Napoleon overthrows Directory, becomes First Consul.'},
+      {date:'1801', text:'Concordat with Pope — reconciles Church and state; Napoleon gains Church cooperation.'},
+      {date:'1804', text:'Napoleonic Code enacted — legal equality, property rights, religious toleration, but patriarchal family law. Most lasting Napoleonic reform.'},
+      {date:'1804', text:'Napoleon crowns himself Emperor — takes crown from Pope\'s hands. Revolutionary emperor.'},
+      {date:'1805', text:'Battle of Trafalgar — Nelson destroys Franco-Spanish fleet. Britain secure; Napoleon cannot invade.'},
+      {date:'1805', text:'Battle of Austerlitz — Napoleon\'s greatest victory; defeats Austria and Russia in one day.'},
+      {date:'1806', text:'Continental System — Napoleon tries to blockade Britain economically. Forces other states to participate, breeding resentment.'},
+      {date:'1808', text:'Peninsular War begins — guerrilla resistance in Spain bleeds France for 6 years. Wellington eventually liberates Spain.'},
+      {date:'1812', text:'Russian campaign — Grande Armée of 600,000 enters Russia; 100,000 return. Catastrophic turning point.'},
+      {date:'1813', text:'Battle of Leipzig ("Battle of Nations") — Prussia, Austria, Russia, Sweden defeat Napoleon. Largest battle in history before WWI.'},
+      {date:'1814', text:'Paris falls; Napoleon abdicates; exiled to Elba.'},
+      {date:'1815', text:'Hundred Days — Napoleon escapes, raises new army, defeated at Waterloo by Wellington and Blücher. Exiled to St Helena.'},
+    ],
+    saq:['Explain one way Napoleon preserved the ideals of the French Revolution.','Explain one way Napoleon betrayed the ideals of the French Revolution.','Explain one way Napoleonic conquest spread revolutionary ideas across Europe.','Explain one cause of Napoleon\'s downfall.'],
+  },
+  {
+    track:'polit', start:1815, end:1848, label:'Concert of Europe',
+    overview:'The system of great-power management established at the Congress of Vienna (1814–15) in which Austria, Prussia, Russia, Britain, and (later) France met periodically to manage crises and prevent another general European war. It was guided by the principles of legitimacy (restoring pre-Revolutionary dynasties), balance of power, and conservative solidarity against liberalism and nationalism.',
+    context:'The Congress of Vienna was dominated by Metternich (Austria), Castlereagh (Britain), Tsar Alexander I (Russia), Talleyrand (France), and Hardenberg (Prussia). Metternich\'s goal was to prevent France from dominating Europe again while suppressing the liberal and nationalist movements the Revolution had unleashed. The Quadruple Alliance and Holy Alliance provided the institutional mechanisms.',
+    significance:'The Concert system was remarkably successful at preventing a general European war for 99 years (until 1914). But it could not stop the forces of liberalism and nationalism indefinitely. The Revolutions of 1830 and 1848 showed the limits of conservative repression. The system\'s fundamental tension — between restoring legitimacy and accommodating change — was never resolved.',
+    figures:'Metternich (Austria — dominant figure of the Concert era), Castlereagh (Britain), Tsar Alexander I (Holy Alliance), Talleyrand (France — restored Bourbons\' defender), Hardenberg (Prussia).',
+    keyEvents:[
+      {date:'1814–15', text:'Congress of Vienna — redrew European map; restored Bourbon dynasties in France, Spain, Naples; created German Confederation; gave Norway to Sweden.'},
+      {date:'1815', text:'Quadruple Alliance — Austria, Prussia, Russia, Britain pledge to maintain the Vienna settlement.'},
+      {date:'1815', text:'Holy Alliance — Tsar Alexander\'s mystical proposal; Austria, Prussia, Russia pledge Christian principles. Britain refuses to join.'},
+      {date:'1820–21', text:'Revolutions in Spain, Naples, Greece — Concert powers debate intervention. Austria suppresses Italian and German revolts.'},
+      {date:'1830', text:'Revolutions in France, Belgium, Poland — Belgium gains independence (Concert accepts this); Poland crushed by Russia.'},
+      {date:'1848', text:'Revolutions across Europe — Concert system unable to prevent; eventually conservative restoration by 1849.'},
+    ],
+    saq:['Explain one goal of the Congress of Vienna.','Explain one principle that guided the Concert of Europe.','Explain one way the Concert of Europe succeeded or failed.','Explain one way the Congress of Vienna\'s settlement contributed to later instability.'],
+  },
+  {
+    track:'polit', start:1848, end:1849, label:'Revolutions of 1848',
+    overview:'A wave of liberal and nationalist revolutions across Europe — France, the German states, Austria, Hungary, Italy — that briefly seemed to overthrow the Concert of Europe\'s conservative order before being suppressed, in almost every case, within two years.',
+    context:'Multiple crises converged: the potato blight and crop failures of 1845–47 caused famine and economic distress; unemployment and food prices rose sharply; liberal and nationalist movements had grown throughout the 1830s–40s; the February revolution in Paris triggered a cascade as news spread by telegraph. The Frankfurt Parliament attempted to unify Germany on liberal constitutional principles.',
+    significance:'All revolutions failed by 1849 — crushed by armies, betrayed by internal divisions between moderate liberals and radical democrats, or reversed by conservative counter-revolution. The failures taught two lessons: first, that achieving liberal and nationalist goals required military and state power, not just popular enthusiasm (→ Bismarck, Cavour); second, that middle-class liberals feared radical workers more than they hated conservatives, making them unreliable revolutionary allies.',
+    figures:'Louis-Philippe (French king overthrown), Louis-Napoleon Bonaparte (elected President, later Emperor Napoleon III), Metternich (fled Vienna), Kossuth (Hungarian nationalist leader), Frederick William IV of Prussia (refused Frankfurt Parliament\'s crown), Cavour and Garibaldi (Italian nationalist leaders).',
+    keyEvents:[
+      {date:'Feb 1848', text:'February Revolution in Paris — Louis-Philippe abdicates; Second French Republic proclaimed.'},
+      {date:'Mar 1848', text:'Metternich resigns and flees Vienna. Revolutions in Berlin, Vienna, Budapest, Milan, Rome.'},
+      {date:'May 1848', text:'Frankfurt Parliament opens — German liberals attempt to write a constitution and unify Germany.'},
+      {date:'Jun 1848', text:'June Days in Paris — workers revolt against bourgeois republic. Crushed by army. Middle class sides with order.'},
+      {date:'Dec 1848', text:'Louis-Napoleon elected President of France by massive majority — conservative and rural vote buries the republic\'s radicalism.'},
+      {date:'1849', text:'Frankfurt Parliament fails — Frederick William IV refuses the "crown from the gutter." Austria reasserts control. Hungarian revolt crushed by Russia.'},
+      {date:'1851', text:'Louis-Napoleon\'s coup — becomes Napoleon III, Emperor. Confirms end of 1848\'s revolutionary hopes.'},
+    ],
+    saq:['Explain one cause of the Revolutions of 1848.','Explain one reason the Revolutions of 1848 failed.','Explain one long-term consequence of the 1848 revolutions.','Explain one way 1848 influenced later nationalist movements.'],
+  },
+  {
+    track:'polit', start:1859, end:1871, label:'German & Italian unification',
+    overview:'The creation of unified nation-states in Germany (1871) and Italy (1861/70) through a combination of war, diplomacy, and pragmatic power politics — not the liberal idealism of 1848, but Bismarck\'s Realpolitik in Germany and Cavour\'s calculated statecraft in Italy.',
+    context:'The failure of 1848 showed that liberal enthusiasm was not enough. Bismarck (Prussian minister-president from 1862) understood that unification required military force and the neutralization of Austria. He provoked three wars (Danish 1864, Austro-Prussian 1866, Franco-Prussian 1870–71) each designed to solve a specific problem in Prussia\'s path to German leadership.',
+    significance:'German unification destroyed the balance of power established at Vienna. A unified Germany of 41 million, with the most powerful army and the fastest-growing industrial economy in Europe, was a transformative presence. Bismarck managed this through alliance systems; Wilhelm II dismantled them, contributing directly to WWI. Italian unification left Italy with "unredeemed" territories (Trentino, Istria) — a source of grievance that contributed to WWI.',
+    figures:'Bismarck (Prussian/German chancellor, Realpolitik), Wilhelm I (Prussian king/German Emperor), Helmuth von Moltke (Prussian military), Cavour (Piedmontese minister-president), Victor Emmanuel II (Italian king), Garibaldi (nationalist guerrilla leader), Napoleon III (manipulated by Bismarck).',
+    keyEvents:[
+      {date:'1859', text:'Austria-Sardinian War — Cavour provokes Austria; French intervention wins Lombardy for Piedmont.'},
+      {date:'1860', text:'Garibaldi\'s Thousand — volunteers conquer Kingdom of the Two Sicilies. Cavour races to annex the south.'},
+      {date:'1861', text:'Kingdom of Italy proclaimed — Victor Emmanuel II king. Rome and Venetia not yet included.'},
+      {date:'1864', text:'Austro-Prussian-Danish War over Schleswig-Holstein — Prussia and Austria take Danish territories, setting up their next conflict.'},
+      {date:'1866', text:'Austro-Prussian War (Seven Weeks\' War) — Prussia crushes Austria at Sadowa. Austria excluded from German affairs. North German Confederation formed.'},
+      {date:'1870', text:'Franco-Prussian War — Napoleon III manipulated into declaring war. Crushed at Sedan; captured. Rome falls to Italy as French garrison withdrawn.'},
+      {date:'Jan 1871', text:'German Empire proclaimed in Hall of Mirrors, Versailles — maximum humiliation of France. Wilhelm I Emperor; Bismarck Chancellor.'},
+    ],
+    saq:['Explain one way Bismarck\'s methods differed from the 1848 liberals\'.','Explain one consequence of German unification for the balance of power.','Explain one similarity or difference between German and Italian unification.','Explain one way unification contributed to later European instability.'],
+  },
+  {
+    track:'polit', start:1914, end:1918, label:'World War I',
+    overview:'The most destructive conflict in European history to that point, killing ~20 million people (military and civilian) and reshaping the map, politics, and culture of Europe. It resulted from the interaction of deep structural causes (alliance system, imperial rivalry, arms race, nationalism) and contingent events (Sarajevo assassination).',
+    context:'Europe in 1914 was armed, anxious, and tightly bound by alliances that turned a local Balkan crisis into a continental war. Austria-Hungary\'s ultimatum to Serbia, backed by Germany, triggered Russia\'s mobilization, which triggered Germany\'s Schlieffen Plan (attack France through Belgium), which brought in France and Britain. The war that was expected to last months lasted four years.',
+    significance:'WWI destroyed the German, Austro-Hungarian, Russian, and Ottoman Empires. It produced the Bolshevik Revolution, the Treaty of Versailles (with its war guilt clause and reparations that humiliated Germany), and the conditions for WWII. Culturally, it shattered the liberal progressive confidence of the Belle Époque and created the disillusionment of the interwar period.',
+    figures:'Wilhelm II, Kaiser Franz Joseph I, Tsar Nicholas II, Lloyd George, Clemenceau, Woodrow Wilson, Haig (British commander), Hindenburg and Ludendorff (German commanders), Gallipoli\'s generals.',
+    keyEvents:[
+      {date:'Jun 1914', text:'Archduke Franz Ferdinand assassinated in Sarajevo by Gavrilo Princip (Black Hand, Serbian nationalist).'},
+      {date:'Jul 1914', text:'Austria\'s ultimatum to Serbia; Serbia\'s partial acceptance rejected. Austria declares war. Alliance system activates.'},
+      {date:'Aug 1914', text:'Germany invades Belgium; Britain declares war. Schlieffen Plan fails — French counterattack at the Marne stops German advance.'},
+      {date:'1914–18', text:'Western Front stalemate — trench warfare from English Channel to Switzerland. Gains measured in yards, losses in hundreds of thousands.'},
+      {date:'1916', text:'Battle of the Somme — 60,000 British casualties on first day; 1.2 million total. Battle of Verdun — 700,000 combined casualties.'},
+      {date:'1917', text:'USA enters war (April). Russian Revolution — Bolsheviks seize power (October), sign armistice with Germany.'},
+      {date:'Nov 1918', text:'Germany signs armistice. Kaiser Wilhelm II abdicates. War ends.'},
+      {date:'1919', text:'Treaty of Versailles — war guilt clause, reparations (132 billion gold marks), territorial losses. Humiliates Germany.'},
+    ],
+    saq:['Explain one long-term cause of WWI.','Explain one way the alliance system turned a local conflict into a world war.','Explain one way nationalism contributed to the outbreak of WWI.','Explain one consequence of WWI for European political order.'],
+  },
+  {
+    track:'polit', start:1919, end:1939, label:'Interwar period & rise of fascism',
+    overview:'The two decades between WWI and WWII in which the liberal democratic order established after 1918 steadily collapsed: hyperinflation, the Great Depression, the rise of fascism in Italy (1922) and Germany (1933), appeasement\'s failure, and the diplomatic unraveling that led to WWII.',
+    context:'The Versailles settlement (1919) created structural problems: it humiliated Germany without destroying its potential, created a ring of weak new states in Eastern Europe, and demanded reparations that contributed to economic instability. The Great Depression (1929) provided the crisis that fascism exploited. Fear of communism made conservative elites willing to tolerate or support fascist movements.',
+    significance:'The interwar period demonstrates how quickly liberal democracy can collapse when economic crisis meets ideological challenge and political failure. The Weimar Republic was Germany\'s first democracy — it lasted 14 years. The failure to understand Hitler as a genuine threat (treating him as a rational actor who could be satisfied — appeasement) is one of history\'s most consequential miscalculations.',
+    figures:'Hitler (Germany), Mussolini (Italy), Stalin (USSR), Hindenburg (German president who appointed Hitler), Neville Chamberlain (British appeasement), Édouard Daladier (French appeasement), Churchill (warned against appeasement).',
+    keyEvents:[
+      {date:'1919', text:'Versailles Treaty signed — German "stab in the back" myth begins. War guilt clause and reparations breed resentment.'},
+      {date:'1922', text:'Mussolini\'s March on Rome — first fascist government in Europe. Italy a model for Hitler.'},
+      {date:'1923', text:'German hyperinflation — wheelbarrows of cash for bread. Destroys middle-class savings; breeds radicalism.'},
+      {date:'1929', text:'Wall Street Crash — global Depression follows. German unemployment reaches 30% by 1932.'},
+      {date:'Jan 1933', text:'Hitler appointed Chancellor by Hindenburg — legal route to power.'},
+      {date:'Mar 1933', text:'Enabling Act — Hitler given dictatorial powers by Reichstag. Democracy ended legally.'},
+      {date:'1935', text:'Nuremberg Laws — Jews stripped of citizenship and rights. Racial state formalized.'},
+      {date:'Mar 1938', text:'Anschluss — Austria annexed without resistance. Appeasement continues.'},
+      {date:'Sep 1938', text:'Munich Agreement — Chamberlain sacrifices Czechoslovakia\'s Sudetenland. "Peace for our time."'},
+      {date:'Mar 1939', text:'Hitler occupies rest of Czechoslovakia — appeasement exposed as futile.'},
+    ],
+    saq:['Explain one cause of the rise of fascism in Europe.','Explain one way fascism differed from communism.','Explain one reason Britain and France pursued appeasement.','Explain one way the Great Depression contributed to political instability.'],
+  },
+  {
+    track:'polit', start:1939, end:1945, label:'World War II',
+    overview:'The most destructive conflict in human history, killing approximately 70–85 million people (the majority civilians), including the systematic genocide of 6 million Jews and millions of others in the Holocaust. It ended with Europe devastated, the US and USSR as superpowers, and the beginning of the Cold War.',
+    context:'Hitler\'s territorial ambitions were ideological as well as strategic: Lebensraum (living space) in the East, racial extermination of Jews and Slavs, reversal of Versailles. The Nazi-Soviet Pact (1939) eliminated the threat of a two-front war initially. The fall of France (1940) in six weeks shocked the world. American entry (December 1941, after Pearl Harbor) and Soviet endurance after Operation Barbarossa (1941) determined the war\'s outcome.',
+    significance:'WWII\'s consequences: the United Nations, the Universal Declaration of Human Rights, the Nuremberg Trials establishing crimes against humanity, the Marshall Plan, NATO, decolonization, the Cold War division of Europe, the founding of Israel, and the beginning of European integration (partly to prevent another war). It also ended European global dominance.',
+    figures:'Hitler, Churchill, Roosevelt, Stalin, Eisenhower, Rommel, Zhukov, Himmler (Holocaust), Goebbels (propaganda).',
+    keyEvents:[
+      {date:'Sep 1939', text:'Germany invades Poland. Britain and France declare war. WWII begins.'},
+      {date:'May–Jun 1940', text:'Fall of France — Germany conquers France in 6 weeks. Dunkirk evacuation saves 338,000 Allied troops.'},
+      {date:'Jul–Sep 1940', text:'Battle of Britain — Luftwaffe fails to win air superiority. Hitler cancels invasion of Britain.'},
+      {date:'Jun 1941', text:'Operation Barbarossa — Germany invades USSR with 3 million troops. Largest land invasion in history.'},
+      {date:'1941–45', text:'Holocaust — systematic genocide of Jews and others in death camps (Auschwitz, Treblinka, etc.). 6 million Jews killed.'},
+      {date:'Dec 1941', text:'Japan attacks Pearl Harbor — USA enters war against both Japan and (via German declaration) Germany.'},
+      {date:'1942–43', text:'Battle of Stalingrad — German 6th Army surrounded and destroyed. Turning point on Eastern Front.'},
+      {date:'Jun 1944', text:'D-Day — Allied landing in Normandy. Second front opened; Germany fighting three-front war.'},
+      {date:'May 1945', text:'VE Day — Germany surrenders unconditionally.'},
+    ],
+    saq:['Explain one cause of WWII.','Explain one way WWII differed from WWI in its impact on civilians.','Explain one consequence of WWII for the European political order.','Explain one reason the Allies were ultimately able to defeat Nazi Germany.'],
+  },
+  {
+    track:'polit', start:1945, end:1991, label:'Cold War in Europe',
+    overview:'The ideological, political, and military confrontation between the United States and the Soviet Union that divided Europe into two hostile blocs — NATO and the Warsaw Pact — from 1945 to 1991, without direct military conflict between the superpowers (hence "cold").',
+    context:'The wartime alliance between the US and USSR was always uneasy and collapsed quickly once Germany was defeated. The USSR\'s imposition of communist governments on Eastern Europe alarmed the West; American economic dominance alarmed the USSR. Nuclear weapons made direct conflict unthinkable. The result was a decades-long proxy conflict fought everywhere but in Europe itself.',
+    significance:'The Cold War shaped every aspect of European life: political (democratic governments in the West, communist states in the East), economic (Marshall Plan capitalism vs Soviet planned economy), cultural (anti-communist McCarthyism vs Soviet Socialist Realism), and military (arms race, NATO, Warsaw Pact). European integration (EEC, 1957) was partly driven by the Cold War — a stronger, united Western Europe was a more effective bulwark against Soviet power.',
+    figures:'Truman (containment doctrine), Stalin (Soviet expansion), Marshall (Marshall Plan), Adenauer (West German democracy), De Gaulle (French independence within NATO), Khrushchev (de-Stalinization, Cuban Missile Crisis), Brezhnev, Gorbachev (glasnost, perestroika — ended Cold War).',
+    keyEvents:[
+      {date:'1947', text:'Truman Doctrine — US pledges to contain Soviet expansion anywhere. Marshall Plan — $13bn to rebuild Western Europe.'},
+      {date:'1948–49', text:'Berlin Blockade — USSR cuts land routes to West Berlin; Western airlift for 11 months. First major Cold War crisis.'},
+      {date:'1949', text:'NATO founded. USSR tests atomic bomb. China becomes communist.'},
+      {date:'1953', text:'Stalin dies. Korean War armistice. Brief relaxation.'},
+      {date:'1956', text:'Hungarian Revolution — uprising crushed by Soviet tanks. West does not intervene — reveals limits of "rollback."'},
+      {date:'1961', text:'Berlin Wall built — stops East German emigration to West. Physical symbol of division.'},
+      {date:'1962', text:'Cuban Missile Crisis — closest point to nuclear war. Resolved by US pledge not to invade Cuba + Soviet missiles removed.'},
+      {date:'1968', text:'Prague Spring — Czechoslovak liberalization crushed by Warsaw Pact invasion. Brezhnev Doctrine: USSR will not allow socialist states to leave bloc.'},
+      {date:'1989', text:'Berlin Wall falls (Nov 9). Revolutions across Eastern Europe — Poland, Hungary, Czechoslovakia, Romania, Bulgaria.'},
+      {date:'1991', text:'USSR dissolves — Cold War ends. Germany reunified (1990). End of postwar European order.'},
+    ],
+    saq:['Explain one cause of the Cold War.','Explain one way the Cold War shaped Western European politics.','Explain one way the Cold War differed from previous European great-power conflicts.','Explain one reason the Cold War ended in 1989–91.'],
+  },
+
+  // ── ECONOMIC ──────────────────────────────────────────────────
+  {
+    track:'econ', start:1450, end:1600, label:'Commercial Revolution',
+    overview:'The transformation of European commerce in the 15th–16th centuries through the development of new financial instruments (bills of exchange, double-entry bookkeeping, joint-stock companies), banking systems, and the shift of trade from the Mediterranean to the Atlantic.',
+    context:'Italian city-state merchants had pioneered financial innovation (Medici bank). As trade expanded with the Americas and Asia, larger capital pools were needed than any individual merchant could provide — hence joint-stock companies and stock exchanges. The shift from land to commerce as the primary source of wealth had profound social consequences.',
+    figures:'Medici bank (Florence), Fugger banking family (Augsburg — financed Charles V), Dutch East India Company (1602 — first joint-stock company), Amsterdam Exchange Bank (1609).',
+    keyEvents:[
+      {date:'1494', text:'Luca Pacioli publishes first book on double-entry bookkeeping — systematic accounting enables larger commercial enterprises.'},
+      {date:'1531', text:'Antwerp bourse established — first commodities exchange in northern Europe.'},
+      {date:'1602', text:'Dutch East India Company (VOC) founded — first publicly traded joint-stock company. Raises capital from many investors; limits individual risk.'},
+      {date:'1609', text:'Amsterdam Exchange Bank — stable currency, secure deposits, basis of Dutch commercial dominance.'},
+    ],
+    saq:['Explain one way the Commercial Revolution changed European social structure.','Explain one innovation of the Commercial Revolution and its significance.'],
+  },
+  {
+    track:'econ', start:1492, end:1620, label:'Columbian Exchange & Price Revolution',
+    overview:'The massive transfer of plants, animals, diseases, and peoples between the Old and New Worlds following Columbus\'s 1492 voyage, and the accompanying Price Revolution — sustained inflation across Europe caused primarily by massive silver imports from the Americas.',
+    context:'Spanish conquest of the Aztec and Inca Empires gave access to enormous silver deposits (especially Potosí, Bolivia). Silver flooded European markets, roughly quadrupling prices over the 16th century. This devastated people on fixed incomes (nobles, Church) while benefiting merchants and flexible landowners who could raise rents.',
+    significance:'The Price Revolution restructured European society, accelerating the rise of merchant capitalism and weakening traditional aristocratic wealth. The Columbian Exchange introduced potatoes and maize (which would transform European agriculture and population), tobacco, and cacao — while also sending European diseases that killed up to 90% of indigenous American populations.',
+    figures:'Columbus (1492), Cortés (Aztec conquest 1519–21), Pizarro (Inca conquest 1532), Jean Bodin (first economist to analyze the Price Revolution).',
+    keyEvents:[
+      {date:'1492', text:'Columbus reaches Caribbean — beginning of sustained contact. Columbian Exchange begins.'},
+      {date:'1519–1600', text:'Massive silver extracted from Americas — ~170,000 tons shipped to Europe. European money supply roughly doubles.'},
+      {date:'1545', text:'Potosí silver mines discovered in Bolivia — single largest source of American silver. Peak output in 1590s.'},
+      {date:'c.1560–1620', text:'Price Revolution at its peak — prices rise 300–400% over the 16th century. Social disruption across Europe.'},
+    ],
+    saq:['Explain one economic consequence of the Age of Exploration for Europe.','Explain one way the Columbian Exchange changed European society.','Explain one way the Price Revolution affected different social groups differently.'],
+  },
+  {
+    track:'econ', start:1600, end:1800, label:'Mercantilism',
+    overview:'The dominant economic theory of early modern Europe, holding that national wealth consisted of the accumulation of bullion (gold and silver), that trade was zero-sum (one nation\'s gain was another\'s loss), and that the state should actively manage the economy to maximize exports and minimize imports.',
+    context:'Mercantilist policies reflected the political conditions of the era: constant warfare required revenue, colonies provided captive markets and resources, and the balance of power was understood in economic as well as military terms. Colbert\'s France was the most systematic mercantilist state; British Navigation Acts directed colonial trade to British ships.',
+    significance:'Mercantilism provided the ideological justification for colonial exploitation — colonies existed to serve the mother country\'s economy. Adam Smith\'s Wealth of Nations (1776) systematically demolished mercantilist assumptions, arguing that trade was positive-sum and that free markets produced more wealth than state direction.',
+    figures:'Jean-Baptiste Colbert (Louis XIV\'s finance minister — French mercantilism), Thomas Mun (English mercantile writer), Navigation Acts (British legislation), Adam Smith (critic of mercantilism).',
+    keyEvents:[
+      {date:'1651', text:'English Navigation Acts — all goods to/from English colonies must travel in English ships. Protects English merchants; angers Dutch.'},
+      {date:'1664', text:'Colbert creates Council of Commerce — systematic French mercantilist direction of economy. State-sponsored manufactures (Gobelins tapestry, etc.).'},
+      {date:'1776', text:'Smith\'s Wealth of Nations — systematic demolition of mercantilist theory. Division of labor, free markets, and comparative advantage produce more wealth.'},
+    ],
+    saq:['Explain one way mercantilism influenced European colonial policy.','Explain one criticism that Adam Smith made of mercantilist theory.'],
+  },
+  {
+    track:'econ', start:1760, end:1840, label:'First Industrial Revolution',
+    overview:'The transformation of Britain\'s (and eventually Europe\'s) economy from agricultural and artisanal to industrial and urban, driven by steam power, mechanized textile production, coal and iron industries, and the factory system. It created modern capitalism, the industrial working class, and the urban environment.',
+    context:'Britain led industrialization for specific reasons: large coal and iron deposits, a navigable river network, agricultural improvement that freed rural labor, colonial markets, patent protection, accessible capital, and relative political stability. The enclosure movement forced rural laborers into cities seeking factory work.',
+    significance:'The First Industrial Revolution created the social conditions for virtually every subsequent development: the bourgeoisie and proletariat as new classes, urbanization, Romanticism\'s reaction against industrial ugliness, socialism as a response to exploitation, and Britain\'s global economic dominance. It also started the process of environmental transformation through coal burning.',
+    figures:'James Watt (steam engine improvements), George Stephenson (locomotive), Richard Arkwright (water frame, factory system), James Hargreaves (spinning jenny), Edmund Cartwright (power loom), Robert Owen (utopian socialist factory owner).',
+    keyEvents:[
+      {date:'1733', text:'John Kay\'s flying shuttle — doubles weaving speed, creates demand for faster spinning.'},
+      {date:'1764', text:'Spinning jenny (Hargreaves) — spins multiple threads simultaneously.'},
+      {date:'1769', text:'Watt\'s improved steam engine — separate condenser; efficient enough for general industrial use.'},
+      {date:'1779', text:'First iron bridge (Coalbrookdale) — symbol of new industrial material culture.'},
+      {date:'1785', text:'Cartwright\'s power loom — mechanizes weaving; textile production fully mechanized.'},
+      {date:'1825', text:'First passenger railway (Stockton-Darlington) — transforms transport; factory goods can reach markets cheaply.'},
+      {date:'1833', text:'Factory Act — limits child labor; first significant state intervention in industrial capitalism.'},
+      {date:'1842', text:'Mines Act — women and children banned from underground mine work.'},
+    ],
+    saq:['Explain one reason Britain industrialized before continental Europe.','Explain one social consequence of industrialization.','Explain one way industrialization changed class structure.','Explain one connection between industrialization and the growth of socialist movements.'],
+  },
+  {
+    track:'econ', start:1840, end:1914, label:'Second Industrial Revolution',
+    overview:'A second wave of industrialization from the 1840s onward, characterized by new industries (steel, chemicals, electrical power, petroleum), new organizational forms (the large corporation, scientific management), and the rise of Germany and the United States to challenge British economic dominance.',
+    context:'The Second Industrial Revolution was more science-based than the first: the chemical industry depended on laboratory research; the electrical industry required physics. Germany\'s research universities, close university-industry links, and government support gave it particular advantages. By 1900, Germany had surpassed Britain in steel production and chemical manufacturing.',
+    figures:'Bessemer (steel converter), Werner von Siemens (electrical industry, Germany), Alfred Krupp (steel — German war industries), Edison and Tesla (electrical power), Benz and Daimler (internal combustion engine, automobile), Alfred Nobel (explosives, then Nobel Prize).',
+    keyEvents:[
+      {date:'1856', text:'Bessemer converter — mass production of cheap steel. Enables railroads, skyscrapers, warships.'},
+      {date:'1866', text:'Transatlantic telegraph cable — instant communication between continents. Transforms global business.'},
+      {date:'1879', text:'Edison\'s electric light bulb — beginning of electrical power network. Factories can run day and night.'},
+      {date:'1882', text:'First electrical power station (London, then New York). Urban electrification begins.'},
+      {date:'1885', text:'Benz\'s Motor Wagen — first gasoline-powered automobile. Internal combustion engine will reshape 20th century.'},
+      {date:'1898', text:'Marie Curie discovers radioactivity — science-industry link at its most profound.'},
+      {date:'1903', text:'Wright Brothers\' first flight — aeronautical age begins.'},
+      {date:'1913', text:'Ford\'s moving assembly line — mass production, scientific management (Taylorism). Consumer capitalism begins.'},
+    ],
+    saq:['Explain one way the Second Industrial Revolution differed from the First.','Explain one reason Germany surpassed Britain economically by 1900.','Explain one connection between the Second Industrial Revolution and the New Imperialism.'],
+  },
+  {
+    track:'econ', start:1873, end:1896, label:'Long Depression',
+    overview:'A prolonged period of price deflation and economic stagnation following the financial panics of 1873, affecting much of the industrialized world and reshaping economic policy and political responses.',
+    context:'The Long Depression (sometimes called the "Great Depression" before 1929\'s crisis redefined the term) followed the rapid expansion of the early 1870s. Overproduction drove down prices; German and American competition undercut British manufacturers; agricultural prices collapsed as American grain flooded European markets.',
+    significance:'The Long Depression produced a political backlash against free trade: most European states (except Britain) moved toward protective tariffs by the 1880s. It also intensified the push for imperial markets and raw material sources (scramble for Africa accelerated in the 1880s). It contributed to the growth of socialist parties as workers saw their real wages stagnate.',
+    figures:'Bismarck (adopted protective tariffs in Germany 1879), Benjamin Disraeli, William Gladstone (British free traders).',
+    keyEvents:[
+      {date:'1873', text:'Panic of 1873 — Vienna and New York stock market crashes. Credit contraction spreads globally.'},
+      {date:'1879', text:'Bismarck\'s "marriage of iron and rye" — protective tariffs on industrial goods AND agricultural products. Unites industrialists and landowners.'},
+      {date:'1884–85', text:'Berlin Conference — scramble for Africa accelerates; partly driven by desire for colonial markets during depression.'},
+      {date:'1896', text:'Recovery begins — gold discoveries in South Africa increase money supply; new industries (electrical, chemical) create growth.'},
+    ],
+    saq:['Explain one consequence of the Long Depression for European economic policy.','Explain one connection between economic depression and imperialism.'],
+  },
+  {
+    track:'econ', start:1929, end:1939, label:'Great Depression',
+    overview:'The most severe economic crisis of the 20th century, triggered by the Wall Street Crash of October 1929 and spreading globally within two years through interconnected financial systems, trade contraction, and banking failures.',
+    context:'The 1920s had seen speculative excess, agricultural overproduction, and reparations-driven instability in the European economy. American loans to Germany propped up the reparations system. When American investors recalled those loans after 1929, the German economy collapsed, pulling Austria and central Europe with it. US tariffs (Smoot-Hawley 1930) made global trade collapse.',
+    significance:'The Depression\'s political consequences were catastrophic: it provided the economic crisis that enabled Hitler\'s rise (German unemployment reached 30% in 1932), destabilized European democracies, and pushed states toward autarky (economic self-sufficiency). Keynesian economics emerged as the theoretical response — governments should spend to stimulate demand during recessions.',
+    figures:'Herbert Hoover (US president during onset), Franklin D. Roosevelt (New Deal), Keynes (General Theory of Employment, Interest and Money, 1936), Brüning (German chancellor whose austerity worsened the crisis), Hitler (exploited the crisis).',
+    keyEvents:[
+      {date:'Oct 1929', text:'Wall Street Crash — US stock market collapses. Credit dries up; American loans to Europe recalled.'},
+      {date:'1930', text:'Smoot-Hawley Tariff — US raises tariffs; other countries retaliate. Global trade collapses by ~66%.'},
+      {date:'1931', text:'Austrian Creditanstalt bank fails — Central European banking crisis begins. Germany suspends reparations payments.'},
+      {date:'1932', text:'German unemployment reaches ~6 million (30%). Nazi party becomes largest in Reichstag.'},
+      {date:'1933', text:'US bank holiday; Roosevelt\'s New Deal begins. Britain abandons gold standard. Keynesian responses emerge.'},
+    ],
+    saq:['Explain one cause of the Great Depression.','Explain one way the Depression contributed to political instability in Europe.','Explain one way governments responded to the Depression.'],
+  },
+  {
+    track:'econ', start:1947, end:1991, label:'Marshall Plan & European integration',
+    overview:'The US Marshall Plan (1948–52) and subsequent European economic integration (ECSC 1951, EEC 1957) rebuilt Western European economies after WWII, tied them to American-led capitalism, and created the institutional foundations of what would eventually become the European Union.',
+    context:'Western Europe was economically devastated in 1945 — industrial production was a fraction of prewar levels, food was rationed, currencies were unstable. The US feared that economic desperation would drive Western Europeans toward communism (as it had in Eastern Europe). The Marshall Plan was simultaneously humanitarian, strategic, and commercial (European recovery created markets for US goods).',
+    significance:'The Marshall Plan worked: Western European economies recovered rapidly (German "economic miracle" / Wirtschaftswunder), living standards rose dramatically, and communist parties lost electoral support. European economic integration was driven by the same logic — an economically integrated Europe was more stable, more prosperous, and a more effective buffer against Soviet power. The EEC\'s success laid the foundation for the eventual European Union.',
+    figures:'George Marshall (US Secretary of State), Jean Monnet (architect of European integration), Robert Schuman (Schuman Declaration 1950 — proposal for ECSC), Konrad Adenauer (West Germany), Alcide De Gasperi (Italy).',
+    keyEvents:[
+      {date:'1947', text:'Marshall Plan announced — $13bn in US aid over 4 years. Requires European cooperation in distributing funds → OEEC created.'},
+      {date:'1948', text:'Marshall Plan begins. USSR forces Eastern bloc to refuse aid — deepens Cold War division.'},
+      {date:'1951', text:'European Coal and Steel Community (ECSC) — France, West Germany, Italy, Benelux pool coal and steel production. First supranational European institution.'},
+      {date:'1957', text:'Treaty of Rome — ECSC members create European Economic Community (EEC) and Euratom. Common market, free movement of goods.'},
+      {date:'1960s', text:'German Wirtschaftswunder — West Germany\'s economy grows at ~8%/year. Europe\'s fastest recovery in history.'},
+      {date:'1973', text:'Britain, Ireland, Denmark join EEC — enlargement begins. Oil crisis tests European solidarity.'},
+    ],
+    saq:['Explain one reason the US launched the Marshall Plan.','Explain one way the Marshall Plan contributed to European recovery.','Explain one connection between the Cold War and European economic integration.'],
+  },
+
+  // ── WARS ──────────────────────────────────────────────────────
+  {
+    track:'mil', start:1494, end:1559, label:'Italian Wars',
+    overview:'A series of wars fought primarily in Italy between the major European powers — France, Spain, the Holy Roman Empire, and various Italian states — that established Spanish dominance over the Italian peninsula and demonstrated the era\'s new scale of warfare.',
+    context:'Charles VIII of France\'s invasion of Italy in 1494 exposed the fragility of the Italian city-state system. What followed were 65 years of nearly continuous warfare, drawing in virtually every major European power. The conflicts accelerated Italian Renaissance artistic production (patrons needed to display wealth and power) while devastating the political independence of Italian states.',
+    figures:'Charles VIII, Louis XII, Francis I (France), Ferdinand of Aragon, Charles V (Spain/HRE), Pope Julius II ("warrior pope"), Cesare Borgia, Machiavelli (observer and analyst).',
+    keyEvents:[
+      {date:'1494', text:'Charles VIII invades Italy — sweeps to Naples. Triggers defensive coalition (League of Venice).'},
+      {date:'1499–1500', text:'Louis XII conquers Milan; France and Spain partition Naples, then fight over it.'},
+      {date:'1525', text:'Battle of Pavia — Francis I of France captured by Charles V. Habsburg dominance in Italy confirmed.'},
+      {date:'1527', text:'Sack of Rome by Charles V\'s troops — Pope Clement VII imprisoned; papacy humiliated. High Renaissance ends.'},
+      {date:'1559', text:'Treaty of Cateau-Cambrésis — France renounces Italian claims. Spain controls Milan, Naples, Sicily, Sardinia. Italian independence ends.'},
+    ],
+    saq:['Explain one consequence of the Italian Wars for Italian political independence.','Explain one way the Italian Wars demonstrated the new scale of early modern warfare.'],
+  },
+  {
+    track:'mil', start:1700, end:1721, label:'Great Northern War',
+    overview:'Sweden vs a coalition led by Russia under Peter the Great (1700–21). Sweden\'s defeat ended its Baltic empire and established Russia as a major European power for the first time.',
+    context:'Sweden under Charles XII had been the dominant Baltic power, controlling much of the Baltic coastline. Peter the Great\'s modernization of Russia (Western technology, reorganized military) enabled Russia to challenge Sweden. After initial Swedish victories, the decisive Russian victory at Poltava (1709) broke Swedish power.',
+    significance:'Russia\'s emergence as a major European power fundamentally altered the European balance. Peter\'s Westernization — adopting European military technology, founding St Petersburg as a Western-style capital — made Russia a genuine participant in European great-power politics for the first time.',
+    figures:'Peter the Great (Russia), Charles XII (Sweden), Augustus the Strong (Poland-Saxony), Frederick IV (Denmark).',
+    keyEvents:[
+      {date:'1700', text:'Battle of Narva — Charles XII\'s Swedish army defeats Peter\'s Russian force 4:1. Sweden seems unstoppable.'},
+      {date:'1709', text:'Battle of Poltava — Peter crushes Charles XII decisively. Swedish army destroyed; Charles flees to Ottoman Empire.'},
+      {date:'1721', text:'Treaty of Nystad — Sweden cedes Baltic provinces to Russia. Swedish empire ended; Russian era begins.'},
+    ],
+    saq:['Explain one consequence of the Great Northern War for the European balance of power.','Explain one way Peter the Great\'s reforms contributed to Russian military success.'],
+  },
+  {
+    track:'mil', start:1792, end:1815, label:'Revolutionary & Napoleonic Wars',
+    overview:'Two decades of near-continuous warfare pitting France (first the Revolutionary Republic, then Napoleon\'s Empire) against shifting coalitions of European powers, fundamentally reshaping European borders, political systems, and ideologies.',
+    context:'The French Revolutionary Wars began in 1792 when Austria and Prussia invaded France to restore the monarchy. The French Republic\'s armies, infused with nationalist revolutionary spirit and increasingly effective tactics, defeated them. Napoleon transformed this energy into imperial conquest. Seven coalitions eventually brought him down.',
+    significance:'The wars spread revolutionary principles (legal equality, nationalism, abolition of feudalism) across Europe through French conquest and the Napoleonic Code. They also awakened nationalism in conquered peoples (Spain, Germany, Russia) who united against French domination — a nationalism that would drive the 19th century\'s great conflicts.',
+    figures:'Napoleon, Wellington, Blücher, Kutuzov (Russian commander in 1812), Tsar Alexander I, Nelson (Trafalgar), Francis II (Austria), Frederick William III (Prussia).',
+    keyEvents:[
+      {date:'1792', text:'France declares war on Austria — Revolutionary Wars begin. French armies initially routed, then rally.'},
+      {date:'1793', text:'Britain enters war. France mobilizes levée en masse — first modern conscript army. 750,000 men.'},
+      {date:'1798', text:'Napoleon\'s Egyptian campaign — defeats Mamelukes but cut off by Nelson\'s victory at the Nile.'},
+      {date:'1805', text:'Trafalgar — Nelson destroys Franco-Spanish fleet. Napoleon cannot invade Britain. Austerlitz — Napoleon defeats Austria and Russia in one day.'},
+      {date:'1806', text:'Jena — Napoleon destroys Prussian army in single battle. Prussia collapses in weeks.'},
+      {date:'1812', text:'Russian campaign — catastrophic failure. Grande Armée destroyed.'},
+      {date:'1813', text:'Leipzig — Napoleon defeated by combined Prussian-Austrian-Russian-Swedish army.'},
+      {date:'1815', text:'Waterloo — Napoleon\'s final defeat by Wellington and Blücher. Exile to St Helena.'},
+    ],
+    saq:['Explain one way the Revolutionary and Napoleonic Wars spread revolutionary ideas.','Explain one way the wars contributed to the rise of nationalism.','Explain one cause of Napoleon\'s ultimate defeat.'],
+  },
+  {
+    track:'mil', start:1853, end:1856, label:'Crimean War',
+    overview:'A war between Russia and an allied coalition of Britain, France, the Ottoman Empire, and Piedmont-Sardinia, fought primarily in Crimea. Russia\'s defeat exposed its military and technological backwardness and triggered Alexander II\'s reforms.',
+    context:'The immediate cause was a dispute over Christian holy sites in Ottoman Palestine and Russian claims to protect Orthodox Christians in the Ottoman Empire. The deeper cause was the "Eastern Question" — what would happen to Ottoman territories as the empire declined, and who would dominate the Balkans and Black Sea?',
+    significance:'The Crimean War is often called the first modern war: fought with railways and telegraphs, covered by war correspondents (William Howard Russell), photographed (Roger Fenton), and reformed by Florence Nightingale. Russia\'s humiliation triggered the abolition of serfdom (1861) and military reform. Piedmont\'s participation (under Cavour) gained French friendship needed for Italian unification.',
+    figures:'Tsar Nicholas I, then Alexander II (Russia), Lord Raglan (British commander), Saint-Arnaud (French), Florence Nightingale (nursing reform), Roger Fenton (war photographer), William Howard Russell (first war correspondent), Cavour (Piedmont).',
+    keyEvents:[
+      {date:'1853', text:'Russia occupies Danubian Principalities (Romania). Britain and France send fleet. Russia sinks Ottoman fleet at Sinope.'},
+      {date:'1854', text:'Britain and France declare war on Russia. Allies land in Crimea; besiege Sevastopol.'},
+      {date:'1854', text:'Charge of the Light Brigade — British cavalry charge into cannon through miscommunication. Immortalized by Tennyson.'},
+      {date:'1855', text:'Florence Nightingale reforms military nursing at Scutari hospital. Mortality rate drops dramatically.'},
+      {date:'1856', text:'Treaty of Paris — Russia loses Black Sea naval rights. Ottoman integrity guaranteed (temporarily).'},
+      {date:'1861', text:'Alexander II abolishes serfdom — partly response to military failure revealing Russia\'s backwardness.'},
+    ],
+    saq:['Explain one consequence of the Crimean War for Russia.','Explain one way the Crimean War can be considered a "modern" war.','Explain one connection between the Crimean War and Italian unification.'],
+  },
+  {
+    track:'mil', start:1936, end:1939, label:'Spanish Civil War',
+    overview:'A conflict between the elected Republican government of Spain and Nationalist rebels led by General Francisco Franco, in which Nazi Germany and Fascist Italy intervened on Franco\'s side while the USSR supported the Republic and international volunteers (International Brigades) joined from across the world.',
+    context:'The Spanish Republic (1931) faced intense opposition from traditional elites: the army, the Catholic Church, landowners, and monarchists. Military rebellion began in July 1936. Franco\'s Nationalists quickly received German and Italian military aid. The Republic received Soviet aid. Democratic powers — Britain and France — pursued non-intervention.',
+    significance:'The Spanish Civil War was a rehearsal for WWII in technology (German Junkers bombers, Italian tanks), tactics (Blitzkrieg elements tested), and ideology (fascism vs communism vs liberal democracy). Picasso\'s Guernica (1937) immortalized the German bombing of a Basque civilian town. Franco\'s victory (1939) consolidated fascism\'s position in Europe just before WWII began.',
+    figures:'Franco (Nationalist leader), Azaña (Republic president), Largo Caballero (Republic prime minister), Durruti (anarchist leader), George Orwell (International Brigade — wrote Homage to Catalonia), Hemingway (journalist — wrote For Whom the Bell Tolls), Picasso (Guernica).',
+    keyEvents:[
+      {date:'Jul 1936', text:'Military rebellion begins in Spanish Morocco under Franco. Republic mobilizes workers\' militias.'},
+      {date:'Aug 1936', text:'Germany and Italy begin military aid to Nationalists. "Non-Intervention Committee" formed by democracies — effectively useless.'},
+      {date:'Sep 1936', text:'USSR begins aid to Republic. International Brigades form — 40,000 volunteers from 50 countries.'},
+      {date:'Apr 1937', text:'Guernica bombed by German Condor Legion — market day, 150 civilians killed. Picasso creates monumental painting.'},
+      {date:'1938', text:'Battle of the Ebro — Republic\'s last major offensive fails.'},
+      {date:'Apr 1939', text:'Madrid falls to Nationalists. Franco declares victory. ~500,000 dead in the war; hundreds of thousands flee into exile.'},
+    ],
+    saq:['Explain one way the Spanish Civil War served as a prelude to WWII.','Explain one reason democratic powers chose non-intervention in Spain.','Explain one connection between the Spanish Civil War and the broader ideological conflicts of the 1930s.'],
+  },
+];
+
+// ─── state & helpers ────────────────────────────────────────────
+let visible = new Set(TRACKS.map(t=>t.id));
+
+function pctL(y){ return ((Math.max(y,START)-START)/SPAN*100).toFixed(4)+'%'; }
+function pctW(s,e){ return (Math.max(0,(Math.min(e,END)-Math.max(s,START))/SPAN*100)).toFixed(4)+'%'; }
+
+// ─── legend ─────────────────────────────────────────────────────
+function buildLegend(){
+  const el = document.getElementById('legend');
+  el.innerHTML = '';
+  TRACKS.forEach(t=>{
+    const item = document.createElement('span');
+    item.className = 'leg-item' + (visible.has(t.id)?'':' hidden');
+    const sw = document.createElement('span');
+    sw.className = 'leg-swatch';
+    sw.style.background = t.color;
+    item.appendChild(sw);
+    item.appendChild(document.createTextNode(t.label));
+    item.onclick = ()=>{
+      if(visible.has(t.id)) visible.delete(t.id);
+      else visible.add(t.id);
+      buildLegend();
+      buildTimeline();
+    };
+    el.appendChild(item);
+  });
+}
+
+// ─── timeline ───────────────────────────────────────────────────
+function buildTimeline(){
+  const tl = document.getElementById('tl');
+  tl.innerHTML = '';
+
+  // axis
+  const axWrap = document.createElement('div');
+  axWrap.className = 'axis-wrap';
+  for(let y=START;y<=END;y++){
+    const tick = document.createElement('div');
+    const isCentury = y%100===0;
+    const isDecade = y%10===0;
+    if(!isDecade) continue;
+    tick.className = isCentury ? 'axis-century' : 'axis-decade';
+    tick.style.width = (10/SPAN*100).toFixed(4)+'%';
+    tick.textContent = y;
+    axWrap.appendChild(tick);
+  }
+  tl.appendChild(axWrap);
+
+  const sections = [
+    {label:'Intellectual history', ids:['intel']},
+    {label:'Art & culture', ids:['art']},
+    {label:'Religion', ids:['relig']},
+    {label:'Political history', ids:['polit']},
+    {label:'Economic history', ids:['econ']},
+    {label:'Wars & conflict', ids:['mil']},
+  ];
+
+  sections.forEach(sec=>{
+    const activeIds = sec.ids.filter(id=>visible.has(id));
+    if(!activeIds.length) return;
+
+    const sh = document.createElement('div');
+    sh.className = 'section-header';
+    const st = document.createElement('span');
+    st.className = 'section-title';
+    st.textContent = sec.label;
+    sh.appendChild(st);
+    tl.appendChild(sh);
+
+    activeIds.forEach(tid=>{
+      const track = TRACKS.find(t=>t.id===tid);
+      const trackItems = DATA.filter(d=>d.track===tid);
+
+      const row = document.createElement('div');
+      row.className = 'track-row';
+
+      const lblCell = document.createElement('div');
+      lblCell.className = 'track-label-cell';
+      lblCell.textContent = track.label;
+      row.appendChild(lblCell);
+
+      const body = document.createElement('div');
+      body.className = 'track-body';
+
+      const laneEnd = [];
+
+      trackItems.forEach(item=>{
+        if(item.point){
+          const pw = document.createElement('div');
+          pw.className = 'point-wrap';
+          pw.style.left = pctL(item.start);
+          const dot = document.createElement('div');
+          dot.className = 'point-dot';
+          dot.style.background = track.color;
+          const stem = document.createElement('div');
+          stem.className = 'point-stem';
+          stem.style.background = track.color;
+          const lbl = document.createElement('div');
+          lbl.className = 'point-lbl';
+          lbl.textContent = item.label.length>22?item.label.slice(0,21)+'…':item.label;
+          pw.appendChild(dot);
+          pw.appendChild(stem);
+          pw.appendChild(lbl);
+          pw.addEventListener('click',e=>showTip(e,item,track));
+          body.appendChild(pw);
+          return;
+        }
+
+        let lane=0;
+        while(laneEnd[lane]!==undefined && laneEnd[lane]>item.start+1) lane++;
+        laneEnd[lane]=item.end;
+
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.left = pctL(item.start);
+        bar.style.width = pctW(item.start,item.end);
+        bar.style.top = (5+lane*26)+'px';
+        bar.style.background = track.color;
+        bar.style.color = track.lt;
+        bar.textContent = item.label;
+        bar.addEventListener('click',e=>showTip(e,item,track));
+        body.appendChild(bar);
+      });
+
+      const maxLane = Math.max(0,laneEnd.length-1);
+      body.style.minHeight = (5+(maxLane+1)*26+8)+'px';
+
+      row.appendChild(body);
+      tl.appendChild(row);
+    });
+
+    const gap = document.createElement('div');
+    gap.className = 'section-gap';
+    tl.appendChild(gap);
+  });
+}
+
+// ─── tooltip ────────────────────────────────────────────────────
+const ttEl = document.getElementById('tt');
+const backdrop = document.getElementById('backdrop');
+let currentItem = null;
+
+function showTip(e,item,track){
+  e.stopPropagation();
+  currentItem = item;
+
+  document.getElementById('tt-bdot').style.background = track.color;
+  document.getElementById('tt-btext').textContent = track.label;
+  document.getElementById('tt-title').textContent = item.label;
+  document.getElementById('tt-dates').textContent = item.point ? String(item.start) : item.start + ' – ' + item.end;
+
+  const body = document.getElementById('tt-body');
+  body.innerHTML = '';
+
+  const sections = [
+    {key:'overview', label:'Overview'},
+    {key:'context', label:'Historical context'},
+    {key:'significance', label:'Significance'},
+    {key:'figures', label:'Key figures'},
+  ];
+
+  sections.forEach(s=>{
+    if(!item[s.key]) return;
+    const sec = document.createElement('div');
+    sec.className = 'tt-section';
+    const lbl = document.createElement('div');
+    lbl.className = 'tt-section-label';
+    lbl.textContent = s.label;
+    sec.appendChild(lbl);
+    const txt = document.createElement('div');
+    txt.className = 'tt-section-text';
+    item[s.key].split('\n').forEach(p=>{
+      if(!p.trim()) return;
+      const el = document.createElement('p');
+      el.textContent = p;
+      txt.appendChild(el);
+    });
+    sec.appendChild(txt);
+    body.appendChild(sec);
+  });
+
+  if(item.keyEvents && item.keyEvents.length){
+    const sec = document.createElement('div');
+    sec.className = 'tt-section';
+    const lbl = document.createElement('div');
+    lbl.className = 'tt-section-label';
+    lbl.textContent = 'Key events';
+    sec.appendChild(lbl);
+    const ul = document.createElement('ul');
+    ul.className = 'tt-keyevents';
+    item.keyEvents.forEach(ev=>{
+      const li = document.createElement('li');
+      const strong = document.createElement('strong');
+      strong.textContent = ev.date;
+      li.appendChild(strong);
+      li.appendChild(document.createTextNode(ev.text));
+      ul.appendChild(li);
+    });
+    sec.appendChild(ul);
+    body.appendChild(sec);
+  }
+
+  if(item.saq && item.saq.length){
+    const sec = document.createElement('div');
+    sec.className = 'tt-section';
+    const lbl = document.createElement('div');
+    lbl.className = 'tt-section-label';
+    lbl.textContent = 'SAQ prompts for this topic';
+    sec.appendChild(lbl);
+    const box = document.createElement('div');
+    box.className = 'tt-saq';
+    item.saq.forEach(q=>{
+      const p = document.createElement('div');
+      p.className = 'tt-saq-q';
+      p.textContent = q;
+      box.appendChild(p);
+    });
+    sec.appendChild(box);
+    body.appendChild(sec);
+  }
+
+  ttEl.classList.add('open');
+  backdrop.classList.add('open');
+
+  // positioning
+  const margin = 14;
+  const ttW = 420, ttH = Math.min(window.innerHeight * 0.8, 700);
+  let x = e.clientX + margin;
+  let y = e.clientY + margin;
+  if(x + ttW > window.innerWidth - margin) x = e.clientX - ttW - margin;
+  if(y + ttH > window.innerHeight - margin) y = Math.max(margin, window.innerHeight - ttH - margin);
+  ttEl.style.left = x+'px';
+  ttEl.style.top = y+'px';
+  ttEl.style.maxHeight = ttH+'px';
+}
+
+function closeTip(){
+  ttEl.classList.remove('open');
+  backdrop.classList.remove('open');
+}
+
+function jumpTo(year, btn){
+  document.querySelectorAll('.era-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const scroller = document.getElementById('scroller');
+  const inner = document.getElementById('tl');
+  const frac = (year-START)/SPAN;
+  scroller.scrollLeft = frac * inner.scrollWidth - 140;
+}
+
+buildLegend();
+buildTimeline();
+</script>
+</body>
+</html>

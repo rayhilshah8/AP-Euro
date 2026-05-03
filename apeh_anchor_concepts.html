@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEH Anchor Concepts</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --card: #fdfaf4;
+  --ink: #1a1410;
+  --muted: #6b5e4e;
+  --faint: #a8997f;
+  --rule: #d4c9b0;
+  --shadow: 3px 3px 0 #c4b89a;
+  --radius: 3px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Mono', monospace;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 3rem 1.25rem 5rem;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* ── header ── */
+header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--rule);
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1px;
+  margin-bottom: 1.25rem;
+  transition: color 0.12s, border-color 0.12s;
+}
+.back-link:hover { color: var(--ink); border-color: var(--ink); }
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 0.5rem;
+}
+
+h1 {
+  font-family: 'IM Fell English', serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* ── era tabs ── */
+.era-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 2rem;
+}
+
+.era-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--rule);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s, color 0.12s, background 0.12s;
+}
+.era-btn:hover { border-color: var(--ink); color: var(--ink); }
+.era-btn.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* ── era label ── */
+.era-label {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.era-name {
+  font-family: 'IM Fell English', serif;
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+.era-dates {
+  font-size: 11px;
+  color: var(--faint);
+  letter-spacing: 0.04em;
+}
+
+/* ── concept cards grid ── */
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.concept-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.12s, box-shadow 0.12s, transform 0.12s;
+}
+.concept-card:hover {
+  border-color: #b8a888;
+  box-shadow: var(--shadow);
+  transform: translate(-1px, -1px);
+}
+.concept-card.open {
+  border-color: var(--ink);
+}
+
+.card-top {
+  padding: 11px 13px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.card-accent {
+  width: 3px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  margin-top: 2px;
+  align-self: stretch;
+  min-height: 30px;
+}
+
+.card-meta { flex: 1; }
+
+.card-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 3px;
+}
+
+.card-title {
+  font-family: 'IM Fell English', serif;
+  font-size: 14px;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.card-date {
+  font-size: 10px;
+  color: var(--faint);
+  letter-spacing: 0.03em;
+}
+
+.card-chevron {
+  font-size: 10px;
+  color: var(--faint);
+  flex-shrink: 0;
+  margin-top: 3px;
+  transition: transform 0.18s;
+  user-select: none;
+}
+.concept-card.open .card-chevron { transform: rotate(180deg); }
+
+/* ── expanded detail ── */
+.card-detail {
+  display: none;
+  border-top: 1px solid var(--rule);
+  padding: 12px 13px 14px 26px;
+}
+.concept-card.open .card-detail { display: block; }
+
+.detail-block { margin-bottom: 12px; }
+.detail-block:last-child { margin-bottom: 0; }
+
+.detail-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 5px;
+}
+
+.detail-items { display: flex; flex-direction: column; gap: 4px; }
+
+.detail-item {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  padding-left: 10px;
+  border-left: 2px solid var(--rule);
+}
+
+.saq-box {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 9px 11px;
+}
+
+.saq-item {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.55;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--rule);
+  font-style: italic;
+}
+.saq-item:last-child { border-bottom: none; padding-bottom: 0; }
+.saq-item::before { content: '— '; color: var(--faint); font-style: normal; }
+
+/* ── footer ── */
+footer {
+  text-align: center;
+  margin-top: 3.5rem;
+  font-size: 11px;
+  color: var(--faint);
+  letter-spacing: 0.06em;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <a class="back-link" href="index.html">← back to index</a>
+  <p class="eyebrow">AP European History</p>
+  <h1>Anchor Concepts</h1>
+  <p class="subtitle">era-by-era causes · consequences · turning points · SAQ prompts</p>
+</header>
+
+<div class="era-nav" id="era-nav"></div>
+<div class="era-label">
+  <span class="era-name" id="era-name"></span>
+  <span class="era-dates" id="era-dates"></span>
+</div>
+<div class="concepts-grid" id="grid"></div>
+
+<footer>APEH Anchor Concepts · 10 eras · use causes → mechanism → consequence for every SAQ</footer>
+
+</div>
+<script>
+const eras = [
+  {
+    name: 'Renaissance & Exploration',
+    dates: 'c. 1450–1550',
+    color: '#7a3a2a',
+    concepts: [
+      {
+        label: 'Intellectual shift',
+        title: 'Italian Renaissance humanism',
+        date: 'c. 1350–1527',
+        causes: [
+          'Wealth of Italian city-states funded patronage networks',
+          'Byzantine scholars fleeing Ottoman expansion brought Greek texts westward',
+          'Black Death shook confidence in Church authority, opening space for secular thought',
+          'Printing press (c. 1450) accelerated spread of humanist ideas across Europe',
+        ],
+        consequences: [
+          'Shift from God-centered to human-centered worldview (studia humanitatis)',
+          'Growth of secular literature, art, and political philosophy',
+          'Ad fontes — return to primary texts — directly fueled the Reformation',
+          'Model of the artist as creative genius rather than anonymous craftsman',
+        ],
+        turning_points: [
+          'Gutenberg\'s printing press (c. 1450)',
+          'Pico della Mirandola\'s Oration on the Dignity of Man (1486)',
+          'Sack of Rome ends the High Renaissance (1527)',
+        ],
+        saq: [
+          'Explain one cause of Renaissance humanism in Italy.',
+          'Explain one way humanism differed from medieval scholasticism.',
+          'Explain one way the printing press changed the spread of humanist ideas.',
+          'Explain one connection between Renaissance humanism and the Protestant Reformation.',
+        ],
+      },
+      {
+        label: 'Political structure',
+        title: 'Italian city-states & the balance of power',
+        date: 'c. 1450–1527',
+        causes: [
+          'Fragmented peninsula with no central authority created interstate competition',
+          'Merchant wealth in Florence, Venice, and Milan funded sophisticated diplomacy',
+          'Peace of Lodi (1454) established formal balance-of-power framework',
+        ],
+        consequences: [
+          'Developed early modern diplomacy — the resident ambassador, balance of power',
+          'Machiavelli produced secular political analysis divorced from moral theology',
+          'Vulnerable to foreign invasion — French (1494) ended Italian independence',
+        ],
+        turning_points: [
+          'Peace of Lodi (1454)',
+          'French invasion of Italy (1494)',
+          'Machiavelli writes The Prince (1513)',
+        ],
+        saq: [
+          'Explain one way Italian city-states contributed to European political development.',
+          'Explain one reason Italy was vulnerable to foreign invasion in the late 15th century.',
+          'Explain one way Machiavelli\'s thought reflected Renaissance values.',
+        ],
+      },
+      {
+        label: 'Global expansion',
+        title: 'Age of Exploration',
+        date: 'c. 1450–1600',
+        causes: [
+          'Desire for direct trade routes to Asia bypassing Ottoman middlemen',
+          'Technological advances: caravel, compass, astrolabe, portolan charts',
+          'Competitive dynastic rivalry between Spain and Portugal',
+          'Crusading ideology and missionary impulse combined with commercial ambition',
+        ],
+        consequences: [
+          'Columbian Exchange transformed European diet, agriculture, and demography',
+          'Massive silver influx from Americas caused the Price Revolution (inflation ~300%)',
+          'Destruction of indigenous populations through disease, conquest, and forced labor',
+          'Shift of European commercial center from Mediterranean to Atlantic',
+        ],
+        turning_points: [
+          'Columbus reaches Americas (1492)',
+          'Treaty of Tordesillas divides world (1494)',
+          'Magellan circumnavigation confirms globe (1522)',
+          'Potosí silver mines discovered (1545)',
+        ],
+        saq: [
+          'Explain one economic consequence of the Age of Exploration for Europe.',
+          'Explain one way the Columbian Exchange changed European society.',
+          'Explain one way the Price Revolution affected different social groups differently.',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Reformation',
+    dates: 'c. 1517–1600',
+    color: '#2a5c3f',
+    concepts: [
+      {
+        label: 'Religious rupture',
+        title: 'Protestant Reformation',
+        date: '1517–1555',
+        causes: [
+          'Sale of indulgences and visible Church corruption angered reformers',
+          'Printing press spread Luther\'s 95 Theses across Germany within weeks',
+          'German princes saw opportunity to seize Church lands and assert independence from Emperor',
+          'Humanist ad fontes tradition applied to the Bible undermined clerical authority',
+        ],
+        consequences: [
+          'Permanent split of Western Christianity into Catholic and multiple Protestant traditions',
+          'Wars of Religion across Europe for over a century',
+          'Vernacular Bible boosted literacy and strengthened national languages',
+          'Doctrine of priesthood of all believers challenged clerical hierarchy',
+        ],
+        turning_points: [
+          'Luther\'s 95 Theses (1517)',
+          'Diet of Worms — Luther refuses to recant (1521)',
+          'Peace of Augsburg — cuius regio (1555)',
+        ],
+        saq: [
+          'Explain one cause of the Protestant Reformation.',
+          'Explain one way the printing press contributed to the Reformation\'s spread.',
+          'Explain one political consequence of the Protestant Reformation.',
+          'Explain one way the Reformation changed the relationship between rulers and the Church.',
+        ],
+      },
+      {
+        label: 'Incomplete settlement',
+        title: 'Peace of Augsburg',
+        date: '1555',
+        causes: [
+          'Decades of conflict between Lutheran princes and Emperor Charles V',
+          'Charles V unable to militarily suppress Lutheranism — abdicated shortly after',
+          'Political exhaustion on both sides required compromise',
+        ],
+        consequences: [
+          'Cuius regio, eius religio — ruler determines territory\'s religion',
+          'Calvinism entirely excluded — plants seeds of Thirty Years\' War',
+          'Ecclesiastical Reservation clause created ongoing dispute over Church lands',
+          'Weakened imperial authority by granting princes religious sovereignty',
+        ],
+        turning_points: [
+          'Signed 1555 — Charles V\'s last major act before abdication',
+          'Calvinism\'s subsequent spread makes Augsburg\'s exclusion increasingly explosive',
+        ],
+        saq: [
+          'Explain one limitation of the Peace of Augsburg.',
+          'Explain one way the Peace of Augsburg contributed to the Thirty Years\' War.',
+          'Explain one way the Peace of Augsburg changed the political structure of the Holy Roman Empire.',
+        ],
+      },
+      {
+        label: 'Catholic response',
+        title: 'Counter-Reformation',
+        date: 'c. 1540–1648',
+        causes: [
+          'Protestant challenge threatened Catholic unity and Church authority across Europe',
+          'Internal demand for genuine reform of clerical abuses from within the Church',
+          'Pope Paul III recognized the need for systematic response',
+        ],
+        consequences: [
+          'Council of Trent reaffirmed doctrine (transubstantiation, seven sacraments, tradition)',
+          'Jesuits spread Catholicism globally through education, missions, and courts',
+          'Index of Forbidden Books and Inquisition enforced orthodoxy',
+          'Baroque art deployed as emotional, sensory instrument of Catholic reconversion',
+        ],
+        turning_points: [
+          'Society of Jesus (Jesuits) founded (1540)',
+          'Council of Trent (1545–1563)',
+          'Index of Forbidden Books established (1559)',
+        ],
+        saq: [
+          'Explain one way the Catholic Church responded to the Protestant Reformation.',
+          'Explain one similarity or difference between the Reformation and Counter-Reformation.',
+          'Explain one way the Council of Trent strengthened the Catholic Church.',
+          'Explain one way Jesuit missions extended the Counter-Reformation beyond Europe.',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Religious Wars',
+    dates: 'c. 1550–1648',
+    color: '#6b2737',
+    concepts: [
+      {
+        label: 'Defining conflict',
+        title: 'Thirty Years\' War',
+        date: '1618–1648',
+        causes: [
+          'Peace of Augsburg excluded Calvinism — left Calvinist rulers with no legal protection',
+          'Bohemian Protestants resisted Catholic Habsburg Emperor Ferdinand II\'s re-Catholicization',
+          'Foreign powers (France, Sweden, Denmark) intervened for strategic not religious reasons',
+          'Habsburg ambitions to centralize imperial power alarmed Protestant princes',
+        ],
+        consequences: [
+          'Devastated Central Europe — Germany lost up to a third of its population',
+          'Ended Habsburg ambitions to dominate Europe or re-unify Christianity',
+          'Shifted warfare\'s primary logic from religious to state-interest-based',
+          'Peace of Westphalia reshaped European order: sovereignty, balance of power',
+        ],
+        turning_points: [
+          'Defenestration of Prague (1618)',
+          'Sweden enters war under Gustavus Adolphus (1630)',
+          'France (Catholic) enters on Protestant side (1635) — war becomes power politics',
+          'Peace of Westphalia (1648)',
+        ],
+        saq: [
+          'Explain one factor that contributed to the outbreak of the Thirty Years\' War.',
+          'Explain one way the war changed the political structure of Central Europe.',
+          'Explain one reason the Thirty Years\' War became less about religion over time.',
+          'Explain one long-term consequence of the Thirty Years\' War.',
+        ],
+      },
+      {
+        label: 'Landmark settlement',
+        title: 'Peace of Westphalia',
+        date: '1648',
+        causes: [
+          'Exhaustion of all major powers after 30 years of devastating war',
+          'Recognition that religious uniformity could not be imposed by force',
+          'First multilateral European peace congress (began 1643)',
+        ],
+        consequences: [
+          'Recognized Calvinism alongside Lutheranism and Catholicism — three-way coexistence',
+          'German princes gained Landeshoheit: sovereign right to conduct own foreign policy',
+          'Established framework of sovereign nation-states as basis of European order',
+          'Papal authority to intervene in secular politics effectively ended',
+        ],
+        turning_points: [
+          'Marks end of religious wars as primary driver of European conflict',
+          'Beginning of modern international relations — sovereignty becomes the principle',
+        ],
+        saq: [
+          'Explain one way the Peace of Westphalia differed from earlier attempts to settle religious conflict.',
+          'Explain one way Westphalia changed the political structure of the Holy Roman Empire.',
+          'Explain one long-term consequence of Westphalia for European international relations.',
+        ],
+      },
+      {
+        label: 'French conflict',
+        title: 'French Wars of Religion',
+        date: '1562–1598',
+        causes: [
+          'Calvinist Huguenot minority (including powerful nobles) threatened Catholic majority',
+          'Noble factions used religion as cover for power struggles against the monarchy',
+          'Spanish interference on behalf of ultra-Catholic Guise faction',
+          'Weak Valois monarchy could not control competing factions',
+        ],
+        consequences: [
+          'St. Bartholomew\'s Day Massacre (1572) killed thousands — shocked Protestant Europe',
+          'Politique argument emerged: political stability matters more than religious purity',
+          'Edict of Nantes (1598) granted Huguenots limited toleration — first in Europe',
+          'Henry IV\'s conversion demonstrated pragmatism over ideology in statecraft',
+        ],
+        turning_points: [
+          'St. Bartholomew\'s Day Massacre (1572)',
+          'Henry IV converts to Catholicism (1593) — "Paris is worth a Mass"',
+          'Edict of Nantes (1598)',
+        ],
+        saq: [
+          'Explain one cause of the French Wars of Religion.',
+          'Explain one way the French Wars of Religion differed from the Thirty Years\' War.',
+          'Explain one significance of the Edict of Nantes.',
+          'Explain one way the French Wars of Religion contributed to political thought.',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Absolutism & State Building',
+    dates: 'c. 1600–1750',
+    color: '#3a4f7a',
+    concepts: [
+      {
+        label: 'Model absolutism',
+        title: 'Louis XIV and French absolutism',
+        date: 'r. 1643–1715',
+        causes: [
+          'Fronde rebellions (1648–53) taught Louis that nobles must be controlled, not trusted',
+          'Richelieu and Mazarin had already centralized power — Louis completed the process',
+          'Wars required massive state revenues requiring bureaucratic control',
+        ],
+        consequences: [
+          'Versailles domesticated nobles — removed from provincial power bases, dependent on royal favor',
+          'Revocation of Edict of Nantes (1685) drove 200,000 Huguenots out, damaging economy',
+          'French model imitated across Europe by rulers seeking to consolidate power',
+          'Wars of Spanish Succession left France financially exhausted',
+        ],
+        turning_points: [
+          'Personal rule begins after Mazarin\'s death (1661)',
+          'Versailles construction begins (1668)',
+          'Revocation of Edict of Nantes (1685)',
+        ],
+        saq: [
+          'Explain one way Louis XIV consolidated royal authority.',
+          'Explain one way Versailles functioned as a political instrument.',
+          'Explain one consequence of Louis XIV\'s religious policies.',
+          'Explain one way French absolutism differed from English constitutionalism.',
+        ],
+      },
+      {
+        label: 'Alternative model',
+        title: 'English constitutionalism',
+        date: '1603–1689',
+        causes: [
+          'Parliament had centuries-old tradition of approving taxation — Stuart kings tried to bypass it',
+          'Stuart divine right claims conflicted with common law traditions',
+          'Religious tensions between Anglicans, Puritans, and Catholics overlapped with constitutional disputes',
+        ],
+        consequences: [
+          'Civil War, execution of Charles I (1649) — first regicide by subjects in European history',
+          'Glorious Revolution (1688) established constitutional monarchy without violence',
+          'Bill of Rights (1689) permanently limited royal power — model for Enlightenment thinkers',
+          'Bank of England (1694) followed, creating a financial revolution alongside the political one',
+        ],
+        turning_points: [
+          'English Civil War (1642–1651)',
+          'Restoration (1660)',
+          'Glorious Revolution (1688)',
+          'Bill of Rights (1689)',
+        ],
+        saq: [
+          'Explain one cause of the English Civil War.',
+          'Explain one way England\'s political development differed from France in the 17th century.',
+          'Explain one significance of the Glorious Revolution for European political thought.',
+        ],
+      },
+      {
+        label: 'Eastern models',
+        title: 'Prussia, Austria & enlightened absolutism',
+        date: 'c. 1640–1790',
+        causes: [
+          'Military threats from neighbors required strong, centralized, militarized states',
+          'Prussia\'s lack of natural borders made military-first state building a survival necessity',
+          'Enlightenment ideas gave monarchs a new vocabulary for reform without surrendering power',
+        ],
+        consequences: [
+          'Prussia became model of the militarized bureaucratic state — Sparta of the north',
+          'Austria-Prussia rivalry defined Central European politics for a century',
+          'Enlightened absolutism produced legal reform, religious toleration, limited serfdom reform',
+          'Reforms preserved royal authority — Enlightenment as tool of power, not liberation',
+        ],
+        turning_points: [
+          'Frederick William the Great Elector builds Prussian army (1640s)',
+          'Frederick the Great comes to power (1740)',
+          'Joseph II\'s radical reforms — and their partial reversal before his death (1790)',
+        ],
+        saq: [
+          'Explain one way enlightened absolutism differed from traditional absolutism.',
+          'Explain one limitation of enlightened absolutism as a reform movement.',
+          'Explain one way Prussian state-building differed from French absolutism.',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Scientific Revolution & Enlightenment',
+    dates: 'c. 1543–1789',
+    color: '#5c3d6e',
+    concepts: [
+      {
+        label: 'Epistemological shift',
+        title: 'Scientific Revolution',
+        date: 'c. 1543–1700',
+        causes: [
+          'Renaissance humanism encouraged questioning ancient authorities (Aristotle, Galen)',
+          'Patronage courts funded natural philosophers outside university structures',
+          'New instruments — telescope, microscope — made precise empirical observation possible',
+          'Printing press allowed international sharing and verification of results',
+        ],
+        consequences: [
+          'Heliocentric model replaced geocentric — undermined Church\'s cosmological authority',
+          'Empiricism and the scientific method became dominant frameworks for knowledge',
+          'Nature understood as a machine governed by discoverable mathematical laws',
+          'Laid intellectual groundwork for Enlightenment\'s program of applying reason to human affairs',
+        ],
+        turning_points: [
+          'Copernicus\'s heliocentric theory (1543)',
+          'Galileo\'s condemnation — Church vs. science (1633)',
+          'Newton\'s Principia Mathematica — unified synthesis (1687)',
+        ],
+        saq: [
+          'Explain one cause of the Scientific Revolution.',
+          'Explain one way the Scientific Revolution challenged Church authority.',
+          'Explain one connection between the Scientific Revolution and the Enlightenment.',
+          'Explain one similarity or difference between Bacon\'s empiricism and Descartes\'s rationalism.',
+        ],
+      },
+      {
+        label: 'Political philosophy',
+        title: 'Enlightenment political thought',
+        date: 'c. 1690–1789',
+        causes: [
+          'Scientific Revolution\'s success encouraged applying reason to human society',
+          'Growing literate public sphere: coffeehouses, salons, reading clubs, philosophes',
+          'Frustration with absolutism and religious authority made critique urgent and popular',
+        ],
+        consequences: [
+          'Social contract theory challenged divine right of kings',
+          'Calls for religious toleration, free speech, rule of law, separation of powers',
+          'Encyclopédie systematized knowledge — 28 volumes, repeatedly banned',
+          'Directly influenced American and French Revolutions\' vocabulary of rights',
+        ],
+        turning_points: [
+          'Locke\'s Two Treatises (1689)',
+          'Montesquieu\'s Spirit of the Laws — separation of powers (1748)',
+          'Rousseau\'s Social Contract (1762)',
+          'Kant\'s What is Enlightenment? — "Dare to know" (1784)',
+        ],
+        saq: [
+          'Explain one way Enlightenment thought challenged existing political structures.',
+          'Explain one similarity or difference between Locke and Rousseau.',
+          'Explain one way the Enlightenment spread through European society.',
+          'Explain one way the Enlightenment contributed to the French Revolution.',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'French Revolution & Napoleon',
+    dates: '1789–1815',
+    color: '#5a4a1a',
+    concepts: [
+      {
+        label: 'Revolutionary outbreak',
+        title: 'Causes of the French Revolution',
+        date: '1787–1789',
+        causes: [
+          'Financial crisis: decades of war and Versailles bankrupted the state',
+          'Estates system deeply inequitable — Third Estate bore tax burden, had no real voice',
+          'Enlightenment ideas provided the language of rights, consent, and popular sovereignty',
+          'Harvest failures (1788) created bread scarcity and social fury in cities',
+        ],
+        consequences: [
+          'Collapse of the Old Regime, feudal privilege, and absolute monarchy',
+          'Declaration of Rights of Man and Citizen (1789)',
+          'Execution of Louis XVI shocked Europe and radicalized the war',
+          'Revolutionary ideas spread across Europe through war and Napoleonic conquest',
+        ],
+        turning_points: [
+          'Estates-General convened (May 1789)',
+          'Storming of the Bastille (July 1789)',
+          'Declaration of Rights of Man (August 1789)',
+          'Execution of Louis XVI (January 1793)',
+        ],
+        saq: [
+          'Explain one long-term cause of the French Revolution.',
+          'Explain one short-term cause of the French Revolution.',
+          'Explain one way Enlightenment ideas contributed to the French Revolution.',
+          'Explain one way the Revolution changed French society.',
+        ],
+      },
+      {
+        label: 'Radical phase',
+        title: 'Reign of Terror',
+        date: '1793–1794',
+        causes: [
+          'Foreign invasion and internal counter-revolution (Vendée) threatened the Republic',
+          'Committee of Public Safety claimed emergency powers to defend the nation',
+          'Robespierre\'s ideology of virtue — the Republic demanded moral purity',
+        ],
+        consequences: [
+          '~17,000 officially executed; hundreds of thousands imprisoned or killed extrajudicially',
+          'Discredited radical republicanism — Thermidorian Reaction ended the Terror',
+          'Demonstrated what happened when Enlightenment ideals were applied without compromise',
+        ],
+        turning_points: [
+          'Law of Suspects (1793)',
+          'Execution of Danton — radicals purge moderates',
+          'Fall of Robespierre — 9 Thermidor (July 1794)',
+        ],
+        saq: [
+          'Explain one cause of the Reign of Terror.',
+          'Explain one way the Terror changed the course of the Revolution.',
+          'Explain one way the Terror can be seen as a continuation or betrayal of Enlightenment ideals.',
+        ],
+      },
+      {
+        label: 'Revolutionary legacy',
+        title: 'Napoleon Bonaparte',
+        date: '1799–1815',
+        causes: [
+          'Political instability of Directory made a strong, competent leader appealing',
+          'Napoleon\'s military genius gave him enormous popular legitimacy',
+          '18 Brumaire coup (1799) — Directory overthrown by force',
+        ],
+        consequences: [
+          'Napoleonic Code spread legal equality, property rights, religious toleration across Europe',
+          'Nationalism awakened in conquered peoples who resisted French domination',
+          'Congress of Vienna (1815) attempted to restore old order but could not undo the Revolution',
+          'Napoleon\'s Continental System alienated allies and ultimately weakened France',
+        ],
+        turning_points: [
+          '18 Brumaire coup (1799)',
+          'Napoleonic Code enacted (1804)',
+          'Russian campaign — catastrophic failure (1812)',
+          'Waterloo (1815)',
+        ],
+        saq: [
+          'Explain one way Napoleon preserved the ideals of the French Revolution.',
+          'Explain one way Napoleon betrayed the ideals of the French Revolution.',
+          'Explain one way Napoleonic conquest spread revolutionary ideas across Europe.',
+          'Explain one cause of Napoleon\'s downfall.',
+        ],
+      },
+    ],
+  },
+  {
+    name: '19th Century: Reaction & Revolution',
+    dates: '1815–1871',
+    color: '#4a6741',
+    concepts: [
+      {
+        label: 'Conservative order',
+        title: 'Congress of Vienna & Concert of Europe',
+        date: '1814–1848',
+        causes: [
+          'Need to restore stability after 25 years of revolutionary and Napoleonic warfare',
+          'Conservative powers wanted to contain liberalism and nationalism',
+          'Principle of legitimacy — restore pre-Revolutionary dynasties to their thrones',
+        ],
+        consequences: [
+          'Redrew European map on balance of power principles — remarkably durable',
+          'Congress System created collective management of crises — no general war for 99 years',
+          'Suppressed but could not eliminate nationalism and liberalism as forces',
+        ],
+        turning_points: [
+          'Congress of Vienna (1814–1815)',
+          'Revolutions of 1830 — partial crack in the system',
+          'Revolutions of 1848 — system under maximum stress',
+        ],
+        saq: [
+          'Explain one goal of the Congress of Vienna.',
+          'Explain one principle that guided the Concert of Europe.',
+          'Explain one way the Concert of Europe succeeded or failed.',
+          'Explain one way the Congress of Vienna\'s settlement contributed to later instability.',
+        ],
+      },
+      {
+        label: 'Revolutionary wave',
+        title: 'Revolutions of 1848',
+        date: '1848–1849',
+        causes: [
+          'Economic crisis: crop failures and unemployment in 1847 created mass desperation',
+          'Liberal demands for constitutions and representative government across Europe',
+          'Nationalist movements seeking self-determination within multi-ethnic empires',
+          'February Revolution in Paris triggered cascade as news spread by telegraph',
+        ],
+        consequences: [
+          'All revolutions failed — conservatives recovered power by 1849',
+          'Failure showed that idealism required realpolitik — Bismarck and Cavour drew the lesson',
+          'Middle-class liberals proved they feared radical workers more than they hated conservatives',
+          'Metternich resigned, fled Vienna — old conservative order shaken even in defeat',
+        ],
+        turning_points: [
+          'February Revolution in France (1848)',
+          'Frankfurt Parliament — liberals attempt German unification (1848–49)',
+          'June Days in Paris — workers crushed by bourgeois republic',
+          'Louis-Napoleon elected president by conservative rural vote (Dec 1848)',
+        ],
+        saq: [
+          'Explain one cause of the Revolutions of 1848.',
+          'Explain one reason the Revolutions of 1848 failed.',
+          'Explain one long-term consequence of the 1848 revolutions.',
+          'Explain one way 1848 influenced later nationalist movements.',
+        ],
+      },
+      {
+        label: 'National unification',
+        title: 'German & Italian unification',
+        date: '1859–1871',
+        causes: [
+          'Failure of 1848 showed unification required military force and statecraft, not liberal enthusiasm',
+          'Bismarck used wars (Denmark 1864, Austria 1866, France 1870–71) to solve each obstacle',
+          'Industrialization gave Prussia and Piedmont economic strength to dominate their regions',
+        ],
+        consequences: [
+          'Unified Germany of 41 million became the dominant continental power',
+          'Disrupted the balance of power established at Vienna — no stable framework replaced it',
+          'Italian unification left "unredeemed" territories — source of grievance feeding into WWI',
+          'Realpolitik established as the governing principle of European statecraft',
+        ],
+        turning_points: [
+          'Austro-Prussian War — Prussia excludes Austria from German affairs (1866)',
+          'Franco-Prussian War — Napoleon III captured, France humiliated (1870–71)',
+          'German Empire proclaimed in Hall of Mirrors, Versailles (January 1871)',
+        ],
+        saq: [
+          'Explain one way Bismarck\'s methods differed from the 1848 liberals\'.',
+          'Explain one consequence of German unification for the European balance of power.',
+          'Explain one similarity or difference between German and Italian unification.',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Industrialization & Its Consequences',
+    dates: 'c. 1760–1914',
+    color: '#1a3a4a',
+    concepts: [
+      {
+        label: 'Economic transformation',
+        title: 'Industrial Revolution (first & second)',
+        date: 'c. 1760–1914',
+        causes: [
+          'Britain had coal, iron, navigable rivers, colonial markets, and accessible capital',
+          'Agricultural revolution freed rural labor for factory work',
+          'First IR: steam, textiles, coal, iron · Second IR: steel, chemicals, electricity, oil',
+          'Germany\'s research universities and government support gave it Second IR advantages',
+        ],
+        consequences: [
+          'Urbanization created two new social classes: industrial bourgeoisie and proletariat',
+          'Living conditions initially worsened for many workers — Engels\'s Manchester',
+          'Britain first, then Germany and USA became world\'s dominant economic powers',
+          'Long Depression (1873–96) pushed states toward protective tariffs and imperialism',
+        ],
+        turning_points: [
+          'Watt\'s steam engine (1769)',
+          'First passenger railway (1825)',
+          'Bessemer converter enables mass steel production (1856)',
+          'Germany surpasses Britain in steel by 1900',
+        ],
+        saq: [
+          'Explain one reason Britain industrialized before continental Europe.',
+          'Explain one social consequence of industrialization.',
+          'Explain one way the Second Industrial Revolution differed from the First.',
+          'Explain one connection between industrialization and the growth of socialist movements.',
+        ],
+      },
+      {
+        label: 'Social response',
+        title: 'Socialism & Marxism',
+        date: 'c. 1830–1914',
+        causes: [
+          'Industrial capitalism created visible, extreme inequality — factory owners vs. workers',
+          'Enlightenment ideas about equality applied to economic conditions',
+          'Failure of liberal reforms to address working-class poverty and exploitation',
+          '1848 revolutions\' failure convinced some that peaceful reform was impossible',
+        ],
+        consequences: [
+          'Growth of trade unions and socialist political parties (German SPD largest by 1912)',
+          'Communist Manifesto (1848) provided systematic revolutionary ideology',
+          'Split between reformist social democrats and revolutionary Marxist-Leninists defined European left',
+          'States responded with both repression and social insurance (Bismarck\'s reforms, 1880s)',
+        ],
+        turning_points: [
+          'Communist Manifesto (1848)',
+          'First International (1864)',
+          'German Social Democratic Party founded (1875)',
+          'Second International (1889) — collapses in 1914 when parties support WWI',
+        ],
+        saq: [
+          'Explain one reason Marxism emerged as a response to industrialization.',
+          'Explain one way Marxism differed from earlier socialist thought.',
+          'Explain one way European governments responded to socialist movements.',
+        ],
+      },
+      {
+        label: 'Global expansion',
+        title: 'New Imperialism',
+        date: 'c. 1870–1914',
+        causes: [
+          'Industrial economies needed raw materials and new markets during Long Depression',
+          'Nationalist rivalries drove competitive colonization — prestige as much as profit',
+          'Social Darwinism provided ideological justification for European domination',
+          'Technological superiority (quinine, Maxim gun, steamships) made conquest cheap',
+        ],
+        consequences: [
+          'European powers controlled ~85% of Africa and most of Asia by 1914',
+          'Intensified great-power rivalry — Morocco crises, Fashoda, scramble for China',
+          'Exploitation of colonized peoples and resources; legacy of underdevelopment',
+          'Contributed to conditions leading to WWI through heightened nationalist competition',
+        ],
+        turning_points: [
+          'Berlin Conference divides Africa (1884–85)',
+          'Fashoda Incident — Britain and France nearly go to war over Sudan (1898)',
+          'Boer War exposes limits of British power (1899–1902)',
+        ],
+        saq: [
+          'Explain one economic cause of the New Imperialism.',
+          'Explain one way Social Darwinism was used to justify imperial expansion.',
+          'Explain one way imperialism contributed to tensions leading to WWI.',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'WWI & Interwar Period',
+    dates: '1914–1939',
+    color: '#8c2424',
+    concepts: [
+      {
+        label: 'War outbreak',
+        title: 'Causes of WWI',
+        date: '1871–1914',
+        causes: [
+          'Alliance system turned local Balkan crisis into continental war automatically',
+          'Arms race — especially Anglo-German naval rivalry heightened mutual suspicion',
+          'Nationalism in multi-ethnic empires (Austria-Hungary, Ottoman) created instability',
+          'Assassination of Franz Ferdinand (1914) triggered alliance obligations',
+        ],
+        consequences: [
+          '~20 million dead; first use of poison gas, tanks, aerial bombing on civilians',
+          'Collapse of German, Austro-Hungarian, Russian, and Ottoman Empires',
+          'Treaty of Versailles humiliated Germany — war guilt, reparations, territorial losses',
+          'Russian Revolution produced first communist state — reshaping global politics',
+        ],
+        turning_points: [
+          'Assassination of Franz Ferdinand, Sarajevo (June 1914)',
+          'Schlieffen Plan fails — Western Front stalemates (1914)',
+          'Verdun and Somme — industrial-scale slaughter (1916)',
+          'USA enters; Russia exits (1917)',
+          'Armistice (November 1918)',
+        ],
+        saq: [
+          'Explain one long-term cause of WWI.',
+          'Explain one way the alliance system turned a local conflict into a world war.',
+          'Explain one way nationalism contributed to the outbreak of WWI.',
+          'Explain one consequence of WWI for European political order.',
+        ],
+      },
+      {
+        label: 'Authoritarian response',
+        title: 'Rise of fascism',
+        date: '1919–1939',
+        causes: [
+          'WWI humiliation and Versailles resentments in Germany and Italy',
+          'Fear of communist revolution made elites willing to support or tolerate fascist movements',
+          'Weimar Republic\'s vulnerability: hyperinflation (1923), then Great Depression (1929)',
+          'Hitler used legal means — elections and Enabling Act — to gain dictatorial power',
+        ],
+        consequences: [
+          'Systematic persecution of Jews and minorities under racial ideology',
+          'Rearmament and aggressive foreign policy dismantled the Versailles settlement',
+          'Appeasement policy failed — Munich (1938) encouraged further aggression',
+          'Spain (1936–39), Ethiopia (1935), and Czechoslovakia showed democracies\' weakness',
+        ],
+        turning_points: [
+          'Mussolini\'s March on Rome (1922)',
+          'Hitler becomes Chancellor (January 1933)',
+          'Enabling Act — legal dictatorship (March 1933)',
+          'Nuremberg Laws — racial state formalized (1935)',
+          'Munich Agreement (September 1938)',
+        ],
+        saq: [
+          'Explain one cause of the rise of fascism in Europe.',
+          'Explain one way fascism differed from communism.',
+          'Explain one reason the Weimar Republic was vulnerable to collapse.',
+          'Explain one reason Britain and France pursued appeasement.',
+        ],
+      },
+    ],
+  },
+  {
+    name: 'WWII & Cold War',
+    dates: '1939–1991',
+    color: '#2d4a2d',
+    concepts: [
+      {
+        label: 'Total war',
+        title: 'WWII and the Holocaust',
+        date: '1939–1945',
+        causes: [
+          'Hitler\'s ideological goals: Lebensraum in the East, racial extermination of Jews',
+          'Appeasement\'s failure — invasion of Poland finally triggered British and French declaration',
+          'Versailles settlement created resentments without destroying German power',
+        ],
+        consequences: [
+          '~70 million dead — majority civilians; Holocaust killed 6 million Jews and millions of others',
+          'Europe devastated — power shifted decisively to USA and USSR',
+          'United Nations, Nuremberg Trials, Universal Declaration of Human Rights established',
+          'Decolonization accelerated — European empires could no longer sustain themselves',
+        ],
+        turning_points: [
+          'Fall of France — six weeks (May–June 1940)',
+          'Operation Barbarossa — Germany invades USSR (June 1941)',
+          'Battle of Stalingrad — turning point on Eastern Front (1942–43)',
+          'D-Day — Allied landing in Normandy (June 1944)',
+          'VE Day (May 1945)',
+        ],
+        saq: [
+          'Explain one cause of WWII.',
+          'Explain one way WWII differed from WWI in its impact on civilians.',
+          'Explain one consequence of WWII for the European political order.',
+          'Explain one reason the Allies were ultimately able to defeat Nazi Germany.',
+        ],
+      },
+      {
+        label: 'Ideological conflict',
+        title: 'Cold War in Europe',
+        date: '1947–1991',
+        causes: [
+          'Wartime US-USSR alliance collapsed over incompatible ideologies and spheres of influence',
+          'Soviet imposition of communist governments on Eastern Europe alarmed the West',
+          'Nuclear weapons made direct conflict unthinkable — hence "cold"',
+        ],
+        consequences: [
+          'Europe divided: NATO vs. Warsaw Pact, Berlin Wall as physical symbol',
+          'Marshall Plan rebuilt Western Europe and tied it firmly to American sphere',
+          'European integration (EEC 1957) partly driven by Cold War — stronger West vs. USSR',
+          'Gorbachev\'s reforms (glasnost, perestroika) unraveled Soviet control, ended Cold War',
+        ],
+        turning_points: [
+          'Truman Doctrine and Marshall Plan (1947)',
+          'Berlin Blockade and Airlift (1948–49)',
+          'Berlin Wall built (1961)',
+          'Cuban Missile Crisis (1962)',
+          'Berlin Wall falls (November 1989)',
+          'USSR dissolves (1991)',
+        ],
+        saq: [
+          'Explain one cause of the Cold War.',
+          'Explain one way the Cold War shaped Western European politics.',
+          'Explain one way the Cold War differed from previous European great-power conflicts.',
+          'Explain one reason the Cold War ended in 1989–91.',
+        ],
+      },
+      {
+        label: 'European integration',
+        title: 'Decolonization & European unity',
+        date: '1945–1991',
+        causes: [
+          'WWII weakened European empires economically and morally — could not sustain colonial rule',
+          'Nationalist movements in colonies intensified after the war; US and USSR both opposed colonialism',
+          'Economic cooperation seen as way to prevent future European wars',
+        ],
+        consequences: [
+          'Rapid decolonization in Africa and Asia (1940s–1960s) — often violent (Algeria, Kenya)',
+          'ECSC (1951) and EEC (Treaty of Rome, 1957) began economic integration',
+          'West Germany\'s "economic miracle" — fastest recovery in history',
+          'European integration laid groundwork for eventual EU',
+        ],
+        turning_points: [
+          'Indian independence (1947)',
+          'Algerian War (1954–1962)',
+          'Schuman Declaration — proposal for ECSC (1950)',
+          'Treaty of Rome — EEC founded (1957)',
+        ],
+        saq: [
+          'Explain one reason European decolonization accelerated after WWII.',
+          'Explain one way WWII contributed to European economic integration.',
+          'Explain one similarity or difference between decolonization and earlier nationalist movements.',
+        ],
+      },
+    ],
+  },
+];
+
+let currentEra = 0;
+const openCards = new Set();
+
+function renderNav() {
+  const nav = document.getElementById('era-nav');
+  nav.innerHTML = '';
+  eras.forEach((era, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'era-btn' + (i === currentEra ? ' active' : '');
+    btn.textContent = era.name;
+    btn.style.setProperty('--era-color', era.color);
+    btn.onclick = () => { currentEra = i; openCards.clear(); renderNav(); renderGrid(); };
+    nav.appendChild(btn);
+  });
+}
+
+function renderGrid() {
+  const era = eras[currentEra];
+  document.getElementById('era-name').textContent = era.name;
+  document.getElementById('era-dates').textContent = era.dates;
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  era.concepts.forEach((c, i) => {
+    const key = currentEra + '-' + i;
+    const isOpen = openCards.has(key);
+
+    const card = document.createElement('div');
+    card.className = 'concept-card' + (isOpen ? ' open' : '');
+
+    const top = document.createElement('div');
+    top.className = 'card-top';
+    top.innerHTML = `
+      <div class="card-accent" style="background:${era.color}"></div>
+      <div class="card-meta">
+        <div class="card-label">${c.label}</div>
+        <div class="card-title">${c.title}</div>
+        <div class="card-date">${c.date}</div>
+      </div>
+      <div class="card-chevron">▼</div>
+    `;
+    top.onclick = () => {
+      if (openCards.has(key)) openCards.delete(key);
+      else openCards.add(key);
+      renderGrid();
+    };
+
+    const detail = document.createElement('div');
+    detail.className = 'card-detail';
+    detail.innerHTML = `
+      <div class="detail-block">
+        <div class="detail-label">Causes</div>
+        <div class="detail-items">${c.causes.map(x => `<div class="detail-item">${x}</div>`).join('')}</div>
+      </div>
+      <div class="detail-block">
+        <div class="detail-label">Consequences</div>
+        <div class="detail-items">${c.consequences.map(x => `<div class="detail-item">${x}</div>`).join('')}</div>
+      </div>
+      <div class="detail-block">
+        <div class="detail-label">Key turning points</div>
+        <div class="detail-items">${c.turning_points.map(x => `<div class="detail-item">${x}</div>`).join('')}</div>
+      </div>
+      <div class="detail-block">
+        <div class="detail-label">SAQ prompts</div>
+        <div class="saq-box">${c.saq.map(q => `<div class="saq-item">${q}</div>`).join('')}</div>
+      </div>
+    `;
+
+    card.appendChild(top);
+    card.appendChild(detail);
+    grid.appendChild(card);
+  });
+}
+
+renderNav();
+renderGrid();
+</script>
+</body>
+</html>
